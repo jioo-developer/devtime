@@ -73,6 +73,7 @@ function Client() {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
+    // 쿠키에서 만료 시간 확인
     if (isAccessTokenValid()) {
       const token = localStorage.getItem("accessToken");
       if (token) {
@@ -171,7 +172,7 @@ function Client() {
             </CommonButton>
           </form>
 
-          <Link href="/auth" prefetch>
+          <Link href="/auth">
             <CommonButton theme="none" className="goSignup">
               <span>회원가입</span>
             </CommonButton>
