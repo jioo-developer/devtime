@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getAccessToken } from "@/config/utils/tokenStorage";
 import { useModalStore } from "@/store/modalStore";
@@ -28,7 +28,8 @@ export function useLoginRequiredModal(isLoggedIn: boolean, isReady: boolean) {
   const pushModal = useModalStore((s) => s.push);
   const closeTop = useModalStore((s) => s.closeTop);
 
-  const openLoginRequiredModal = useCallback(() => {
+  useEffect(() => {
+    if (!isReady || isLoggedIn) return;
     pushModal({
       width: 360,
       height: 150,
@@ -48,9 +49,5 @@ export function useLoginRequiredModal(isLoggedIn: boolean, isReady: boolean) {
         </CommonButton>
       ),
     });
-  }, [pushModal, closeTop, router]);
-
-  useEffect(() => {
-    if (isReady && !isLoggedIn) openLoginRequiredModal();
-  }, [isReady, isLoggedIn, openLoginRequiredModal]);
+  }, [isReady, isLoggedIn, pushModal, closeTop, router]);
 }
