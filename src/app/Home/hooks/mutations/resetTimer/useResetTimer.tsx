@@ -10,17 +10,17 @@ import { useTimerStore } from "@/store/timerStore";
 import CommonButton from "@/components/atoms/CommonButton/CommonButton";
 
 type ResetTimerRequest = { timerId: string };
-type ResponseMessage = { message: string };
+type ResetTimerResponse = { message: string };
 
 export const useResetTimer = () => {
   const queryClient = useQueryClient();
-  return useMutation<ResponseMessage, Error, ResetTimerRequest>({
+  return useMutation<ResetTimerResponse, Error, ResetTimerRequest>({
     mutationFn: async ({ timerId }) => {
-      return await ApiClient.delete<ResponseMessage>(
-        `/api/timers/${timerId}`,
-        undefined,
-        getAuthHeaders()
-      );
+      const res = await ApiClient.delete("/api/timers/{timerId}", {
+        pathParams: { timerId },
+        headers: getAuthHeaders(),
+      });
+      return res as ResetTimerResponse;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.TIMERS] });

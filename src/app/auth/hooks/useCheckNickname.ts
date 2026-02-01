@@ -9,8 +9,8 @@ export const useCheckNickname = ({
 }: UseChecValidationlParams) => {
   return useMutation({
     mutationFn: (nickname: string) =>
-      ApiClient.get<CheckDuplicateResponse>("/api/signup/check-nickname", {
-        nickname,
+      ApiClient.get("/api/signup/check-nickname", {
+        query: { nickname },
       }),
     onSuccess: (data) => {
       if (!data.available) {

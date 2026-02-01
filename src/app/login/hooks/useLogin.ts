@@ -9,7 +9,7 @@ export const useLogin = () => {
         email: data.email,
         password: data.password,
       };
-      return ApiClient.post<LoginResponse>("/api/auth/login", payload);
+      return ApiClient.post("/api/auth/login", payload);
     },
   });
 };

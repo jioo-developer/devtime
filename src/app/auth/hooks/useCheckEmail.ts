@@ -9,8 +9,8 @@ export const useCheckEmail = ({
 }: UseChecValidationlParams) => {
   return useMutation({
     mutationFn: (email: string) =>
-      ApiClient.get<CheckDuplicateResponse>("/api/signup/check-email", {
-        email,
+      ApiClient.get("/api/signup/check-email", {
+        query: { email },
       }),
     onSuccess: (data) => {
       if (!data.available) {
