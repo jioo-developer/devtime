@@ -48,6 +48,13 @@
   align-items: center;
   justify-content: center;
   gap: calc(var(--margin-xl) * 2);
+  position: relative;
+}
+
+.controls:has(.isTimerRunningHidden) .isTimerRunning {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 .footer {

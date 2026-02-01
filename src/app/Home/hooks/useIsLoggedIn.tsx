@@ -31,6 +31,7 @@ export function useLoginRequiredModal(isLoggedIn: boolean, isReady: boolean) {
   const openLoginRequiredModal = useCallback(() => {
     pushModal({
       width: 360,
+      height: 150,
       title: "로그인 필요",
       content: "로그인이 필요한 서비스입니다.",
       showCloseButton: false,
