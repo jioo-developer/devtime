@@ -4,7 +4,7 @@ import "./style.css";
 import { TimerControls } from "./component/TimerControls";
 import { TimerDisplay } from "./component/TimerDisplay";
 import { useTimerPageController } from "./hooks/useTimerPageController";
-import { useLoginRequiredModal } from "./hooks/useIsLoggedIn";
+import { useLoginRequiredModal } from "@/hooks";
 
 /**
  * 타이머 페이지. 데이터·핸들러는 useTimerPageController, 로그인 모달은 useLoginRequiredModal에 위임하고
