@@ -53,6 +53,11 @@
   text-decoration: underline;
 }
 
+.navigation li a.active {
+  color: var(--secondary-indigo);
+  text-decoration: underline;
+}
+
 .profileCard {
   display: flex;
   align-items: center;
