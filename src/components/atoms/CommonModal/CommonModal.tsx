@@ -15,7 +15,7 @@ export type UIModalBaseProps = {
   zIndex: number; //   스택 쌓임 순서를 위한 z-index
   testId?: string; // 테스트용 식별자
   width?: string | number; // 모달 너비
-  height?: string | number; // 모달 높이
+  height?: string | number; // 모달 높이 (지정 시 고정, 없으면 콘텐츠에 맞게)
 };
 
 export default function UIModalBase({

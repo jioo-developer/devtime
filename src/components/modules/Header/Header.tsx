@@ -12,8 +12,14 @@ function Header() {
     <header className={styles.header}>
       <div className={styles.headerIn}>
         <div className={styles.leftCon}>
-          <Link href="/" prefetch>
-            <CommonImage src={HeaderLogo} alt="로고" width={148} height={40} priority />
+          <Link href="/">
+            <CommonImage
+              src={HeaderLogo}
+              alt="로고"
+              width={148}
+              height={40}
+              priority
+            />
           </Link>
           <Navigation />
         </div>
