@@ -28,6 +28,8 @@ export type ProfileFormData = {
   goal: string;
   career: string;
   purpose: string;
+  /** purpose가 "기타"일 때만 사용 */
+  purposeDetail: string;
   techStacks: string[];
   profileImage: string;
   /** 회원정보 수정 시에만 사용(선택) */

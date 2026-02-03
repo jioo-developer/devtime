@@ -38,6 +38,14 @@ export const PURPOSE_API_VALUES = [
 
 export const PURPOSE_OPTIONS = createOptions(PURPOSE_API_VALUES);
 
+/** 공부 목적 "기타" 선택 시 상세 입력용 */
+export const PURPOSE_OTHER_VALUE = "기타" as const;
+
+export const PURPOSE_OPTIONS_WITH_OTHER: { value: string; label: string }[] = [
+  ...PURPOSE_OPTIONS,
+  { value: PURPOSE_OTHER_VALUE, label: "직접입력" },
+];
+
 export function getPurposeLabel(purposeFromApi: PurposeFromApi): string {
   if (!purposeFromApi) return "";
   if (typeof purposeFromApi === "object") {

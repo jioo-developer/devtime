@@ -7,6 +7,8 @@ export {
   getPurposeLabel,
   PURPOSE_API_VALUES,
   PURPOSE_OPTIONS,
+  PURPOSE_OPTIONS_WITH_OTHER,
+  PURPOSE_OTHER_VALUE,
   toAllowedEnumValue,
   TECH_STACK_OPTIONS,
 } from "./profileOptions";

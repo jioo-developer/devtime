@@ -220,6 +220,11 @@
   padding-top: var(--gap-xl);
 }
 
+.profileFormPurposeDetailWrap {
+  margin-top: var(--gap-md);
+  margin-bottom: var(--gap-md);
+}
+
 .profileFormLeft .profileSection:first-child,
 .profileFormRight .profileSection:first-child {
   padding-top: 0;

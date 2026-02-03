@@ -8,7 +8,8 @@ import ImageUploader from "@/components/modules/CommonImageUploder/ImageUploder"
 import { useCheckNickname } from "@/app/auth/hooks/useCheckNickname";
 import {
   CAREER_OPTIONS,
-  PURPOSE_OPTIONS,
+  PURPOSE_OPTIONS_WITH_OTHER,
+  PURPOSE_OTHER_VALUE,
   TECH_STACK_OPTIONS,
   getProfileImageUrl,
 } from "../constants";
@@ -99,12 +100,24 @@ export function ProfileForm({
               {...mypageForm.register("purpose")}
             >
               <option value="">선택하세요</option>
-              {PURPOSE_OPTIONS.map((option) => (
+              {PURPOSE_OPTIONS_WITH_OTHER.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
               ))}
             </select>
+            {mypageForm.watch("purpose") === PURPOSE_OTHER_VALUE && (
+              <div className="profileFormPurposeDetailWrap">
+                <CommonInput
+                  id="purposeDetail"
+                  type="text"
+                  label=""
+                  placeholder="공부 목적을 입력해 주세요."
+                  register={mypageForm.register}
+                  className="profileFormInput"
+                />
+              </div>
+            )}
           </section>
 
           <section className="profileSection">
