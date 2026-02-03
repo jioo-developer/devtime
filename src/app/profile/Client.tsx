@@ -7,7 +7,6 @@ import CommonImage from "@/components/atoms/CommonImage/CommonImage";
 import CommonButton from "@/components/atoms/CommonButton/CommonButton";
 import CommonAutocomplete from "@/components/modules/CommonAutoComplate/CommonAutoComplate";
 import ImageUploader from "@/components/modules/CommonImageUploder/ImageUploder";
-import { useModalStore } from "@/store/modalStore";
 import Logo from "@/asset/images/Logo.svg";
 import Background from "@/asset/images/logo_background.jpg";
 import {
@@ -21,6 +20,7 @@ import { useCreateProfile, useUploadProfileImage } from "@/app/mypage/hooks";
 import { getCreateProfilePayload } from "@/app/mypage/utils/profileFormHandler";
 import type { ProfileFormData } from "@/app/mypage/types";
 import { isProfileFormIncomplete } from "./utils/profileFormValidation";
+import { useProfileModals } from "./hooks/useProfileModal";
 import "./style.css";
 
 const PROFILE_SETTING_DEFAULTS: ProfileFormData = {
@@ -41,30 +41,21 @@ export default function ProfileSettingClient() {
   });
   const { mutate: createProfile, isPending: isCreating } = useCreateProfile();
   const { upload: uploadProfileImage } = useUploadProfileImage();
+  const { showValidationErrorModal, showCreateErrorModal } = useProfileModals();
 
   const selectedTechStacks = watch("techStacks");
   const currentProfileImage = watch("profileImage");
 
   const onSubmit = (formData: ProfileFormData) => {
     if (isProfileFormIncomplete(formData)) {
-      const push = useModalStore.getState().push;
-      const closeTop = useModalStore.getState().closeTop;
-      push({
-        title: "입력 오류",
-        content: "모든 항목을 입력해 주세요.",
-        footer: (
-          <CommonButton theme="primary" onClick={() => closeTop()}>
-            확인
-          </CommonButton>
-        ),
-        BackdropMiss: false,
-      });
+      showValidationErrorModal();
       return;
     }
+
     const payload = getCreateProfilePayload(formData, undefined);
     createProfile(payload, {
       onSuccess: () => router.replace("/"),
-      onError: (error) => alert(error.message),
+      onError: (error) => showCreateErrorModal(error.message),
     });
   };
 
