@@ -12,7 +12,7 @@ export function ProfileView({ profileData }: ProfileViewProps) {
   const techStackList = profileData?.profile?.techStacks ?? [];
   const hasTechStacks = techStackList.length > 0;
   return (
-    <>
+    <div className="profileView">
       <section className="profileSection">
         <span className="profileSectionLabel">이메일 주소</span>
         <p className="profileSectionValue">{profileData?.email ?? "—"}</p>
@@ -64,7 +64,6 @@ export function ProfileView({ profileData }: ProfileViewProps) {
           </p>
         )}
       </section>
-
-    </>
+    </div>
   );
 }

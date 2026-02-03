@@ -23,6 +23,8 @@ export function getFormDefaultValuesFromProfile(
         : "",
     techStacks: profileData?.profile?.techStacks ?? [],
     profileImage: profileData?.profile?.profileImage ?? "",
+    newPassword: "",
+    newPasswordConfirmation: "",
   };
 }
 
@@ -67,10 +69,16 @@ export function getUpdateProfilePayload(
     (formData.nickname?.trim() || profileData?.nickname) ?? "";
   const profileImage =
     (formData.profileImage || profileData?.profile?.profileImage) ?? "";
+  const newPassword = formData.newPassword?.trim();
+  const newPasswordConfirmation = formData.newPasswordConfirmation?.trim();
+  const includePassword =
+    !!newPassword &&
+    newPassword === newPasswordConfirmation;
 
   return {
     ...base,
     nickname,
     ...(profileImage && { profileImage }),
+    ...(includePassword && { password: newPassword }),
   };
 }

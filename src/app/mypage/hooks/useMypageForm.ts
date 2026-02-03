@@ -21,9 +21,16 @@ export function useMypageForm(
 ) {
   const hasExistingProfile = Boolean(profileData?.profile);
   const defaultValues = getFormDefaultValuesFromProfile(profileData);
-  const { register, watch, setValue, handleSubmit, reset } = useForm<
-    ProfileFormData
-  >({ defaultValues, mode: "onChange" });
+  const {
+    register,
+    watch,
+    setValue,
+    setError,
+    clearErrors,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ProfileFormData>({ defaultValues, mode: "onChange" });
 
   useEffect(() => {
     if (profileData) reset(getFormDefaultValuesFromProfile(profileData));
@@ -56,6 +63,9 @@ export function useMypageForm(
     register,
     watch,
     setValue,
+    setError,
+    clearErrors,
+    errors,
     handleSave: handleSubmit(onSubmit),
     handleCancel,
     isEditing,

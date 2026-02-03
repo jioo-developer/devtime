@@ -85,9 +85,7 @@
   color: var(--gray-600);
   cursor: pointer;
   border-radius: var(--radius-sm);
-  transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
+  transition: background-color 0.15s ease, color 0.15s ease;
   flex-shrink: 0;
 }
 
@@ -103,7 +101,6 @@
 
 .profileSection {
   padding-top: var(--gap-xl);
-  border-top: 1px solid var(--gray-200);
 }
 
 .profileSection:first-of-type {
@@ -112,16 +109,20 @@
 }
 
 .profileSection + .profileSection {
-  margin-top: var(--gap-xl);
+  margin-top: 0;
   padding-top: var(--gap-xl);
-  border-top: 1px solid var(--gray-200);
+}
+
+/* 두 컬럼 레이아웃에서는 섹션 간격은 위에서 지정 */
+.profileFormColumns .profileSection + .profileSection {
+  margin-top: 0;
 }
 
 .profileSectionLabel {
   font-size: var(--fontsize-body-small);
   font-weight: var(--font-weight-medium);
   color: var(--gray-500);
-  margin-bottom: var(--gap-sm);
+  margin-bottom: var(--gap-md);
   display: block;
 }
 
@@ -147,9 +148,109 @@
   margin-top: 0;
 }
 
-/* ---------- 편집 모드 폼 ---------- */
+/* ---------- 프로필 보기(회원정보 수정 아님) — 섹션에 padding-bottom, border-bottom ---------- */
+.profileView .profileSection {
+  padding-bottom: var(--gap-xl);
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.profileView .profileSection:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* ---------- 편집 모드 폼 (두 컬럼 레이아웃) ---------- */
 .profileForm {
   margin-top: 0;
+}
+
+.profileFormColumns {
+  position: relative;
+  height: 70vh;
+  --profile-form-gap: var(--gap-2xl);
+}
+
+.profileFormLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: calc(50% - var(--profile-form-gap) / 2);
+  padding-right: var(--profile-form-gap);
+  min-width: 0;
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+.profileFormRight {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  width: calc(50% - var(--profile-form-gap) / 2);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .profileFormColumns {
+    height: auto;
+  }
+
+  .profileFormLeft {
+    width: 100%;
+    padding-right: 0;
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  .profileFormRight {
+    position: static;
+    top: auto;
+    right: auto;
+    transform: none;
+    width: 100%;
+  }
+}
+
+.profileFormLeft .profileSection,
+.profileFormRight .profileSection {
+  margin-top: 0;
+  padding-top: var(--gap-xl);
+}
+
+.profileFormLeft .profileSection:first-child,
+.profileFormRight .profileSection:first-child {
+  padding-top: 0;
+}
+
+.profileFormLeft .profileSection:last-child,
+.profileFormRight .profileSection:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.profileFormFieldWrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--gap-md);
+}
+
+.profileFormFieldWrap > label {
+  flex: 1;
+  min-width: 0;
+}
+
+.profileFormFieldWrap:has(.error, .success) {
+  align-items: flex-start;
+}
+
+/* 두 컬럼 안에서는 입력 필드가 컬럼 너비 전체 사용 */
+.profileFormColumns .profileFormInput,
+.profileFormColumns .profileFormSelect {
+  max-width: none;
 }
 
 .profileFormLabel {
@@ -163,7 +264,7 @@
 .profileFormInput,
 .profileFormSelect {
   width: 100%;
-  max-width: 400px;
+  box-sizing: border-box;
   height: 44px;
   padding: 0 var(--gap-lg);
   border: 1px solid var(--gray-200);
@@ -171,7 +272,12 @@
   font-size: var(--fontsize-body);
   color: var(--gray-900);
   background-color: var(--gray-white);
-  margin-bottom: var(--gap-xl);
+  margin-bottom: 0;
+}
+
+.profileForm .profileSection .profileFormInput,
+.profileForm .profileSection .profileFormSelect {
+  margin-top: var(--gap-sm);
 }
 
 .profileFormInput::placeholder {
@@ -200,6 +306,7 @@
   gap: var(--gap-md);
   margin-top: var(--margin-xl);
   padding-top: var(--gap-2xl);
+  padding-bottom: var(--gap-2xl);
   border-top: 1px solid var(--gray-200);
 }
 
@@ -209,9 +316,7 @@
   font-size: var(--fontsize-body-small);
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
-  transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .profileFormButtonCancel {

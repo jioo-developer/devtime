@@ -44,11 +44,13 @@ export default function MypagePage() {
   return (
     <main className="mypagePage">
       <div className="profileCard">
-        <ProfileHeader
-          profileData={profileData}
-          mypageForm={mypageForm}
-          hasExistingProfile={Boolean(profileData?.profile)}
-        />
+        {!mypageForm.isEditing && (
+          <ProfileHeader
+            profileData={profileData}
+            mypageForm={mypageForm}
+            hasExistingProfile={Boolean(profileData?.profile)}
+          />
+        )}
 
         {mypageForm.isEditing ? (
           <ProfileForm

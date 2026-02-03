@@ -3,7 +3,10 @@
  */
 import type { ApiRequest, ApiResponse } from "@/types/api/helpers";
 import type {
+  FieldErrors,
+  UseFormClearErrors,
   UseFormRegister,
+  UseFormSetError,
   UseFormSetValue,
   UseFormWatch,
 } from "react-hook-form";
@@ -27,6 +30,9 @@ export type ProfileFormData = {
   purpose: string;
   techStacks: string[];
   profileImage: string;
+  /** 회원정보 수정 시에만 사용(선택) */
+  newPassword?: string;
+  newPasswordConfirmation?: string;
 };
 
 export type CreateProfileMutation = (
@@ -44,6 +50,9 @@ export type MypageFormReturn = {
   register: UseFormRegister<ProfileFormData>;
   watch: UseFormWatch<ProfileFormData>;
   setValue: UseFormSetValue<ProfileFormData>;
+  setError: UseFormSetError<ProfileFormData>;
+  clearErrors: UseFormClearErrors<ProfileFormData>;
+  errors: FieldErrors<ProfileFormData>;
   handleSave: () => void;
   handleCancel: () => void;
   isEditing: boolean;
