@@ -47,19 +47,19 @@ export function ProfileHeader({
               <p className="profileMotto">아직 설정한 목표가 없어요.</p>
             )}
           </div>
-          <CommonButton
-            type="button"
-            theme="none"
-            className="editProfileButton"
-            aria-label={
-              hasExistingProfile ? "회원정보 수정" : "프로필 만들기"
-            }
-            onClick={() => mypageForm.setIsEditing(true)}
-            width="auto"
-          >
-            <MdEdit size={20} />
-            {hasExistingProfile ? "회원정보 수정" : "프로필 만들기"}
-          </CommonButton>
+          {hasExistingProfile && (
+            <CommonButton
+              type="button"
+              theme="none"
+              className="editProfileButton"
+              aria-label="회원정보 수정"
+              onClick={() => mypageForm.setIsEditing(true)}
+              width="auto"
+            >
+              <MdEdit size={20} />
+              회원정보 수정
+            </CommonButton>
+          )}
         </>
       )}
     </div>

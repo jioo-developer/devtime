@@ -20,14 +20,12 @@ type ProfileFormProps = {
   profileData: GetProfileResponse | undefined;
   mypageForm: MypageFormReturn;
   hasExistingProfile: boolean;
-  isCreating: boolean;
   isUpdating: boolean;
   onProfileImageUpload: (file: File) => void;
 };
 
 export function ProfileForm({
   mypageForm,
-  isCreating,
   isUpdating,
   onProfileImageUpload,
 }: ProfileFormProps) {
@@ -196,18 +194,17 @@ export function ProfileForm({
           onClick={mypageForm.handleCancel}
           width="auto"
           className="profileFormButton profileFormButtonCancel"
-          disabled={isCreating}
         >
           취소
         </CommonButton>
         <CommonButton
           type="submit"
           theme="primary"
-          disabled={isUpdating || isCreating}
+          disabled={isUpdating}
           width="auto"
           className="profileFormButton profileFormButtonSave"
         >
-          {isUpdating || isCreating
+          {isUpdating
             ? "변경 사항 저장 중..."
             : "변경 사항 저장하기"}
         </CommonButton>
