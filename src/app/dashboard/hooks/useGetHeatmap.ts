@@ -10,11 +10,9 @@ export function useGetHeatmap(enabled: boolean = true): UseQueryResult<HeatmapRe
     queryKey: [QueryKey.HEATMAP],
     enabled,
     queryFn: async () => {
-      const res = await ApiClient.get<HeatmapResponse | { data?: { heatmap?: HeatmapResponse["heatmap"] } }>(
-        "/api/heatmap",
-        undefined,
-        getAuthHeaders(),
-      );
+      const res = await ApiClient.get("/api/heatmap", {
+        headers: getAuthHeaders(),
+      });
       return normalizeHeatmap(res);
     },
     staleTime: 60 * 1000,

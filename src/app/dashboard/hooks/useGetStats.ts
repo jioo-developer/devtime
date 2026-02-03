@@ -12,7 +12,9 @@ export function useGetStats(enabled: boolean = true): UseQueryResult<StatsDispla
     queryKey: [QueryKey.STATS],
     enabled,
     queryFn: async () => {
-      const res = await ApiClient.get<StatsResponse>("/api/stats", undefined, getAuthHeaders());
+      const res = await ApiClient.get("/api/stats", {
+        headers: getAuthHeaders(),
+      });
       return toStatsDisplay(res);
     },
     staleTime: 60 * 1000,

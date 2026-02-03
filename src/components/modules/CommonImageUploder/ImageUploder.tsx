@@ -7,6 +7,8 @@ interface ImageUploaderProps {
   label?: string;
   maxSize?: number; // MB
   acceptedFormats?: string[];
+  /** 기존 프로필 이미지 URL — 있으면 업로드 영역에 표시, 새 파일 선택 시 교체 */
+  currentImageUrl?: string;
   onImageChange?: (file: File | null) => void;
 }
 
@@ -14,6 +16,7 @@ function ImageUploader({
   label = "Label",
   maxSize = 5,
   acceptedFormats = [".png", ".jpg", ".jpeg"],
+  currentImageUrl,
   onImageChange,
 }: ImageUploaderProps) {
   const [preview, setPreview] = useState<string | null>(null);
@@ -57,9 +60,7 @@ function ImageUploader({
             className={styles.fileInput}
           />
 
-          {!preview ? (
-            <span className={styles.uploadPlus}>+</span>
-          ) : (
+          {preview ? (
             <CommonImage
               className={styles.uploadPreview}
               src={preview}
@@ -67,6 +68,16 @@ function ImageUploader({
               width={200}
               height={200}
             />
+          ) : currentImageUrl ? (
+            <CommonImage
+              className={styles.uploadPreview}
+              src={currentImageUrl}
+              alt="현재 프로필"
+              width={200}
+              height={200}
+            />
+          ) : (
+            <span className={styles.uploadPlus}>+</span>
           )}
         </div>
 

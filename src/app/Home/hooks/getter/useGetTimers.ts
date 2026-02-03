@@ -2,19 +2,17 @@ import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { ApiClient } from "@/config/apiConfig";
 import { QueryKey } from "@/constant/queryKeys";
 import { getAuthHeaders } from "@/utils/authUtils";
+import type { ApiResponse } from "@/types/api/helpers";
 
-export type TimerResponse = {
-  message: string;
-  studyLogId: string;
-  timerId: string;
-  startTime: string;
-};
+/** GET /api/timers 200 응답 (404 시 default 반환으로 동일 형태) */
+export type TimerResponse = ApiResponse<"/api/timers", "get", 200>;
 
 const defaultTimerResponse: TimerResponse = {
-  message: "",
-  studyLogId: "",
   timerId: "",
+  studyLogId: "",
+  splitTimes: [],
   startTime: "",
+  lastUpdateTime: null,
 };
 
 export const useGetTimers = (
@@ -23,18 +21,16 @@ export const useGetTimers = (
   return useQuery<TimerResponse, Error>({
     queryKey: [QueryKey.TIMERS],
     enabled,
-    queryFn: async () =>
-      ApiClient.get<TimerResponse>(
-        "/api/timers",
-        undefined,
-        getAuthHeaders(),
-        {
-          onNotOk: async (response) => {
-            if (response.status === 404) return defaultTimerResponse;
-            throw new Error("GET /api/timers failed");
-          },
-        }
-      ),
+    queryFn: async (): Promise<TimerResponse> => {
+      const res = await ApiClient.get("/api/timers", {
+        headers: getAuthHeaders(),
+        onNotOk: async (response) => {
+          if (response.status === 404) return defaultTimerResponse;
+          throw new Error("GET /api/timers failed");
+        },
+      });
+      return "error" in res ? defaultTimerResponse : res;
+    },
     retry: 3,
     staleTime: 0,
     refetchOnMount: true,
