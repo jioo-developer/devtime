@@ -1,6 +1,7 @@
 import localFont from "next/font/local";
 import TanstackProvider from "@/provider/TanstackProvider";
 import ConditionalHeader from "@/components/modules/Header/ConditionalHeader";
+import ProfileGuard from "@/components/ProfileGuard";
 import UIModalStack from "@/components/atoms/CommonModal/modalContainer";
 import "../asset/reset.css";
 import "../asset/common.css";
@@ -23,6 +24,7 @@ export default function RootLayout({
         <TanstackProvider>
           <div className="wrap">
             <ConditionalHeader />
+            <ProfileGuard />
             {children}
           </div>
           <UIModalStack />

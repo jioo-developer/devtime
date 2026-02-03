@@ -1,0 +1,132 @@
+.profileSettingLayout {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  min-height: 100vh;
+}
+
+.profileSettingLayout .section {
+  width: 50%;
+}
+
+.profileSettingLayout .logoSection {
+  display: flex;
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.profileSettingLayout .background {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.profileSettingLayout .content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--gap-xl);
+  position: relative;
+  z-index: 2;
+}
+
+.profileSettingLayout .contentText {
+  font-size: var(--fontsize-title);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--lineheight-title);
+  color: var(--gray-white);
+}
+
+.profileSettingLayout .formSection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  flex-direction: column;
+  gap: var(--margin-lg);
+  padding: var(--gap-2xl);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.profileSettingLayout .formTitle {
+  font-size: var(--fontsize-heading);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--lineheight-heading);
+  color: var(--primary-core);
+  text-align: center;
+  align-self: center;
+  width: 100%;
+}
+
+.profileSettingForm {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-3xl);
+}
+
+.profileSettingForm .profileSettingLabel {
+  font-size: var(--fontsize-body-small);
+  font-weight: var(--font-weight-medium);
+  color: var(--gray-500);
+  margin-bottom: var(--gap-sm);
+  display: block;
+}
+
+.profileSettingForm .profileSettingSelect,
+.profileSettingForm .profileSettingInput {
+  width: 100%;
+  box-sizing: border-box;
+  height: 44px;
+  padding: 0 var(--gap-lg);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  font-size: var(--fontsize-body);
+  color: var(--gray-900);
+  background-color: var(--gray-white);
+}
+
+.profileSettingForm .profileSettingSelect:focus,
+.profileSettingForm .profileSettingInput:focus {
+  outline: none;
+  border-color: var(--primary-core);
+}
+
+.profileSettingPurposeDetailWrap {
+  margin-top: var(--gap-md);
+  margin-bottom: var(--gap-md);
+}
+
+.profileSettingActions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+  margin-top: var(--gap-lg);
+  align-items: center;
+  width: 100%;
+}
+
+.profileSettingSkip {
+  font-size: var(--fontsize-body);
+  color: var(--gray-600);
+  text-align: center;
+  width: 100%;
+}
+
+.profileSettingSkipLink {
+  color: var(--primary-core);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.profileSettingSkipLink:hover {
+  text-decoration: underline;
+}
