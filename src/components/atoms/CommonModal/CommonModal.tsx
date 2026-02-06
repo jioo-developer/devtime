@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { createPortal } from "react-dom";
+import CommonButton from "../CommonButton/CommonButton";
 import styles from "./UIModalBase.module.css";
 
 //   모달 껍데기(원자) 컴포넌트가 받는 props 정의
@@ -75,8 +76,9 @@ export default function UIModalBase({
 
             {/*   X 버튼: showCloseButton이 true이고 top에서만 동작 */}
             {showCloseButton && (
-              <button
+              <CommonButton
                 type="button"
+                theme="none"
                 className={styles.closeButton}
                 onClick={() => {
                   if (!isTop) return; //   top이 아니면 무시
@@ -86,7 +88,7 @@ export default function UIModalBase({
                 disabled={!isTop} //   top이 아니면 버튼도 비활성
               >
                 ✕
-              </button>
+              </CommonButton>
             )}
           </div>
         )}

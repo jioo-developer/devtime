@@ -16,7 +16,6 @@ type AccountMenuProps = {
 };
 
 function AccountMenu({ isLoggedIn, hasProfile }: AccountMenuProps) {
-  const { mutate: logout } = useLogout();
   const { isOpen, toggle, rootRef } = useDropdown<HTMLLIElement>();
 
   const { data: profile } = useGetProfile(isLoggedIn);
@@ -25,6 +24,7 @@ function AccountMenu({ isLoggedIn, hasProfile }: AccountMenuProps) {
     profile?.profile?.profileImage,
   );
 
+  const { mutate: logout } = useLogout();
   const handleLogout = () => logout();
 
   return (

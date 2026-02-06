@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AutocompleteOption } from "../component/AutoComplateItems";
+import { AutocompleteOption } from "../component/Items";
 
 type UseAutocompleteInputParams = {
   options: AutocompleteOption[];

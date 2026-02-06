@@ -46,7 +46,7 @@ function CommonPagination({
   return (
     <div
       className={styles.pagination}
-      {...(testId ? { "data-testid": testId } : {})}
+      {...(testId ? { "data-testid-pagination": testId } : {})}
     >
       {showFirstLast && (
         <NavButton

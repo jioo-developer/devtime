@@ -9,7 +9,7 @@ import {
   AutocompleteMenu,
   AutocompleteOption,
   AutocompleteSelectedChips,
-} from "./component/AutoComplateItems";
+} from "./component/Items";
 
 export default function CommonAutocomplete({
   label,
@@ -39,7 +39,7 @@ export default function CommonAutocomplete({
   const { inputValue, setInputValue, filteredOptions, changeInput } =
     useAutocompleteInput({ options, value, onChange });
 
-  const { selectedItems, handleAddNew, handleSelect, handleRemoveItem } =
+  const { selectedItems, addItem, selectOption, handleRemoveItem } =
     useMultiSelect({
       selectedItems: externalSelectedItems,
       onSelectedItemsChange,
@@ -70,20 +70,24 @@ export default function CommonAutocomplete({
         isVisible={showMenu}
         inputValue={inputValue}
         options={filteredOptions}
-        onSelect={(o) =>
-          handleSelect(
-            o,
-            multiSelect,
-            showAddButton,
-            setInputValue,
-            onChange,
-            close,
-          )
-        }
+        onSelect={(option) => {
+          const result = selectOption(option, { multiSelect, showAddButton });
+          if (result.action === "single") {
+            setInputValue(result.label);
+            onChange?.(result.label);
+            close();
+          } else if (result.action === "multiAdded") {
+            setInputValue("");
+          } else if (result.action === "fillInput") {
+            setInputValue(result.label);
+          }
+        }}
         showAddButton={showAddButton}
-        onAddNew={() =>
-          handleAddNew(inputValue, multiSelect, setInputValue, close)
-        }
+        onAddNew={() => {
+          addItem(inputValue, multiSelect);
+          setInputValue("");
+          close();
+        }}
       />
 
       {multiSelect && selectedItems.length > 0 && (

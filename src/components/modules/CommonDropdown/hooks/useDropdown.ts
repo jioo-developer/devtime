@@ -7,7 +7,7 @@ export function useDropdown<T extends HTMLElement = HTMLDivElement>(
   const rootRef = useRef<T>(null);
 
   const close = () => setIsOpen(false);
-  const toggle = () => setIsOpen((v) => !v);
+  const toggle = () => setIsOpen((prev) => !prev);
 
   const select = (value: string) => {
     onChange?.(value);
@@ -17,7 +17,7 @@ export function useDropdown<T extends HTMLElement = HTMLDivElement>(
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (!rootRef.current) return;
-      if (!rootRef.current.contains(e.target as Node)) {
+      if (!rootRef.current.contains(e.target as HTMLElement)) {
         close();
       }
     };

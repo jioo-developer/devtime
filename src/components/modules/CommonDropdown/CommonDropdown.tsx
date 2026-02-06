@@ -6,7 +6,7 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-} from "./component/DropdownItems";
+} from "./component/Items";
 
 type DropdownOption = { value: string; label: string };
 
@@ -29,7 +29,7 @@ export default function CommonDropdown({
 }: CommonDropdownProps) {
   const { isOpen, toggle, select, rootRef } = useDropdown(onChange);
 
-  const selected = options.find((o) => o.value === value);
+  const selected = options.find((option) => option.value === value);
 
   return (
     <div

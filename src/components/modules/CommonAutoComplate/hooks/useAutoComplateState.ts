@@ -7,7 +7,7 @@ export function useAutocompleteState() {
 
   const open = () => setIsOpen(true);
   const close = () => setIsOpen(false);
-  const toggle = () => setIsOpen((v) => !v);
+  const toggle = () => setIsOpen((value) => !value);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
