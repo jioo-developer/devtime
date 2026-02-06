@@ -65,15 +65,16 @@ export function getCreateProfilePayload(
       ? formData.techStacks
       : (profileData?.profile?.techStacks ?? []);
   const profileImage =
-    (formData.profileImage || profileData?.profile?.profileImage) ?? "";
+    (formData.profileImage || profileData?.profile?.profileImage)?.trim() ?? "";
 
-  return {
+  const payload: CreateProfileRequest = {
     career,
     purpose,
-    goal,
     techStacks,
-    profileImage: profileImage || "",
+    ...(goal ? { goal } : {}),
+    ...(profileImage ? { profileImage } : {}),
   };
+  return payload;
 }
 
 export function getUpdateProfilePayload(

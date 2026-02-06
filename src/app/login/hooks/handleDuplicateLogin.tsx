@@ -23,7 +23,7 @@ export const handleDuplicateLogin = (
           closeModal();
           setTokens(result.accessToken, result.refreshToken);
           if (result.isFirstLogin) {
-            router.replace("/");
+            router.replace("/profile");
           } else {
             const redirectParam = safeInternalPath(
               searchParams.get("redirect"),

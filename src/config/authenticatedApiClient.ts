@@ -49,11 +49,26 @@ async function request<T>(
     ...init,
     headers,
   });
-
   if (res.status !== 401) {
-    if (!res.ok) throw new Error(`${init.method ?? "GET"} ${endpoint} failed`);
+    if (!res.ok) {
+      const contentType = res.headers.get("content-type") ?? "";
+      const isJsonResponse = contentType.includes("application/json");
+
+      let errorMessage: string | null = null;
+
+      if (isJsonResponse) {
+        const body = (await res.json()) as { message?: string } | undefined;
+        errorMessage = body?.message ?? null;
+      }
+
+      const fallbackMessage = `${init.method ?? "GET"} ${endpoint} failed`;
+
+      throw new Error(errorMessage || fallbackMessage);
+    }
+
     return res.json();
   }
+
 
   // 401 처리: refresh 시도 후 1회 재시도
   if (init._retried) {
