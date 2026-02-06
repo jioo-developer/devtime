@@ -11,7 +11,10 @@ import { useForm } from "react-hook-form";
 import { useCheckEmail } from "./hooks/useCheckEmail";
 import { useCheckNickname } from "./hooks/useCheckNickname";
 import { useSignup } from "./hooks/useSignup";
-import { handleSignupSuccess, handleSignupError } from "./hooks/handleSignupModal";
+import {
+  handleSignupSuccess,
+  handleSignupError,
+} from "./hooks/handleSignupModal";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { AuthFormData } from "./types";
@@ -70,7 +73,8 @@ function AuthPage({ onSubmit }: AuthPageProps = {}) {
     agreed;
 
   const handleFormSubmit = async (data: AuthFormData) => {
-    if (onSubmit) { // 테스트 코드용 if
+    if (onSubmit) {
+      // 테스트 코드용 if
       await onSubmit(data);
     } else {
       mutate(data, {

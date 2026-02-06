@@ -1,8 +1,6 @@
 "use client";
-
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import CommonImage from "@/components/atoms/CommonImage/CommonImage";
 import CommonButton from "@/components/atoms/CommonButton/CommonButton";
 import CommonAutocomplete from "@/components/modules/CommonAutoComplate/CommonAutoComplate";
@@ -89,10 +87,7 @@ export default function ProfileSettingClient() {
         >
           <div>
             <span className="profileSettingLabel">개발 경력</span>
-            <select
-              className="profileSettingSelect"
-              {...register("career")}
-            >
+            <select className="profileSettingSelect" {...register("career")}>
               <option value="">선택하세요</option>
               {CAREER_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -177,19 +172,6 @@ export default function ProfileSettingClient() {
             >
               {isCreating ? "저장 중..." : "저장하기"}
             </CommonButton>
-            <p className="profileSettingSkip">
-              다음에 하시겠어요?{" "}
-              <Link
-                href="/"
-                className="profileSettingSkipLink"
-                onClick={(e) => {
-                  e.preventDefault();
-                  router.replace("/");
-                }}
-              >
-                건너뛰기
-              </Link>
-            </p>
           </div>
         </form>
       </section>
