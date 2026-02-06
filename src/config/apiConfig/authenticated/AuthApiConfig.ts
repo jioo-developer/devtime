@@ -10,8 +10,7 @@ import type {
 
 /**
  * Authenticated API client
- * - ApiClient(requestJson 기반) 패턴을 유지하되,
- * - 인증/401-refresh-재시도 흐름은 requestWithAuth로 위임
+ * - request()(axios) 기반, 인증/401-refresh-재시도는 requestWithAuth에서 처리
  */
 export const AuthenticatedApiClient = {
   config: ApiClient.config,
@@ -33,7 +32,7 @@ export const AuthenticatedApiClient = {
       method: "GET",
       endpoint: String(endpoint),
       pathParams: args?.pathParams,
-      query: args?.query,
+      params: args?.query,
       headers: args?.headers,
     });
   },
