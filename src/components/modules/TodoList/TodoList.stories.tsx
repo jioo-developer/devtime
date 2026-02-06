@@ -75,6 +75,6 @@ export const Disabled: Story = {
 export const Typing: Story = {
   args: {
     text: "Writing documentation...",
-    initialStatus: "typing",
+    initialStatus: "active",
   },
 };
