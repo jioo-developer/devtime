@@ -45,8 +45,7 @@ export function TodoListSection({
           onTextChange={onTextChange?.(index)}
           onStatusChange={
             onStatusChange?.(index)
-              ? (next: TodoStatus) =>
-                onStatusChange(index)(next === "disabled")
+              ? (next: TodoStatus) => onStatusChange(index)(next === "disabled")
               : undefined
           }
         />

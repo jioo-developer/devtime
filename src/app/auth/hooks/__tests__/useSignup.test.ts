@@ -102,9 +102,9 @@ describe("useSignup", () => {
     const queryClient = createTestQueryClient();
     const wrapper = createWrapper(queryClient);
 
-    vi.mocked(ApiClient.post).mockResolvedValueOnce(
-      { success: true } as Awaited<ReturnType<typeof ApiClient.post>>,
-    );
+    vi.mocked(ApiClient.post).mockResolvedValueOnce({
+      success: true,
+    } as Awaited<ReturnType<typeof ApiClient.post>>);
 
     const { result } = renderHook(() => useSignup(), { wrapper });
 

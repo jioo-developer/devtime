@@ -10,13 +10,13 @@ import { useShallow } from "zustand/react/shallow";
  * - 타이머 running/paused 같은 도메인 상태는 다루지 않는다.
  */
 export function useRestoreTodosFromStudyLog(
-  studyLogData: StudyLogData | undefined
+  studyLogData: StudyLogData | undefined,
 ) {
   const { setTodoTitle, setSavedTodos } = useTimerStore(
     useShallow((state) => ({
       setTodoTitle: state.setTodoTitle,
       setSavedTodos: state.setSavedTodos,
-    }))
+    })),
   );
 
   useEffect(() => {

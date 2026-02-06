@@ -54,9 +54,9 @@ export function getCreateProfilePayload(
       ? { type: "기타" as const, detail: formData.purposeDetail?.trim() ?? "" }
       : toAllowedEnumValue(
           formData.purpose ||
-          (typeof profileData?.profile?.purpose === "string"
-            ? profileData.profile.purpose
-            : undefined),
+            (typeof profileData?.profile?.purpose === "string"
+              ? profileData.profile.purpose
+              : undefined),
           PURPOSE_API_VALUES,
         );
   const goal = (formData.goal?.trim() || profileData?.profile?.goal) ?? "";
@@ -82,15 +82,13 @@ export function getUpdateProfilePayload(
   profileData: GetProfileResponse | undefined,
 ): UpdateProfileRequest {
   const base = getCreateProfilePayload(formData, profileData);
-  const nickname =
-    (formData.nickname?.trim() || profileData?.nickname) ?? "";
+  const nickname = (formData.nickname?.trim() || profileData?.nickname) ?? "";
   const profileImage =
     (formData.profileImage || profileData?.profile?.profileImage) ?? "";
   const newPassword = formData.newPassword?.trim();
   const newPasswordConfirmation = formData.newPasswordConfirmation?.trim();
   const includePassword =
-    !!newPassword &&
-    newPassword === newPasswordConfirmation;
+    !!newPassword && newPassword === newPasswordConfirmation;
 
   return {
     ...base,

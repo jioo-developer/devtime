@@ -1,7 +1,15 @@
 /** UTC 자정 시각 계산 */
 export function getUTCMidnight(date: Date): Date {
   return new Date(
-    Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 0, 0, 0, 0)
+    Date.UTC(
+      date.getUTCFullYear(),
+      date.getUTCMonth(),
+      date.getUTCDate(),
+      0,
+      0,
+      0,
+      0,
+    ),
   );
 }
 

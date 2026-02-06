@@ -39,7 +39,11 @@ export function HeatmapSection() {
                   ? `${cell.date} ${formatHrToHms(cell.studyTimeHours)}`
                   : `${cell.date} 공부 기록 없음`
               }
-              title={cell.studyTimeHours > 0 ? formatHrToHms(cell.studyTimeHours) : undefined}
+              title={
+                cell.studyTimeHours > 0
+                  ? formatHrToHms(cell.studyTimeHours)
+                  : undefined
+              }
             />
           ))}
         </div>

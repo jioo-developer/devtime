@@ -21,7 +21,9 @@ function AccountMenu({ isLoggedIn, hasProfile }: AccountMenuProps) {
 
   const { data: profile } = useGetProfile(isLoggedIn);
   const nickname = profile?.nickname;
-  const profileImageDisplayUrl = getProfileImageUrl(profile?.profile?.profileImage);
+  const profileImageDisplayUrl = getProfileImageUrl(
+    profile?.profile?.profileImage,
+  );
 
   const handleLogout = () => logout();
 

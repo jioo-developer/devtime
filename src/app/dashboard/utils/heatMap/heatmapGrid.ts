@@ -13,7 +13,9 @@ export function getGridDates(targetYear: number): string[] {
     const weekColumnIndex = cellIndex % TOTAL_WEEKS;
     const dayRowIndex = Math.floor(cellIndex / TOTAL_WEEKS);
     const cellDate = new Date(gridStartSunday);
-    cellDate.setDate(gridStartSunday.getDate() + weekColumnIndex * DAYS_PER_WEEK + dayRowIndex);
+    cellDate.setDate(
+      gridStartSunday.getDate() + weekColumnIndex * DAYS_PER_WEEK + dayRowIndex,
+    );
     const year = cellDate.getFullYear();
     const month = String(cellDate.getMonth() + 1).padStart(2, "0");
     const dayOfMonth = String(cellDate.getDate()).padStart(2, "0");

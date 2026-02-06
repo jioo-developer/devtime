@@ -20,14 +20,16 @@ export const CAREER_API_VALUES = [
   "11년 이상",
 ] as const;
 
-
 export const CAREER_OPTIONS = createOptions(CAREER_API_VALUES);
 
 // ─── Purpose ────────────────────────────────────────────────────────────
 export type PurposeApiValue = (typeof PURPOSE_API_VALUES)[number];
 
 /** API에서 오는 purpose: enum 문자열 또는 기타(detail) */
-export type PurposeFromApi = PurposeApiValue | { type: "기타"; detail: string } | undefined;
+export type PurposeFromApi =
+  | PurposeApiValue
+  | { type: "기타"; detail: string }
+  | undefined;
 
 export const PURPOSE_API_VALUES = [
   "취업 준비",
@@ -105,5 +107,8 @@ export function getEnumLabel<T extends string>(
   options: EnumOptions<T>,
 ): string {
   if (!valueFromApi) return "";
-  return options.find((option) => option.value === valueFromApi)?.label ?? valueFromApi;
+  return (
+    options.find((option) => option.value === valueFromApi)?.label ??
+    valueFromApi
+  );
 }

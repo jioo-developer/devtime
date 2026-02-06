@@ -22,9 +22,7 @@ function getCookie(name: string): string | null {
   const cookiePairs = document.cookie ? document.cookie.split("; ") : [];
   const targetPrefix = `${name}=`;
 
-  const matchedPair = cookiePairs.find((pair) =>
-    pair.startsWith(targetPrefix),
-  );
+  const matchedPair = cookiePairs.find((pair) => pair.startsWith(targetPrefix));
 
   if (!matchedPair) return null;
 
@@ -45,7 +43,8 @@ function setCookie(name: string, value: string, options: CookieOptions) {
     `SameSite=${sameSite}`,
   ];
 
-  if (typeof options.maxAgeSec === "number") parts.push(`max-age=${options.maxAgeSec}`);
+  if (typeof options.maxAgeSec === "number")
+    parts.push(`max-age=${options.maxAgeSec}`);
   if (options.secure) parts.push("Secure");
 
   document.cookie = parts.join("; ");
@@ -77,7 +76,6 @@ export function setAccessTokenExpiry() {
 export function setRefreshTokenExpiry() {
   setExpiryCookie(REFRESH_TOKEN_EXPIRY_COOKIE, REFRESH_MAX_AGE_SEC);
 }
-
 
 function isExpiryCookieValid(cookieName: string): boolean {
   const expiryValue = getCookie(cookieName);

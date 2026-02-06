@@ -2,7 +2,11 @@ import { refreshAccessToken } from "../../utils/tokenRefresh";
 import { ApiClient } from "../apiConfig";
 import type { GetArgs, PostArgs, PutArgs, DeleteArgs } from "../type";
 import { requestWithAuth } from "./helpers";
-import type { ApiPath, ApiRequest, ApiResponseSuccess } from "@/types/api/helpers";
+import type {
+  ApiPath,
+  ApiRequest,
+  ApiResponseSuccess,
+} from "@/types/api/helpers";
 
 /**
  * Authenticated API client

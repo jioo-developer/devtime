@@ -2,7 +2,10 @@ import { getRefreshToken, setTokens } from "./tokenStorage";
 import { ApiClient } from "@/config/apiConfig/apiConfig";
 import type { ApiResponseSuccess } from "@/types/api/helpers";
 
-interface RefreshResponse extends ApiResponseSuccess<"/api/auth/refresh", "post"> {
+interface RefreshResponse extends ApiResponseSuccess<
+  "/api/auth/refresh",
+  "post"
+> {
   refreshToken?: string;
 }
 
@@ -31,9 +34,9 @@ export function refreshAccessToken(): Promise<string | null> {
   refreshPromise = (async () => {
     try {
       // 4-1) refresh API 호출 (ApiClient 사용)
-      const data: RefreshResponse = (await ApiClient.post("/api/auth/refresh", {
+      const data: RefreshResponse = await ApiClient.post("/api/auth/refresh", {
         refreshToken,
-      }))
+      });
 
       // 4-2) 새 accessToken이 없으면 실패 처리
       const newAccessToken = data?.accessToken ?? null;

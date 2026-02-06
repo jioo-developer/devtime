@@ -22,7 +22,11 @@ export function RecordsSection() {
         isError={isError}
         onGoalClick={openStudyLogDetailModal}
       />
-      <RecordsPagination page={page} totalPages={totalPages} onPageChange={setPage} />
+      <RecordsPagination
+        page={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
     </section>
   );
 }

@@ -1,7 +1,7 @@
 /** 새 비밀번호는 선택 입력 — 값이 있을 때만 검증 */
 
 function toStr(value: string | string[] | undefined): string {
-  return typeof value === "string" ? value : value?.[0] ?? "";
+  return typeof value === "string" ? value : (value?.[0] ?? "");
 }
 
 export const newPasswordValidation = {

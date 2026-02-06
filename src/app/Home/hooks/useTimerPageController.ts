@@ -14,7 +14,6 @@ import { useTimerModal } from "./timer/useTimerModal";
  * 타이머 페이지의 데이터·복구·표시·핸들러를 한데 모아주는 컨트롤러 훅.
  */
 export function useTimerPageController(isLoggedIn: boolean) {
-
   // ——— 타이머 스토어 (로컬 상태) ———
   // running/paused, 시작 시각, 일시정지 누적 등 — useShallow로 필요한 값만 구독
   const {
@@ -32,7 +31,7 @@ export function useTimerPageController(isLoggedIn: boolean) {
       startTime: state.startTime,
       clientStartedAt: state.clientStartedAt,
       totalPausedDuration: state.totalPausedDuration,
-    }))
+    })),
   );
 
   // ——— 서버 데이터 ———

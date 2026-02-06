@@ -86,7 +86,12 @@ export function TimerControls({
         />
       </CommonButton>
 
-      <div className={clsx("isTimerRunning", !isTimerRunning && "isTimerRunningHidden")}>
+      <div
+        className={clsx(
+          "isTimerRunning",
+          !isTimerRunning && "isTimerRunningHidden",
+        )}
+      >
         <CommonButton
           theme="none"
           className="finishButton"
@@ -109,12 +114,7 @@ export function TimerControls({
           title="초기화"
           onClick={onReset}
         >
-          <CommonImage
-            src={ResetIcon}
-            alt="초기화"
-            width={64}
-            height={64}
-          />
+          <CommonImage src={ResetIcon} alt="초기화" width={64} height={64} />
         </CommonButton>
       </div>
     </div>

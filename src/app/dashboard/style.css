@@ -44,7 +44,7 @@
 .kpiCardValue {
   font-size: var(--fontsize-title);
   font-weight: var(--font-weight-bold);
-  color:#023E99;
+  color: #023e99;
   line-height: 1.2;
 }
 
@@ -177,7 +177,7 @@
 .heatmapTitle {
   font-size: var(--fontsize-subtitle);
   font-weight: var(--font-weight-semibold);
-  color: #969DA8;
+  color: #969da8;
   margin-bottom: var(--gap-xl);
 }
 
@@ -337,7 +337,7 @@
 .recordsTitle {
   font-size: var(--fontsize-subtitle);
   font-weight: var(--font-weight-semibold);
-  color:#969DA8;
+  color: #969da8;
   margin-bottom: var(--gap-xl);
 }
 
@@ -355,7 +355,7 @@
   text-align: left;
   padding: var(--gap-lg) var(--gap-md);
   font-size: var(--fontsize-body-small);
-  color: #023E99;
+  color: #023e99;
   font-weight: var(--font-weight-semibold);
   border-bottom: 1px solid var(--gray-200);
 }

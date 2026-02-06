@@ -38,13 +38,10 @@ export function useMypageForm(
   };
 
   const onSubmit = (formData: ProfileFormData) => {
-    updateProfileMutation(
-      getUpdateProfilePayload(formData, profileData),
-      {
-        onSuccess: () => setIsEditing(false),
-        onError: (error: Error) => alert(error.message),
-      },
-    );
+    updateProfileMutation(getUpdateProfilePayload(formData, profileData), {
+      onSuccess: () => setIsEditing(false),
+      onError: (error: Error) => alert(error.message),
+    });
   };
 
   return {

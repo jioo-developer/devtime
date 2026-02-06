@@ -1,5 +1,8 @@
 import { buildSplitTimesForStop, applySafetyBuffer } from "./splitTimesForStop";
-import type { FinishTimerRequest, FinishTimerTaskItem } from "@/app/Home/hooks/mutations/finishTimer/useFinishTimer";
+import type {
+  FinishTimerRequest,
+  FinishTimerTaskItem,
+} from "@/app/Home/hooks/mutations/finishTimer/useFinishTimer";
 
 export type BuildFinishPayloadInput = {
   timerId: string;
@@ -33,7 +36,7 @@ export function buildFinishTimerPayload(input: BuildFinishPayloadInput): {
   const splitTimes = buildSplitTimesForStop(startTime, endTime, pausedDuration);
   const rawRangeMs = Math.max(
     0,
-    endTime.getTime() - new Date(startTime).getTime() - pausedDuration
+    endTime.getTime() - new Date(startTime).getTime() - pausedDuration,
   );
   const allowedSec = Math.floor(rawRangeMs / 1000);
   const safeSec = Math.max(0, allowedSec - 10);

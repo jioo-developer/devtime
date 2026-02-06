@@ -31,7 +31,8 @@ export const useResetTimer = () => {
 const RESET_MODAL_OPTIONS = {
   width: 360,
   title: "기록을 초기화 하시겠습니까?",
-  content: "진행되던 타이머 기록은 삭제되고, 복구가 불가능합니다. 계속 초기화할까요?",
+  content:
+    "진행되던 타이머 기록은 삭제되고, 복구가 불가능합니다. 계속 초기화할까요?",
   showCloseButton: false as const,
   BackdropMiss: true as const,
 };
@@ -58,9 +59,8 @@ export function useResetTimerAction() {
       setStartTime: state.setStartTime,
       setClientStartedAt: state.setClientStartedAt,
       setTotalPausedDuration: state.setTotalPausedDuration,
-    }))
+    })),
   );
-
 
   const clearAndClose = () => {
     setIsTimerRunning(false);
@@ -93,7 +93,7 @@ export function useResetTimerAction() {
                       console.error("타이머 초기화 실패:", error);
                       closeModal();
                     },
-                  }
+                  },
                 );
               } else {
                 clearAndClose();

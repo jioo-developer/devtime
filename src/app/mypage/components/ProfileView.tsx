@@ -49,11 +49,7 @@ export function ProfileView({ profileData }: ProfileViewProps) {
         {hasTechStacks ? (
           <div className="stackTags">
             {techStackList.map((techStackLabel) => (
-              <CommonChip
-                key={techStackLabel}
-                variant="outlined"
-                size="md"
-              >
+              <CommonChip key={techStackLabel} variant="outlined" size="md">
                 {techStackLabel}
               </CommonChip>
             ))}

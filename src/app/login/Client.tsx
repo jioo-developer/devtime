@@ -56,9 +56,7 @@ function Client() {
         if (result.isFirstLogin) {
           router.replace("/profile");
         } else {
-          const redirectParam = safeInternalPath(
-            searchParams.get("redirect"),
-          );
+          const redirectParam = safeInternalPath(searchParams.get("redirect"));
           router.replace(redirectParam ?? "/");
         }
       }

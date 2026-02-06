@@ -8,11 +8,10 @@ import {
 import clsx from "clsx";
 import styles from "./style.module.css";
 
-type AutoResizeTextAreaProps =
-  TextareaHTMLAttributes<HTMLTextAreaElement> & {
-    label?: string;
-    error?: string;
-  };
+type AutoResizeTextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
+  label?: string;
+  error?: string;
+};
 
 export const CommonTextArea = forwardRef<
   HTMLTextAreaElement,
@@ -29,7 +28,8 @@ export const CommonTextArea = forwardRef<
   } = props;
 
   const internalRef = useRef<HTMLTextAreaElement>(null);
-  const textareaRef = (forwardedRef ?? internalRef) as MutableRefObject<HTMLTextAreaElement>;
+  const textareaRef = (forwardedRef ??
+    internalRef) as MutableRefObject<HTMLTextAreaElement>;
 
   const handleInput = (event: FormEvent<HTMLTextAreaElement>) => {
     const textarea = textareaRef.current;

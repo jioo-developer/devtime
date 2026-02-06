@@ -60,7 +60,6 @@ function AuthPage({ onSubmit }: AuthPageProps = {}) {
     setSuccessMessage: setNicknameSuccess,
   });
 
-
   const { mutate } = useSignup();
 
   const handleFormSubmit = async (data: AuthFormData) => {

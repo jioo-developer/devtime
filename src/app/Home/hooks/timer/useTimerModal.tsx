@@ -19,7 +19,7 @@ export function useTimerModal() {
   const openTimerModal = (
     mode: FormMode,
     studyLogId?: string,
-    endParams?: OpenEndParams
+    endParams?: OpenEndParams,
   ) => {
     let endOptions: ModalFormEndOptions | undefined;
     if (mode === "end" && endParams) {
@@ -39,7 +39,11 @@ export function useTimerModal() {
       footer: null,
       BackdropMiss: false,
       content: (
-        <ModalForm mode={mode} studyLogId={studyLogId} endOptions={endOptions} />
+        <ModalForm
+          mode={mode}
+          studyLogId={studyLogId}
+          endOptions={endOptions}
+        />
       ),
     });
   };

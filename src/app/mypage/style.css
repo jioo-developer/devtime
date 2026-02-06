@@ -85,7 +85,9 @@
   color: var(--gray-600);
   cursor: pointer;
   border-radius: var(--radius-sm);
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
   flex-shrink: 0;
 }
 
@@ -321,7 +323,9 @@
   font-size: var(--fontsize-body-small);
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .profileFormButtonCancel {

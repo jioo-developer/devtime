@@ -38,9 +38,7 @@ export function ProfileHeader({
       {!mypageForm.isEditing && (
         <>
           <div className="profileInfo">
-            <h1 className="profileName">
-              {profileData?.nickname || "닉네임"}
-            </h1>
+            <h1 className="profileName">{profileData?.nickname || "닉네임"}</h1>
             {profileData?.profile?.goal ? (
               <p className="profileMotto">{profileData.profile.goal}</p>
             ) : (

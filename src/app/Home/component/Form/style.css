@@ -11,7 +11,7 @@
 }
 
 .sectionTitle {
-  font-size: var( --fontsize-title);
+  font-size: var(--fontsize-title);
   font-weight: var(--font-weight-semibold);
   color: var(--gray-700);
   margin: 0 0 var(--gap-md) 0;
@@ -24,12 +24,13 @@
 
 .todoInput {
   display: flex;
-  background: #F0F2F5;
+  background: #f0f2f5;
   padding: var(--gap-md);
   border-radius: var(--radius-md);
   margin-top: var(--gap-xl);
 
-  input,button {
+  input,
+  button {
     border-radius: 0;
     border: 0;
   }
@@ -53,7 +54,6 @@
   gap: var(--gap-md);
 }
 
-
 .footer {
   margin-top: auto;
   display: flex;
@@ -62,18 +62,18 @@
 }
 .goalForm #title,
 .goalForm #title::placeholder {
-  font-size: calc(var(--fontsize-body) *2);
+  font-size: calc(var(--fontsize-body) * 2);
 }
 
-.goalForm #title::placeholder{
+.goalForm #title::placeholder {
   font-weight: var(--font-weight-bold);
-  color:#ccd0d6;
+  color: #ccd0d6;
 }
 
 .goalForm #todoInput::placeholder {
-  font-size: var( --fontsize-body);
+  font-size: var(--fontsize-body);
   font-weight: var(--font-weight-medium);
-  color:#ccd0d6;
+  color: #ccd0d6;
 }
 
 .goalForm .todoInput button:hover:not(:disabled) {
@@ -86,14 +86,14 @@
 }
 
 .headerTitle {
-  font-size: var( --fontsize-title);
+  font-size: var(--fontsize-title);
   font-weight: bold;
   margin-bottom: 8px;
   color: #333;
 }
 
 .headerDescription {
-  font-size: var( --fontsize-body);
+  font-size: var(--fontsize-body);
   color: #666;
 }
 
@@ -118,7 +118,7 @@
 }
 
 .addButtonDisabled {
-  color: #969DA8;
+  color: #969da8;
 }
 
 /* TodoListSection */

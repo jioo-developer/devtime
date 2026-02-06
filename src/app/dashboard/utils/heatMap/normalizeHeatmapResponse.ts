@@ -8,7 +8,8 @@ export function normalizeHeatmap(
   if (Array.isArray((apiResponse as HeatmapResponse).heatmap)) {
     rawList = (apiResponse as HeatmapResponse).heatmap;
   } else {
-    const heatmapFromData = (apiResponse as { data?: { heatmap?: unknown[] } }).data?.heatmap;
+    const heatmapFromData = (apiResponse as { data?: { heatmap?: unknown[] } })
+      .data?.heatmap;
     rawList = Array.isArray(heatmapFromData) ? heatmapFromData : [];
   }
   const rawItems = rawList as Array<{
@@ -21,8 +22,13 @@ export function normalizeHeatmap(
   return {
     heatmap: rawItems.map((item) => ({
       date: String(item?.date ?? ""),
-      studyTimeHours: Number(item?.studyTimeHours ?? item?.study_time_hours ?? 0),
-      colorLevel: Math.min(5, Math.max(0, Number(item?.colorLevel ?? item?.color_level ?? 0))),
+      studyTimeHours: Number(
+        item?.studyTimeHours ?? item?.study_time_hours ?? 0,
+      ),
+      colorLevel: Math.min(
+        5,
+        Math.max(0, Number(item?.colorLevel ?? item?.color_level ?? 0)),
+      ),
     })) as HeatmapItemDto[],
   };
 }

@@ -52,7 +52,11 @@ export function RankingCard({ entry }: RankingCardProps) {
           {tags.length > 0 && (
             <div className="rankingCard__tags">
               {tags.map((tag, index) => (
-                <CommonChip key={`${tag}-${index}`} size="sm" variant="outlined">
+                <CommonChip
+                  key={`${tag}-${index}`}
+                  size="sm"
+                  variant="outlined"
+                >
                   {tag}
                 </CommonChip>
               ))}

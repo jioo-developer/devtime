@@ -13,9 +13,30 @@ export type DashboardKpi = {
 };
 
 export const WEEKDAY_LABELS = ["S", "M", "T", "W", "T", "F", "S"] as const;
-export const WEEKDAY_KEYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"] as const;
+export const WEEKDAY_KEYS = [
+  "sun",
+  "mon",
+  "tue",
+  "wed",
+  "thu",
+  "fri",
+  "sat",
+] as const;
 
-export const MONTH_LABELS = ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"];
+export const MONTH_LABELS = [
+  "1월",
+  "2월",
+  "3월",
+  "4월",
+  "5월",
+  "6월",
+  "7월",
+  "8월",
+  "9월",
+  "10월",
+  "11월",
+  "12월",
+];
 export const HEATMAP_LEGEND_LEVELS = [0, 1, 2, 3, 4, 5] as const;
 export const HEATMAP_Y_LABELS = ["24시간", "16시간", "8시간"] as const;
 
@@ -28,7 +49,15 @@ export const KPI_ITEMS: { label: string; value: keyof DashboardKpi }[] = [
 ];
 
 /** 히트맵 요일 축 라벨 (한글) */
-export const HEATMAP_WEEKDAY_LABELS = ["일", "월", "화", "수", "목", "금", "토"] as const;
+export const HEATMAP_WEEKDAY_LABELS = [
+  "일",
+  "월",
+  "화",
+  "수",
+  "목",
+  "금",
+  "토",
+] as const;
 
 /** 히트맵 범례 레벨별 배경색 */
 export const HEATMAP_LEGEND_BG: Record<number, string> = {

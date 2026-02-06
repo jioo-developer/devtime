@@ -24,7 +24,7 @@ type StudyLogApiResponse = ApiResponseSuccess<
 >;
 
 export const useGetStudyLog = (
-  studyLogId: string | undefined
+  studyLogId: string | undefined,
 ): UseQueryResult<StudyLogData, Error> => {
   return useQuery<StudyLogApiResponse, Error, StudyLogData>({
     queryKey: [QueryKey.STUDY_LOGS, studyLogId],

@@ -23,7 +23,9 @@ export function RankingTabs({ value, onChange }: RankingTabsProps) {
           type="button"
           role="tab"
           aria-selected={value === tab.value}
-          className={value === tab.value ? "rankingTabs__tabActive" : "rankingTabs__tab"}
+          className={
+            value === tab.value ? "rankingTabs__tabActive" : "rankingTabs__tab"
+          }
           onClick={() => onChange(tab.value)}
         >
           {tab.label}

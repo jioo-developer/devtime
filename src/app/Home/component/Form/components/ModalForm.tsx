@@ -27,13 +27,17 @@ type ModalFormProps = {
   endOptions?: ModalFormEndOptions;
 };
 
-export default function ModalForm({ mode, studyLogId, endOptions }: ModalFormProps) {
+export default function ModalForm({
+  mode,
+  studyLogId,
+  endOptions,
+}: ModalFormProps) {
   const isEndMode = mode === "end";
   const isEditMode = mode === "edit";
   const isCreateMode = mode === "create";
 
   const { data: studyLog } = useGetStudyLog(
-    isEditMode || isEndMode ? studyLogId : undefined
+    isEditMode || isEndMode ? studyLogId : undefined,
   );
   const savedTodos = useTimerStore((state) => state.savedTodos);
 
@@ -48,10 +52,13 @@ export default function ModalForm({ mode, studyLogId, endOptions }: ModalFormPro
   const getInitialTodos = () => {
     if (isEditMode && studyLog?.data?.tasks) return studyLog.data.tasks;
     if (isEndMode) {
-      return studyLog?.data?.tasks ?? (savedTodos ?? []).map((content) => ({
-        content,
-        isCompleted: false,
-      }));
+      return (
+        studyLog?.data?.tasks ??
+        (savedTodos ?? []).map((content) => ({
+          content,
+          isCompleted: false,
+        }))
+      );
     }
     return [];
   };
@@ -77,10 +84,15 @@ export default function ModalForm({ mode, studyLogId, endOptions }: ModalFormPro
     resetKey: getResetKey(),
   });
 
-  const completedCount = (todos ?? []).filter((todo) => todo.isCompleted).length;
+  const completedCount = (todos ?? []).filter(
+    (todo) => todo.isCompleted,
+  ).length;
   const canStartTimer =
     isCreateMode &&
-    isTimerStartValid(watch("title"), (todos ?? []).map((todo) => todo.content));
+    isTimerStartValid(
+      watch("title"),
+      (todos ?? []).map((todo) => todo.content),
+    );
 
   const { startTimerAction, saveTasksAction } = useModalFormActions();
   const { finishTimerAction } = useFinishTimerAction();
@@ -103,7 +115,12 @@ export default function ModalForm({ mode, studyLogId, endOptions }: ModalFormPro
           content: todo.content,
           isCompleted: todo.isCompleted,
         }));
-        finishTimerAction(endOptions, tasks, data.reflection ?? "", completedCount);
+        finishTimerAction(
+          endOptions,
+          tasks,
+          data.reflection ?? "",
+          completedCount,
+        );
       }
     })();
   };
@@ -160,7 +177,10 @@ export default function ModalForm({ mode, studyLogId, endOptions }: ModalFormPro
               {...register("reflection", {
                 required: "학습 회고를 작성해 주세요.",
                 minLength: { value: 15, message: "15자 이상 작성해 주세요." },
-                maxLength: { value: 500, message: "500자 이하로 작성해 주세요." },
+                maxLength: {
+                  value: 500,
+                  message: "500자 이하로 작성해 주세요.",
+                },
               })}
               placeholder="오늘 학습한 내용을 회고해 보세요. (15자 이상 작성 필수)"
               className="reflectionTextarea"

@@ -23,7 +23,11 @@ export function useModalFormActions() {
     });
   };
 
-  const saveTasksAction = (studyLogId: string, title: string, todos: TodoTask[]) => {
+  const saveTasksAction = (
+    studyLogId: string,
+    title: string,
+    todos: TodoTask[],
+  ) => {
     const taskList = todos.map((todo) => ({
       content: todo.content,
       isCompleted: todo.isCompleted,
@@ -40,7 +44,7 @@ export function useModalFormActions() {
         onError: (err) => {
           console.error("할 일 목록 저장 실패:", err);
         },
-      }
+      },
     );
   };
 

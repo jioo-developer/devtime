@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 export function useDropdown<T extends HTMLElement = HTMLDivElement>(
-  onChange?: (value: string) => void
+  onChange?: (value: string) => void,
 ) {
   const [isOpen, setIsOpen] = useState(false);
   const rootRef = useRef<T>(null);

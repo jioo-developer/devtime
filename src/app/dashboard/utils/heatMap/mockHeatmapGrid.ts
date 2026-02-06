@@ -18,15 +18,19 @@ export function getMockGrid(targetYear: number): MockHeatmapCell[] {
     const seed = (cellIndex * 31 + targetYear) % 100;
 
     let level = (seed % 4) + 1;
-    if (month === 7 || month === 8 || month === 10) level = Math.min(5, level + 1);
+    if (month === 7 || month === 8 || month === 10)
+      level = Math.min(5, level + 1);
     if (month === 6) level = Math.max(0, level - 1);
     if (month === 1 && weekCol < 2) level = Math.max(0, level - 1);
-    if (dayRow === 1 || dayRow === 2 || dayRow === 4) level = Math.min(5, level + 1);
+    if (dayRow === 1 || dayRow === 2 || dayRow === 4)
+      level = Math.min(5, level + 1);
     if (seed < 6) level = 0;
 
     const colorLevel = Math.min(5, Math.max(0, level));
     const studyTimeHours =
-      colorLevel === 0 ? 0 : colorLevel * 1.2 + (seed % 18) * 0.15 + (seed % 5) * 0.05;
+      colorLevel === 0
+        ? 0
+        : colorLevel * 1.2 + (seed % 18) * 0.15 + (seed % 5) * 0.05;
 
     return { date: dateStr, studyTimeHours, colorLevel };
   });

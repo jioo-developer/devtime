@@ -10,13 +10,8 @@ export default function TimerPage() {
   const { isLoggedIn, isReady } = useIsLoggedIn();
 
   // 타이머 페이지 컨트롤러
-  const {
-    todoTitle,
-    isTimerRunning,
-    isTimerPaused,
-    display,
-    handlers,
-  } = useTimerPageController(isLoggedIn);
+  const { todoTitle, isTimerRunning, isTimerPaused, display, handlers } =
+    useTimerPageController(isLoggedIn);
 
   // 비로그인시 "로그인 필요" 모달 노출
   useLoginRequiredModal(isLoggedIn, isReady);

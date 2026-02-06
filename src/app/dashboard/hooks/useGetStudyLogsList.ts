@@ -2,10 +2,7 @@ import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { ApiClient } from "@/config/apiConfig/apiConfig";
 import { QueryKey } from "@/constant/queryKeys";
 import { getAuthHeaders } from "@/utils/authUtils";
-import type {
-  StudyLogsListApiResponse,
-  StudyLogsListResult,
-} from "../types";
+import type { StudyLogsListApiResponse, StudyLogsListResult } from "../types";
 
 /**
  * Swagger 기준:
@@ -21,7 +18,9 @@ const DEFAULT_PAGE_SIZE = 10;
  * - studyLogs: 서버 필드명을 프론트 컨벤션으로 맵핑
  * - pagination: totalPages만 노출
  */
-function mapToResult(apiResponse: StudyLogsListApiResponse): StudyLogsListResult {
+function mapToResult(
+  apiResponse: StudyLogsListApiResponse,
+): StudyLogsListResult {
   const { studyLogs, pagination } = apiResponse.data;
 
   return {
@@ -66,7 +65,7 @@ function mapToResult(apiResponse: StudyLogsListApiResponse): StudyLogsListResult
 export function useGetStudyLogsList(
   pageNumber: number,
   pageSize: number = DEFAULT_PAGE_SIZE,
-  isEnabled: boolean = true
+  isEnabled: boolean = true,
 ): UseQueryResult<StudyLogsListResult, Error> {
   return useQuery({
     // 페이지/사이즈가 달라지면 별도의 캐시로 관리됨

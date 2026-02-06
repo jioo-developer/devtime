@@ -21,7 +21,7 @@ export function useFinishTimerAction() {
     endOptions: ModalFormEndOptions,
     tasks: FinishTimerTaskItem[],
     reflection: string,
-    completedCount: number
+    completedCount: number,
   ) => {
     if (completedCount === 0) {
       showNoCompletedTasksAlert();

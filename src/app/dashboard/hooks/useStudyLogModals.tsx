@@ -12,7 +12,11 @@ export function useStudyLogModals() {
   const openDeleteConfirmModal = (studyLogId: string | number) => {
     pushModal({
       title: "학습 기록 삭제",
-      content: <p className="studyLogModalConfirmText">정말 삭제할까요? 복구할 수 없습니다.</p>,
+      content: (
+        <p className="studyLogModalConfirmText">
+          정말 삭제할까요? 복구할 수 없습니다.
+        </p>
+      ),
       footer: (
         <div className="studyLogModalActions">
           <CommonButton theme="secondary" onClick={closeTop}>

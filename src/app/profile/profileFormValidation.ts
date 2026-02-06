@@ -3,7 +3,8 @@ import type { ProfileFormData } from "@/app/mypage/types";
 
 export function isProfileFormIncomplete(data: ProfileFormData): boolean {
   const isBlank = (value?: string) => (value ?? "").trim() === "";
-  const isEmptyList = (list?: unknown[]) => !Array.isArray(list) || list.length === 0;
+  const isEmptyList = (list?: unknown[]) =>
+    !Array.isArray(list) || list.length === 0;
 
   const checks: boolean[] = [
     // 문자열 필수 입력값

@@ -86,7 +86,10 @@ function getRequestTokenOrRedirect(retried?: boolean): string | null {
  * Authorization 헤더 포함
  * - 기존 헤더 유지 + Bearer 토큰 추가
  */
-function buildAuthHeaders(token: string | null, extra?: HeadersInit): HeadersInit {
+function buildAuthHeaders(
+  token: string | null,
+  extra?: HeadersInit,
+): HeadersInit {
   const headers = new Headers(extra);
 
   if (token) {

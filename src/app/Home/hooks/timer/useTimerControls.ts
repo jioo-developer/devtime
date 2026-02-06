@@ -20,7 +20,7 @@ export function useTimerControls() {
       setStartTime: state.setStartTime,
       setClientStartedAt: state.setClientStartedAt,
       setTotalPausedDuration: state.setTotalPausedDuration,
-    }))
+    })),
   );
 
   const onPause = () => {

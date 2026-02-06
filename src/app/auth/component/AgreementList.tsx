@@ -4,7 +4,7 @@ import CommonCheckbox from "@/components/atoms/CommonCheckbox/CommonCheckbox";
 type AgreementListProps = {
   agreed: boolean;
   setAgreed: (value: boolean) => void;
-}
+};
 
 function AgreementList({ agreed, setAgreed }: AgreementListProps) {
   return (

@@ -58,8 +58,12 @@ export default function UIModalBase({
         className={styles.panel}
         style={{
           pointerEvents: isTop ? "auto" : "none", //   아래 모달 클릭 불가
-          ...(width && { width: typeof width === "number" ? `${width}px` : width }),
-          ...(height && { height: typeof height === "number" ? `${height}px` : height }),
+          ...(width && {
+            width: typeof width === "number" ? `${width}px` : width,
+          }),
+          ...(height && {
+            height: typeof height === "number" ? `${height}px` : height,
+          }),
         }}
         role="dialog" //   접근성 기본
         aria-modal={isTop ? "true" : undefined} //   top만 modal 취급

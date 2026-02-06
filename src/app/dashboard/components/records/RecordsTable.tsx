@@ -11,7 +11,12 @@ type RecordsTableProps = {
   onGoalClick: (studyLogId: string | number) => void;
 };
 
-export function RecordsTable({ records, isLoading, isError, onGoalClick }: RecordsTableProps) {
+export function RecordsTable({
+  records,
+  isLoading,
+  isError,
+  onGoalClick,
+}: RecordsTableProps) {
   return (
     <div className="recordsTableWrap">
       <table className="recordsTable">
@@ -36,7 +41,9 @@ export function RecordsTable({ records, isLoading, isError, onGoalClick }: Recor
           ) : (
             records.map((record) => (
               <tr key={record.studyLogId}>
-                <td className="colDate">{record.date ? record.date.replace(/-/g, ".") : record.date}</td>
+                <td className="colDate">
+                  {record.date ? record.date.replace(/-/g, ".") : record.date}
+                </td>
                 <td className="colGoal">
                   <CommonButton
                     type="button"

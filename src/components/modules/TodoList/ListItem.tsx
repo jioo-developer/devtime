@@ -78,61 +78,61 @@ export default function TodoListItem({
       </div>
 
       {mode === "edit" && (
-      <div className={styles.rightSection}>
-        {/* typing 상태: 저장 체크 */}
-        {isTyping && (
-          <button
-            className={styles.iconButton}
-            onClick={(e) => {
-              e.stopPropagation();
-              finishEdit();
+        <div className={styles.rightSection}>
+          {/* typing 상태: 저장 체크 */}
+          {isTyping && (
+            <button
+              className={styles.iconButton}
+              onClick={(e) => {
+                e.stopPropagation();
+                finishEdit();
+              }}
+              disabled={isDisabled}
+              aria-label="save"
+            >
+              <MdCheck size={20} />
+            </button>
+          )}
+
+          {/* active/default 상태: edit/delete */}
+          {(status === "active" || status === "default") && !isDisabled && (
+            <>
+              <button
+                className={styles.iconButton}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  startEdit();
+                }}
+                aria-label="edit"
+              >
+                <MdEdit size={20} />
+              </button>
+
+              <button
+                style={{ paddingRight: 8 }}
+                className={styles.iconButton}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  requestDelete();
+                }}
+                aria-label="delete"
+              >
+                <MdDelete size={20} />
+              </button>
+            </>
+          )}
+
+          {/* 체크박스로 disable/enable 토글 */}
+          <CommonCheckbox
+            checked={isDisabled}
+            onChange={() => {
+              toggleDisabled();
             }}
-            disabled={isDisabled}
-            aria-label="save"
-          >
-            <MdCheck size={20} />
-          </button>
-        )}
-
-        {/* active/default 상태: edit/delete */}
-        {(status === "active" || status === "default") && !isDisabled && (
-          <>
-            <button
-              className={styles.iconButton}
-              onClick={(e) => {
-                e.stopPropagation();
-                startEdit();
-              }}
-              aria-label="edit"
-            >
-              <MdEdit size={20} />
-            </button>
-
-            <button
-              style={{ paddingRight: 8 }}
-              className={styles.iconButton}
-              onClick={(e) => {
-                e.stopPropagation();
-                requestDelete();
-              }}
-              aria-label="delete"
-            >
-              <MdDelete size={20} />
-            </button>
-          </>
-        )}
-
-        {/* 체크박스로 disable/enable 토글 */}
-        <CommonCheckbox
-          checked={isDisabled}
-          onChange={() => {
-            toggleDisabled();
-          }}
-          onClick={(e) => e.stopPropagation()}
-          color="white"
-          size={20}
-        />
-      </div>
+            onClick={(e) => e.stopPropagation()}
+            color="white"
+            size={20}
+          />
+        </div>
       )}
     </div>
   );

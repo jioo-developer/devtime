@@ -21,10 +21,14 @@ export const useUpdateStudyLogTasks = () => {
 
   return useMutation<void, Error, UpdateStudyLogTasksRequest>({
     mutationFn: async ({ studyLogId, tasks }) => {
-      await ApiClient.put("/api/{studyLogId}/tasks", { tasks }, {
-        pathParams: { studyLogId },
-        headers: getAuthHeaders(),
-      });
+      await ApiClient.put(
+        "/api/{studyLogId}/tasks",
+        { tasks },
+        {
+          pathParams: { studyLogId },
+          headers: getAuthHeaders(),
+        },
+      );
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({

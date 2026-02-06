@@ -25,8 +25,8 @@ export type ApiResponseSuccess<
   Method extends keyof paths[Path] & HttpMethod,
 > = paths[Path][Method] extends { responses: infer R }
   ? R extends Record<number, { content?: { "application/json": infer T } }>
-  ? T
-  : never
+    ? T
+    : never
   : never;
 
 /** JSON 요청 바디 타입 (post/put 등, requestBody optional 대응) */

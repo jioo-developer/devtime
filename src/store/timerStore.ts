@@ -43,7 +43,8 @@ export const useTimerStore = create<TimerState>((set) => ({
   setClientStartedAt: (clientStartedAt) => set({ clientStartedAt }),
   setTotalPausedDuration: (ms) =>
     set((s) => ({
-      totalPausedDuration: typeof ms === "function" ? ms(s.totalPausedDuration) : ms,
+      totalPausedDuration:
+        typeof ms === "function" ? ms(s.totalPausedDuration) : ms,
     })),
   setTimerEndedAt: (iso) => set({ timerEndedAt: iso }),
 }));

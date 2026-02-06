@@ -6,7 +6,7 @@ import { getUTCMidnight, getNextDayMidnight } from "./dateUtils";
  * stop 시점에 서버로 보낼(혹은 저장할) 날짜별 분할 시간(초 단위) 타입
  */
 export type SplitTimeForStop = {
-  date: string;      // 날짜 키(여기서는 ISO 문자열)
+  date: string; // 날짜 키(여기서는 ISO 문자열)
   timeSpent: number; // 해당 날짜에 배분된 시간(초)
 };
 
@@ -14,7 +14,7 @@ export type SplitTimeForStop = {
  * 내부 계산용: "하루 단위"로 잘린 시간 조각
  */
 type TimeChunk = {
-  startDate: Date;    // chunk가 시작되는 날짜 기준(주로 UTC 자정 또는 첫날 시작 시각)
+  startDate: Date; // chunk가 시작되는 날짜 기준(주로 UTC 자정 또는 첫날 시작 시각)
   durationMs: number; // 해당 chunk의 지속 시간(ms)
 };
 
@@ -87,7 +87,7 @@ function splitByDays(start: Date, end: Date, totalMs: number): TimeChunk[] {
  */
 function convertToSeconds(
   chunks: TimeChunk[],
-  allowedSec: number
+  allowedSec: number,
 ): SplitTimeForStop[] {
   // chunk의 ms 합계(원본 분할 합)
   const totalMs = chunks.reduce((sum, chunk) => sum + chunk.durationMs, 0);
@@ -102,7 +102,7 @@ function convertToSeconds(
     date: chunk.startDate.toISOString(), // 날짜 키를 ISO로 사용
     timeSpent: Math.max(
       0,
-      Math.floor((chunk.durationMs / 1000) * ratio) // 비율 적용 후 소수점 버림
+      Math.floor((chunk.durationMs / 1000) * ratio), // 비율 적용 후 소수점 버림
     ),
   }));
 
@@ -124,9 +124,9 @@ function convertToSeconds(
  * - 초 단위로 변환 및 합계 보정
  */
 export function buildSplitTimesForStop(
-  startTime: string,         // 시작 시각 ISO 문자열
-  endTime: Date,             // 종료 시각 Date
-  pausedDurationMs: number = 0 // 일시정지 누적 시간(ms)
+  startTime: string, // 시작 시각 ISO 문자열
+  endTime: Date, // 종료 시각 Date
+  pausedDurationMs: number = 0, // 일시정지 누적 시간(ms)
 ): SplitTimeForStop[] {
   // startTime을 Date로 파싱
   const start = new Date(startTime);
@@ -134,7 +134,7 @@ export function buildSplitTimesForStop(
   // 실제 사용 ms = (종료 - 시작 - 일시정지), 음수 방지
   const totalMs = Math.max(
     0,
-    endTime.getTime() - start.getTime() - pausedDurationMs
+    endTime.getTime() - start.getTime() - pausedDurationMs,
   );
 
   // 서버에 보내는 단위를 초로 맞추기 위해 총 초(버림) 계산
@@ -156,7 +156,7 @@ export function buildSplitTimesForStop(
  */
 export function applySafetyBuffer(
   splitTimes: SplitTimeForStop[],
-  safeSec: number
+  safeSec: number,
 ): SplitTimeForStop[] {
   // 원본을 직접 변형하지 않기 위해 얕은 복사본 생성
   const adjusted = splitTimes.map((split) => ({ ...split }));

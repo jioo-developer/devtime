@@ -168,7 +168,9 @@ export default function ProfileSettingClient() {
             <span className="profileSettingLabel">프로필 이미지</span>
             <ImageUploader
               label=""
-              currentImageUrl={getProfileImageUrl(watch().profileImage) || undefined}
+              currentImageUrl={
+                getProfileImageUrl(watch().profileImage) || undefined
+              }
               onImageChange={(file) => {
                 if (!file) return;
 

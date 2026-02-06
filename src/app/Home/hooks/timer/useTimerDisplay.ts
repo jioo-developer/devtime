@@ -42,7 +42,6 @@ export function useTimerDisplay({
   clientStartedAtMs,
   totalPausedDurationMs,
 }: UseTimerDisplayParams) {
-
   // 화면에 표시할 시/분/초 문자열 상태
   const [hours, setHours] = useState("00");
   const [minutes, setMinutes] = useState("00");
@@ -68,7 +67,6 @@ export function useTimerDisplay({
    * 타이머가 실행 중일 때 1초마다 경과 시간을 계산해 화면에 반영
    */
   useEffect(() => {
-
     // 실행 중이 아니거나, 일시정지 상태면 interval을 돌리지 않는다.
     // 동시에 로컬 기준 시각도 초기화해 다음 실행 시 새로 잡히게 한다.
     if (!isRunning || isPaused) {
@@ -94,36 +92,27 @@ export function useTimerDisplay({
      * - 서버 시작: serverStartTimestampMs
      */
     const displayBaseTimestampMs: number = isLocalStart
-      ? (
-        localDisplayBaseTimestampRef.current ??
+      ? (localDisplayBaseTimestampRef.current ??
         clientStartedAtMs ??
-        Date.now()
-      )
+        Date.now())
       : (serverStartTimestampMs as number);
 
     /**
      * 숫자를 항상 두 자리 문자열로 변환
      * 예: 3 → "03"
      */
-    const toTwoDigitString = (value: number) =>
-      String(value).padStart(2, "0");
+    const toTwoDigitString = (value: number) => String(value).padStart(2, "0");
 
     /**
      * 실제 표시값 업데이트 함수
      */
     const update = () => {
-
       // 경과 시간(ms) = 현재 시각 - 기준 시각 - 누적 일시정지 시간
       const elapsedMs =
-        Date.now() -
-        displayBaseTimestampMs -
-        totalPausedDurationMs;
+        Date.now() - displayBaseTimestampMs - totalPausedDurationMs;
 
       // 초 단위로 변환 (음수 방지)
-      const totalSec = Math.max(
-        0,
-        Math.floor(elapsedMs / 1000)
-      );
+      const totalSec = Math.max(0, Math.floor(elapsedMs / 1000));
 
       // 시 / 분 / 초 분해
       const hours = Math.floor(totalSec / 3600);
@@ -142,7 +131,6 @@ export function useTimerDisplay({
 
     // 컴포넌트 언마운트 혹은 조건 변경 시 interval 정리
     return () => clearInterval(intervalId);
-
   }, [
     isRunning,
     isPaused,

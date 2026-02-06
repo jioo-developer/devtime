@@ -17,7 +17,7 @@ export function KpiSection() {
         <div key={value} className="kpiCard">
           <p className="kpiCardLabel">{label}</p>
           <p className="kpiCardValue kpiCardValueLarge" aria-busy={isLoading}>
-            {isLoading ? "—" : isError ? "—" : data?.[value] ?? "—"}
+            {isLoading ? "—" : isError ? "—" : (data?.[value] ?? "—")}
           </p>
         </div>
       ))}
@@ -30,21 +30,37 @@ export function KpiSection() {
             ))}
           </div>
           <div className="weekdayChartRight">
-            <div className="weekdayBarsWrap" role="img" aria-label="요일별 평균 공부 시간" aria-busy={isLoading}>
-              {(data?.weekdayHours ?? [0, 0, 0, 0, 0, 0, 0]).map((hours, weekdayIndex) => (
-                <div
-                  key={WEEKDAY_KEYS[weekdayIndex]}
-                  className="weekdayBarCol"
-                  title={`${WEEKDAY_LABELS[weekdayIndex]}: ${hours}시간`}
-                >
-                  <div className="weekdayBarEmpty" style={{ flex: (MAX_HOURS - hours) / MAX_HOURS }} />
-                  <div className="weekdayBarFill" style={{ flex: hours / MAX_HOURS }} />
-                </div>
-              ))}
+            <div
+              className="weekdayBarsWrap"
+              role="img"
+              aria-label="요일별 평균 공부 시간"
+              aria-busy={isLoading}
+            >
+              {(data?.weekdayHours ?? [0, 0, 0, 0, 0, 0, 0]).map(
+                (hours, weekdayIndex) => (
+                  <div
+                    key={WEEKDAY_KEYS[weekdayIndex]}
+                    className="weekdayBarCol"
+                    title={`${WEEKDAY_LABELS[weekdayIndex]}: ${hours}시간`}
+                  >
+                    <div
+                      className="weekdayBarEmpty"
+                      style={{ flex: (MAX_HOURS - hours) / MAX_HOURS }}
+                    />
+                    <div
+                      className="weekdayBarFill"
+                      style={{ flex: hours / MAX_HOURS }}
+                    />
+                  </div>
+                ),
+              )}
             </div>
             <div className="weekdayLabels">
               {WEEKDAY_LABELS.map((weekdayLabel, weekdayIndex) => (
-                <div key={WEEKDAY_KEYS[weekdayIndex]} className="weekdayLabelCell">
+                <div
+                  key={WEEKDAY_KEYS[weekdayIndex]}
+                  className="weekdayLabelCell"
+                >
                   <span className="weekdayLabelCircle">{weekdayLabel}</span>
                 </div>
               ))}

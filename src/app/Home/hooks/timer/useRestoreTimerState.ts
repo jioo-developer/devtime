@@ -44,7 +44,7 @@ export function useRestoreTimerState(timerData: TimerResponse | undefined) {
         setIsTimerRunning: state.setIsTimerRunning,
         setIsTimerPaused: state.setIsTimerPaused,
         setTotalPausedDuration: state.setTotalPausedDuration,
-      }))
+      })),
     );
 
   useEffect(() => {

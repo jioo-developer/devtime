@@ -41,11 +41,7 @@ export function ProfileForm({
   });
 
   return (
-    <form
-      className="profileForm"
-      onSubmit={mypageForm.handleSave}
-      noValidate
-    >
+    <form className="profileForm" onSubmit={mypageForm.handleSave} noValidate>
       <div className="profileFormColumns">
         <div className="profileFormLeft">
           <section className="profileSection">
@@ -144,9 +140,7 @@ export function ProfileForm({
                   const str = typeof value === "string" ? value : value?.[0];
                   const newPw = mypageForm.watch("newPassword");
                   if (!newPw && !str) return true;
-                  return (
-                    str === newPw || "비밀번호가 일치하지 않습니다."
-                  );
+                  return str === newPw || "비밀번호가 일치하지 않습니다.";
                 },
               }}
               error={mypageForm.errors.newPasswordConfirmation}
@@ -217,9 +211,7 @@ export function ProfileForm({
           width="auto"
           className="profileFormButton profileFormButtonSave"
         >
-          {isUpdating
-            ? "변경 사항 저장 중..."
-            : "변경 사항 저장하기"}
+          {isUpdating ? "변경 사항 저장 중..." : "변경 사항 저장하기"}
         </CommonButton>
       </div>
     </form>

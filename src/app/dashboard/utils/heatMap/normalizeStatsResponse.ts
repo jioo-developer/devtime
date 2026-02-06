@@ -1,5 +1,9 @@
 import type { StatsResponse } from "../../types";
-import { formatMinToHm, formatConsecDays, formatTaskRate } from "../formatStats";
+import {
+  formatMinToHm,
+  formatConsecDays,
+  formatTaskRate,
+} from "../formatStats";
 import { MAX_HOURS } from "../data";
 
 /** KpiSection 표시용으로 가공된 통계 */
@@ -24,8 +28,8 @@ const WEEKDAY_ORDER: (keyof StatsResponse["weekdayStudyTime"])[] = [
 
 export function toStatsDisplay(statsResponse: StatsResponse): StatsDisplay {
   const weekdayStudyTime = statsResponse.weekdayStudyTime;
-  const weekdayHours = WEEKDAY_ORDER.map(
-    (weekdayKey) => Math.min(MAX_HOURS, Math.max(0, weekdayStudyTime[weekdayKey] ?? 0)),
+  const weekdayHours = WEEKDAY_ORDER.map((weekdayKey) =>
+    Math.min(MAX_HOURS, Math.max(0, weekdayStudyTime[weekdayKey] ?? 0)),
   ) as StatsDisplay["weekdayHours"];
 
   return {

@@ -16,7 +16,7 @@ const defaultTimerResponse: TimerResponse = {
 };
 
 export const useGetTimers = (
-  enabled: boolean = true
+  enabled: boolean = true,
 ): UseQueryResult<TimerResponse, Error> => {
   return useQuery<TimerResponse, Error>({
     queryKey: [QueryKey.TIMERS],
