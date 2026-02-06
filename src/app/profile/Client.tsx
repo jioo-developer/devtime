@@ -21,7 +21,7 @@ import { useModalStore } from "@/store/modalStore";
 import { useCreateProfile, useUploadProfileImage } from "@/app/mypage/hooks";
 import { getCreateProfilePayload } from "@/app/mypage/utils/profileFormHandler";
 import type { ProfileFormData } from "@/app/mypage/types";
-import { isProfileFormIncomplete } from "./profileFormValidation";
+import { isProfileFormIncomplete } from "./utils/profileFormValidation";
 import "./style.css";
 
 const PROFILE_SETTING_DEFAULTS: ProfileFormData = {
