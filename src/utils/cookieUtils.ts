@@ -1,83 +1,105 @@
 /**
- * 쿠키 유틸리티 함수
- * 토큰 만료 시간을 쿠키에 저장하여 자동 만료 관리
+ * 토큰 만료 시간(클라이언트 기준)을 쿠키에 저장/조회하는 유틸
  */
 
 const ACCESS_TOKEN_EXPIRY_COOKIE = "accessTokenExpiry";
 const REFRESH_TOKEN_EXPIRY_COOKIE = "refreshTokenExpiry";
 
-/**
- * 쿠키 설정
- */
-function setCookie(name: string, value: string, maxAge: number) {
-  if (typeof document === "undefined") return;
-  document.cookie = `${name}=${value}; path=/; max-age=${maxAge}; SameSite=Lax`;
-}
+const ACCESS_MAX_AGE_SEC = 60 * 60; // 1h
+const REFRESH_MAX_AGE_SEC = 60 * 60 * 24 * 10; // 10d
 
-/**
- * 쿠키 조회
- */
+type CookieOptions = {
+  path?: string;
+  maxAgeSec?: number;
+  sameSite?: "Lax" | "Strict" | "None";
+  secure?: boolean;
+};
+
+// 쿠키 조회
 function getCookie(name: string): string | null {
   if (typeof document === "undefined") return null;
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) {
-    return parts.pop()?.split(";").shift() ?? null;
-  }
-  return null;
+
+  const cookiePairs = document.cookie ? document.cookie.split("; ") : [];
+  const targetPrefix = `${name}=`;
+
+  const matchedPair = cookiePairs.find((pair) =>
+    pair.startsWith(targetPrefix),
+  );
+
+  if (!matchedPair) return null;
+
+  const encodedValue = matchedPair.slice(targetPrefix.length);
+  return decodeURIComponent(encodedValue);
 }
 
-/**
- * 쿠키 삭제
- */
+// 쿠키 설정
+function setCookie(name: string, value: string, options: CookieOptions) {
+  if (typeof document === "undefined") return;
+
+  const path = options.path ?? "/";
+  const sameSite = options.sameSite ?? "Lax";
+
+  const parts: string[] = [
+    `${name}=${encodeURIComponent(value)}`,
+    `path=${path}`,
+    `SameSite=${sameSite}`,
+  ];
+
+  if (typeof options.maxAgeSec === "number") parts.push(`max-age=${options.maxAgeSec}`);
+  if (options.secure) parts.push("Secure");
+
+  document.cookie = parts.join("; ");
+}
+
+// 쿠키 삭제
 function deleteCookie(name: string) {
   if (typeof document === "undefined") return;
-  document.cookie = `${name}=; path=/; max-age=0; SameSite=Lax`;
+  setCookie(name, "", { maxAgeSec: 0, sameSite: "Lax" });
 }
 
-/**
- * Access Token 만료 시간 설정 (1시간 = 3600초)
- */
+// 만료 시간 쿠키 설정
+function setExpiryCookie(cookieName: string, maxAgeSec: number) {
+  const expiryMs = Date.now() + maxAgeSec * 1000;
+
+  setCookie(cookieName, String(expiryMs), {
+    maxAgeSec,
+    sameSite: "Lax",
+    secure: typeof location !== "undefined" && location.protocol === "https:",
+  });
+}
+
+/** Access Token 만료 시간 설정 */
 export function setAccessTokenExpiry() {
-  const maxAge = 3600; // 1시간
-  const expiryTime = Date.now() + maxAge * 1000;
-  setCookie(ACCESS_TOKEN_EXPIRY_COOKIE, expiryTime.toString(), maxAge);
+  setExpiryCookie(ACCESS_TOKEN_EXPIRY_COOKIE, ACCESS_MAX_AGE_SEC);
 }
 
-/**
- * Refresh Token 만료 시간 설정 (10일 = 864000초)
- */
+/** Refresh Token 만료 시간 설정 */
 export function setRefreshTokenExpiry() {
-  const maxAge = 864000; // 10일
-  const expiryTime = Date.now() + maxAge * 1000;
-  setCookie(REFRESH_TOKEN_EXPIRY_COOKIE, expiryTime.toString(), maxAge);
+  setExpiryCookie(REFRESH_TOKEN_EXPIRY_COOKIE, REFRESH_MAX_AGE_SEC);
 }
 
-/**
- * Access Token 만료 시간 확인
- * @returns 만료되지 않았으면 true, 만료되었거나 없으면 false
- */
+
+function isExpiryCookieValid(cookieName: string): boolean {
+  const expiryValue = getCookie(cookieName);
+  if (!expiryValue) return false;
+
+  const expiryMs = Number(expiryValue);
+  if (!Number.isFinite(expiryMs)) return false;
+
+  return Date.now() < expiryMs;
+}
+
+/** Access Token 만료 확인 */
 export function isAccessTokenValid(): boolean {
-  const expiry = getCookie(ACCESS_TOKEN_EXPIRY_COOKIE);
-  if (!expiry) return false;
-  const expiryTime = parseInt(expiry, 10);
-  return !isNaN(expiryTime) && Date.now() < expiryTime;
+  return isExpiryCookieValid(ACCESS_TOKEN_EXPIRY_COOKIE);
 }
 
-/**
- * Refresh Token 만료 시간 확인
- * @returns 만료되지 않았으면 true, 만료되었거나 없으면 false
- */
+/** Refresh Token 만료 확인 */
 export function isRefreshTokenValid(): boolean {
-  const expiry = getCookie(REFRESH_TOKEN_EXPIRY_COOKIE);
-  if (!expiry) return false;
-  const expiryTime = parseInt(expiry, 10);
-  return !isNaN(expiryTime) && Date.now() < expiryTime;
+  return isExpiryCookieValid(REFRESH_TOKEN_EXPIRY_COOKIE);
 }
 
-/**
- * 모든 토큰 만료 쿠키 삭제
- */
+/** 모든 토큰 만료 쿠키 삭제 */
 export function clearTokenExpiryCookies() {
   deleteCookie(ACCESS_TOKEN_EXPIRY_COOKIE);
   deleteCookie(REFRESH_TOKEN_EXPIRY_COOKIE);

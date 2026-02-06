@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import "./style.css";
+import Link from "next/link";
 import CommonImage from "@/components/atoms/CommonImage/CommonImage";
 import Logo from "@/asset/images/Logo.svg";
 import Background from "@/asset/images/logo_background.jpg";
@@ -11,18 +11,15 @@ import { useForm } from "react-hook-form";
 import { useCheckEmail } from "./hooks/useCheckEmail";
 import { useCheckNickname } from "./hooks/useCheckNickname";
 import { useSignup } from "./hooks/useSignup";
-import {
-  handleSignupSuccess,
-  handleSignupError,
-} from "./hooks/handleSignupModal";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import type { AuthFormData } from "./types";
-import { useLogin } from "@/app/login/hooks/useLogin";
-import type { LoginResponse } from "@/app/login/types";
-import { setTokens } from "@/config/utils/tokenStorage";
+import { isAuthFormValid } from "./utils/authFormValidation";
+import "./style.css";
 
-export type { AuthFormData } from "./types";
+export type AuthFormData = {
+  email: string;
+  nickname: string;
+  password: string;
+  passwordConfirmation: string;
+};
 
 interface AuthPageProps {
   onSubmit?: (data: AuthFormData) => Promise<void>;
@@ -43,6 +40,14 @@ function AuthPage({ onSubmit }: AuthPageProps = {}) {
   const [nicknameSuccess, setNicknameSuccess] = useState<string>("");
   const [agreed, setAgreed] = useState(false);
 
+  const isFormValid = isAuthFormValid({
+    watch,
+    emailSuccess,
+    nicknameSuccess,
+    agreed,
+    errors,
+  });
+
   const { mutate: checkEmail } = useCheckEmail({
     setError,
     clearErrors,
@@ -55,46 +60,15 @@ function AuthPage({ onSubmit }: AuthPageProps = {}) {
     setSuccessMessage: setNicknameSuccess,
   });
 
-  const router = useRouter();
+
   const { mutate } = useSignup();
-  const { mutate: login } = useLogin();
-
-  const { email, nickname, password, passwordConfirmation } = watch();
-
-  const isFormValid =
-    !!email &&
-    !!emailSuccess &&
-    !!nickname &&
-    !!nicknameSuccess &&
-    !!password &&
-    !!passwordConfirmation &&
-    !errors.password &&
-    !errors.passwordConfirmation &&
-    agreed;
 
   const handleFormSubmit = async (data: AuthFormData) => {
     if (onSubmit) {
       // 테스트 코드용 if
       await onSubmit(data);
     } else {
-      mutate(data, {
-        onSuccess: () => {
-          // 회원가입 성공 후 바로 로그인해서 토큰 저장 (프로필 설정에서 로그인 리다이렉트 방지)
-          login(
-            { email: data.email, password: data.password },
-            {
-              onSuccess: (result: LoginResponse) => {
-                if (result?.success) {
-                  setTokens(result.accessToken, result.refreshToken);
-                }
-                handleSignupSuccess(router);
-              },
-              onError: handleSignupError,
-            },
-          );
-        },
-        onError: handleSignupError,
-      });
+      mutate(data);
     }
   };
 

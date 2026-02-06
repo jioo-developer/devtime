@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { ApiClient } from "@/config/apiConfig";
-import { CheckDuplicateResponse, UseChecValidationlParams } from "./hookTypes";
+import { UseChecValidationlParams } from "./hookTypes";
 
 export const useCheckEmail = ({
   setError,

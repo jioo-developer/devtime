@@ -6,10 +6,12 @@ import CommonImage from "@/components/atoms/CommonImage/CommonImage";
 import Navigation from "./component/Navigation";
 import AccountMenu from "./component/AccountMenu";
 import Link from "next/link";
-import { useIsLoggedIn } from "@/hooks";
+import { useIsLoggedIn } from "@/hooks/useIsLoggedIn";
+import { getProfileComplete } from "@/utils/profileStorage";
 
 function Header() {
   const { isLoggedIn } = useIsLoggedIn();
+  const hasProfile = getProfileComplete();
 
   return (
     <header className={styles.header}>
@@ -27,7 +29,7 @@ function Header() {
           <Navigation isLoggedIn={isLoggedIn} />
         </div>
         <div className={styles.rightCon}>
-          <AccountMenu isLoggedIn={isLoggedIn} />
+          <AccountMenu isLoggedIn={isLoggedIn} hasProfile={hasProfile} />
         </div>
       </div>
     </header>

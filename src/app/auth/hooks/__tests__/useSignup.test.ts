@@ -10,6 +10,26 @@ vi.mock("@/config/apiConfig", () => ({
   },
 }));
 
+vi.mock("../useSignupModal", () => ({
+  useSignupModal: () => ({
+    showSignupSuccessModal: vi.fn(),
+    showSignupErrorModal: vi.fn(),
+  }),
+}));
+
+vi.mock("@/app/login/hooks/useLogin", () => ({
+  useLogin: () => ({
+    mutateAsync: vi.fn().mockResolvedValue({
+      success: true,
+      accessToken: "token",
+      refreshToken: "refresh",
+      message: "",
+      isFirstLogin: false,
+      isDuplicateLogin: false,
+    }),
+  }),
+}));
+
 describe("useSignup", () => {
   beforeEach(() => {
     vi.clearAllMocks();

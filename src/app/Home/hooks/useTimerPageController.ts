@@ -1,7 +1,6 @@
 "use client";
 import { useShallow } from "zustand/react/shallow";
 import { useTimerStore } from "@/store/timerStore";
-import { useIsLoggedIn } from "@/hooks";
 import { useGetTimers } from "./getter/useGetTimers";
 import { useGetStudyLog } from "./getter/useGetStudyLog";
 import { useRestoreTimerState } from "./timer/useRestoreTimerState";
@@ -13,11 +12,8 @@ import { useTimerModal } from "./timer/useTimerModal";
 
 /**
  * 타이머 페이지의 데이터·복구·표시·핸들러를 한데 모아주는 컨트롤러 훅.
- * 페이지 컴포넌트는 이 훅과 useLoginRequiredModal만 쓰고, UI 조립만 담당한다.
  */
-export function useTimerPageController() {
-  // ——— 로그인 여부 (getTimers 활성화·useLoginRequiredModal에 전달용) ———
-  const { isLoggedIn, isReady } = useIsLoggedIn();
+export function useTimerPageController(isLoggedIn: boolean) {
 
   // ——— 타이머 스토어 (로컬 상태) ———
   // running/paused, 시작 시각, 일시정지 누적 등 — useShallow로 필요한 값만 구독
@@ -97,8 +93,6 @@ export function useTimerPageController() {
   const handleReset = () => resetTimer(timerData?.timerId);
 
   return {
-    isLoggedIn,
-    isReady,
     todoTitle,
     isTimerRunning,
     isTimerPaused,

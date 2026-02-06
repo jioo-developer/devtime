@@ -1,26 +1,24 @@
 "use client";
-
 import "./style.css";
 import { TimerControls } from "./component/TimerControls";
 import { TimerDisplay } from "./component/TimerDisplay";
 import { useTimerPageController } from "./hooks/useTimerPageController";
-import { useLoginRequiredModal } from "@/hooks";
+import { useIsLoggedIn, useLoginRequiredModal } from "@/hooks/useIsLoggedIn";
 
-/**
- * 타이머 페이지. 데이터·핸들러는 useTimerPageController, 로그인 모달은 useLoginRequiredModal에 위임하고
- * 여기서는 레이아웃·조립만 한다.
- */
 export default function TimerPage() {
+  // 로그인 여부
+  const { isLoggedIn, isReady } = useIsLoggedIn();
+
+  // 타이머 페이지 컨트롤러
   const {
-    isLoggedIn,
-    isReady,
     todoTitle,
     isTimerRunning,
     isTimerPaused,
     display,
     handlers,
-  } = useTimerPageController();
+  } = useTimerPageController(isLoggedIn);
 
+  // 비로그인시 "로그인 필요" 모달 노출
   useLoginRequiredModal(isLoggedIn, isReady);
 
   return (

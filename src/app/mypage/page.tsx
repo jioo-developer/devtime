@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import "./style.css";
 import {
   useGetProfile,
@@ -9,11 +10,31 @@ import {
   useMypageForm,
 } from "./hooks";
 import { ProfileHeader, ProfileForm, ProfileView } from "./components";
+import { useIsLoggedIn } from "@/hooks/useIsLoggedIn";
+import { getProfileComplete } from "@/utils/profileStorage";
 
 export default function MypagePage() {
-  const { data: profileData, isLoading: isProfileLoading } = useGetProfile();
+  const router = useRouter();
+  const { isLoggedIn, isReady } = useIsLoggedIn();
+
+  const hasProfileCompleteFlag = getProfileComplete();
+
+  const shouldFetchProfile = isReady && isLoggedIn && hasProfileCompleteFlag;
+
+  const { data: profileData, isLoading: isProfileLoading } =
+    useGetProfile(shouldFetchProfile);
+
+  useEffect(() => {
+    if (!isReady) return;
+    if (!isLoggedIn) return;
+    if (hasProfileCompleteFlag) return;
+
+    router.replace("/profile");
+  }, [isReady, isLoggedIn, hasProfileCompleteFlag, router]);
+
   const { mutate: updateProfileMutation, isPending: isUpdating } =
     useUpdateProfile();
+
   const { upload: uploadProfileImage } = useUploadProfileImage();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -25,6 +46,8 @@ export default function MypagePage() {
     updateProfileMutation,
   );
 
+  if (isReady && isLoggedIn && !hasProfileCompleteFlag) return null;
+
   if (isProfileLoading) {
     return (
       <main className="mypagePage">
@@ -33,18 +56,21 @@ export default function MypagePage() {
     );
   }
 
+  const hasExistingProfile = Boolean(profileData?.profile);
+  const isEditMode = mypageForm.isEditing;
+
   return (
     <main className="mypagePage">
       <div className="profileCard">
-        {!mypageForm.isEditing && (
+        {!isEditMode && (
           <ProfileHeader
             profileData={profileData}
             mypageForm={mypageForm}
-            hasExistingProfile={Boolean(profileData?.profile)}
+            hasExistingProfile={hasExistingProfile}
           />
         )}
 
-        {mypageForm.isEditing && profileData?.profile ? (
+        {isEditMode && hasExistingProfile ? (
           <ProfileForm
             profileData={profileData}
             mypageForm={mypageForm}
@@ -52,8 +78,8 @@ export default function MypagePage() {
             isUpdating={isUpdating}
             onProfileImageUpload={(file) => {
               uploadProfileImage(file).then((uploadedImageKey) => {
-                if (uploadedImageKey)
-                  mypageForm.setValue("profileImage", uploadedImageKey);
+                if (!uploadedImageKey) return;
+                mypageForm.setValue("profileImage", uploadedImageKey);
               });
             }}
           />

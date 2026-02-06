@@ -5,6 +5,7 @@ import {
   setRefreshTokenExpiry,
   clearTokenExpiryCookies,
 } from "@/utils/cookieUtils";
+import { clearProfileComplete } from "@/utils/profileStorage";
 
 /**
  * Access Token 조회
@@ -89,6 +90,7 @@ export function clearTokens() {
     window.localStorage.removeItem("accessToken");
     window.localStorage.removeItem("refreshToken");
     clearTokenExpiryCookies(); // 쿠키도 삭제
+    clearProfileComplete();
   } catch {
     // ignore
   }

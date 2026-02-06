@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ApiClient } from "@/config/apiConfig";
 import { QueryKey } from "@/constant/queryKeys";
 import { getAuthHeaders } from "@/utils/authUtils";
-import { parseErrorDetail } from "@/utils/parseErrorDetail";
 
 export type FinishTimerTaskItem = {
   content: string;
@@ -43,9 +42,8 @@ export const useFinishTimer = () => {
           pathParams: { timerId },
           headers: getAuthHeaders(),
           onNotOk: async (response) => {
-            const err = await parseErrorDetail(response);
             throw new Error(
-              `POST /api/timers/${timerId}/stop failed (${err.status}): ${err.message}`
+              `POST /api/timers/${timerId}/stop failed: ${response.status} ${response.statusText}`
             );
           },
         },

@@ -5,42 +5,25 @@ import CommonImage from "@/components/atoms/CommonImage/CommonImage";
 import DefaultImage from "@/asset/images/default_profile_image.svg";
 import Link from "next/link";
 import { useLogout } from "@/app/login/hooks/useLogout";
-<<<<<<< HEAD
-import { useQuery } from "@tanstack/react-query";
-import { AuthenticatedApiClient } from "@/config/authenticatedApiClient";
-import { QueryKey } from "@/constant/queryKeys";
-
-type ProfileResponse = {
-  nickname?: string;
-  profileImageUrl?: string;
-};
-=======
-import { useIsLoggedIn } from "@/app/Home/hooks/useIsLoggedIn";
 import { useDropdown } from "@/components/modules/CommonDropdown/hooks/useDropdown";
 import { useGetProfile } from "@/app/mypage/hooks/useGetProfile";
 import { getProfileImageUrl } from "@/app/mypage/constants";
 import { MdPerson, MdLogout } from "react-icons/md";
->>>>>>> origin/week3_feature_myPage
 
 type AccountMenuProps = {
   isLoggedIn: boolean;
+  hasProfile: boolean;
 };
 
-function AccountMenu({ isLoggedIn }: AccountMenuProps) {
+function AccountMenu({ isLoggedIn, hasProfile }: AccountMenuProps) {
   const { mutate: logout } = useLogout();
-<<<<<<< HEAD
-=======
-  const { isLoggedIn } = useIsLoggedIn();
   const { isOpen, toggle, rootRef } = useDropdown<HTMLLIElement>();
->>>>>>> origin/week3_feature_myPage
 
   const { data: profile } = useGetProfile(isLoggedIn);
   const nickname = profile?.nickname;
   const profileImageDisplayUrl = getProfileImageUrl(profile?.profile?.profileImage);
 
-  const handleLogout = () => {
-    logout();
-  };
+  const handleLogout = () => logout();
 
   return (
     <ul className={styles.navigation}>
@@ -65,12 +48,12 @@ function AccountMenu({ isLoggedIn }: AccountMenuProps) {
           {isOpen && (
             <div className={styles.accountMenu}>
               <Link
-                href="/mypage"
+                href={hasProfile ? "/mypage" : "/profile"}
                 className={styles.accountMenuItem}
                 onClick={toggle}
               >
                 <MdPerson size={20} className={styles.accountMenuIcon} />
-                마이페이지
+                {hasProfile ? "마이페이지" : "프로필 설정"}
               </Link>
               <div className={styles.accountMenuDivider} />
               <button

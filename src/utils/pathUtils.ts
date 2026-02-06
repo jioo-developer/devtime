@@ -1,12 +1,16 @@
 /**
  * 안전한 내부 경로인지 검증
- * - null/undefined 체크
- * - "/"로 시작하는지 확인
- * - "//" 또는 "\\" 같은 위험한 경로 차단
  */
 export function safeInternalPath(value: string | null): string | null {
   if (!value) return null;
-  if (!value.startsWith("/")) return null;
-  if (value.startsWith("//") || value.includes("\\")) return null;
+
+  const startsWithSlash = value.startsWith("/");
+  const startsWithDoubleSlash = value.startsWith("//");
+  const containsBackslash = value.includes("\\");
+
+  if (!startsWithSlash) return null; // "/"로 시작하지 않으면 null 반환
+  if (startsWithDoubleSlash) return null; // "//"로 시작하면 null 반환
+  if (containsBackslash) return null; // "\\"가 포함되어 있으면 null 반환
+
   return value;
 }

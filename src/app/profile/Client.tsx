@@ -1,9 +1,12 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { setProfileComplete } from "@/utils/profileStorage";
 import CommonImage from "@/components/atoms/CommonImage/CommonImage";
 import CommonButton from "@/components/atoms/CommonButton/CommonButton";
+import CommonInput from "@/components/atoms/CommonInput/CommonInput";
 import CommonAutocomplete from "@/components/modules/CommonAutoComplate/CommonAutoComplate";
+import CommonDropdown from "@/components/modules/CommonDropdown/CommonDropdown";
 import ImageUploader from "@/components/modules/CommonImageUploder/ImageUploder";
 import Logo from "@/asset/images/Logo.svg";
 import Background from "@/asset/images/logo_background.jpg";
@@ -14,11 +17,11 @@ import {
   PURPOSE_OTHER_VALUE,
   TECH_STACK_OPTIONS,
 } from "@/app/mypage/constants";
+import { useModalStore } from "@/store/modalStore";
 import { useCreateProfile, useUploadProfileImage } from "@/app/mypage/hooks";
 import { getCreateProfilePayload } from "@/app/mypage/utils/profileFormHandler";
 import type { ProfileFormData } from "@/app/mypage/types";
-import { isProfileFormIncomplete } from "./utils/profileFormValidation";
-import { useProfileModals } from "./hooks/useProfileModal";
+import { isProfileFormIncomplete } from "./profileFormValidation";
 import "./style.css";
 
 const PROFILE_SETTING_DEFAULTS: ProfileFormData = {
@@ -32,29 +35,47 @@ const PROFILE_SETTING_DEFAULTS: ProfileFormData = {
 };
 
 export default function ProfileSettingClient() {
+  // 라우터
   const router = useRouter();
+  // 폼 상태 관리
   const { register, watch, setValue, handleSubmit } = useForm<ProfileFormData>({
     defaultValues: PROFILE_SETTING_DEFAULTS,
     mode: "onChange",
   });
-  const { mutate: createProfile, isPending: isCreating } = useCreateProfile();
+  // 모달 스토어
+  const openModal = useModalStore((state) => state.push);
+  const closeModal = useModalStore((state) => state.closeTop);
+  // 프로필 생성 훅
+  const { mutate: createProfile } = useCreateProfile();
+  // 프로필 이미지 업로드 훅
   const { upload: uploadProfileImage } = useUploadProfileImage();
-  const { showValidationErrorModal, showCreateErrorModal } = useProfileModals();
-
-  const selectedTechStacks = watch("techStacks");
-  const currentProfileImage = watch("profileImage");
 
   const onSubmit = (formData: ProfileFormData) => {
     if (isProfileFormIncomplete(formData)) {
-      showValidationErrorModal();
+      openModal({
+        title: "입력 오류",
+        content: "모든 항목을 입력해 주세요.",
+        footer: (
+          <CommonButton theme="primary" onClick={() => closeModal()}>
+            확인
+          </CommonButton>
+        ),
+        BackdropMiss: false,
+      });
+      // 입력 오류 모달 띄우고 종료
       return;
     }
 
     const payload = getCreateProfilePayload(formData, undefined);
+    // 프로필 생성 요청
     createProfile(payload, {
-      onSuccess: () => router.replace("/"),
-      onError: (error) => showCreateErrorModal(error.message),
+      onSuccess: () => {
+        setProfileComplete();
+        router.replace("/");
+      },
+      onError: (error) => console.error(error),
     });
+    // 프로필 생성 실패 시 에러 콘솔 출력
   };
 
   return (
@@ -85,47 +106,46 @@ export default function ProfileSettingClient() {
           onSubmit={handleSubmit(onSubmit)}
           noValidate
         >
-          <div>
-            <span className="profileSettingLabel">개발 경력</span>
-            <select className="profileSettingSelect" {...register("career")}>
-              <option value="">선택하세요</option>
-              {CAREER_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+          <div className="profileSettingField">
+            <CommonDropdown
+              label="개발 경력"
+              placeholder="선택하세요"
+              options={CAREER_OPTIONS}
+              value={watch().career}
+              onChange={(value) => setValue("career", value)}
+              className="profileSettingDropdown"
+            />
           </div>
 
-          <div>
-            <span className="profileSettingLabel">공부 목적</span>
-            <select className="profileSettingSelect" {...register("purpose")}>
-              <option value="">선택하세요</option>
-              {PURPOSE_OPTIONS_WITH_OTHER.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-            {watch("purpose") === PURPOSE_OTHER_VALUE && (
+          <div className="profileSettingField">
+            <CommonDropdown
+              label="공부 목적"
+              placeholder="선택하세요"
+              options={PURPOSE_OPTIONS_WITH_OTHER}
+              value={watch().purpose}
+              onChange={(value) => setValue("purpose", value)}
+              className="profileSettingDropdown"
+            />
+            {watch().purpose === PURPOSE_OTHER_VALUE && (
               <div className="profileSettingPurposeDetailWrap">
-                <input
-                  type="text"
-                  className="profileSettingInput"
+                <CommonInput<ProfileFormData>
+                  id="purposeDetail"
+                  label=""
                   placeholder="공부 목적을 입력해 주세요."
-                  {...register("purposeDetail")}
+                  register={register}
+                  className="profileSettingInput"
                 />
               </div>
             )}
           </div>
 
-          <div>
-            <span className="profileSettingLabel">공부 목표</span>
-            <input
-              type="text"
-              className="profileSettingInput"
+          <div className="profileSettingField">
+            <CommonInput<ProfileFormData>
+              id="goal"
+              label="공부 목표"
               placeholder="슈퍼 개발자가 돼서 지구 정복"
-              {...register("goal")}
+              register={register}
+              className="profileSettingInput"
             />
           </div>
 
@@ -139,7 +159,7 @@ export default function ProfileSettingClient() {
               options={TECH_STACK_OPTIONS}
               multiSelect
               showAddButton
-              selectedItems={selectedTechStacks ?? []}
+              selectedItems={watch().techStacks ?? []}
               onSelectedItemsChange={(items) => setValue("techStacks", items)}
             />
           </div>
@@ -148,29 +168,21 @@ export default function ProfileSettingClient() {
             <span className="profileSettingLabel">프로필 이미지</span>
             <ImageUploader
               label=""
-              currentImageUrl={
-                currentProfileImage
-                  ? getProfileImageUrl(currentProfileImage)
-                  : undefined
-              }
+              currentImageUrl={getProfileImageUrl(watch().profileImage) || undefined}
               onImageChange={(file) => {
-                if (file) {
-                  uploadProfileImage(file).then((key) => {
-                    if (key) setValue("profileImage", key);
-                  });
-                }
+                if (!file) return;
+
+                uploadProfileImage(file).then((key) => {
+                  if (!key) return;
+                  setValue("profileImage", key);
+                });
               }}
             />
           </div>
 
           <div className="profileSettingActions">
-            <CommonButton
-              type="submit"
-              theme="primary"
-              width="100%"
-              disabled={isCreating}
-            >
-              {isCreating ? "저장 중..." : "저장하기"}
+            <CommonButton type="submit" theme="primary" width="100%">
+              저장하기
             </CommonButton>
           </div>
         </form>
