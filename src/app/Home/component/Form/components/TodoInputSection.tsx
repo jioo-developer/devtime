@@ -32,6 +32,7 @@ export function TodoInputSection({
           id="title"
           type="text"
           placeholder="오늘의 목표"
+          maxLength={30}
           register={register}
           className="titleInputNoBorder"
           validation={{
@@ -49,6 +50,7 @@ export function TodoInputSection({
           id="todoInput"
           type="text"
           placeholder="할 일을 입력해주세요. (최대 30자)"
+          maxLength={30}
           register={register}
           className="todoInputNoBorder"
           validation={{

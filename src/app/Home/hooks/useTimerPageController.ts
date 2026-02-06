@@ -1,7 +1,7 @@
 "use client";
 import { useShallow } from "zustand/react/shallow";
 import { useTimerStore } from "@/store/timerStore";
-import { useIsLoggedIn } from "./useIsLoggedIn";
+import { useIsLoggedIn } from "@/hooks";
 import { useGetTimers } from "./getter/useGetTimers";
 import { useGetStudyLog } from "./getter/useGetStudyLog";
 import { useRestoreTimerState } from "./timer/useRestoreTimerState";

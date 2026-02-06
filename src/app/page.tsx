@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import HomePage from "./Home/page";
+import TimerPage from "./Home/TimerPage";
 
 export const metadata: Metadata = {
   title: "DevTime",
@@ -11,5 +11,5 @@ export const metadata: Metadata = {
 };
 
 export default function Main() {
-  return <HomePage />;
+  return <TimerPage />;
 }
