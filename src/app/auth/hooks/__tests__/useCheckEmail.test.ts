@@ -27,7 +27,7 @@ describe("useCheckEmail", () => {
       success: true,
       available: true,
       message: "사용 가능한 이메일입니다.",
-    });
+    } as Awaited<ReturnType<typeof ApiClient.get>>);
 
     const { result } = renderHook(
       () =>
@@ -46,7 +46,7 @@ describe("useCheckEmail", () => {
     });
 
     expect(ApiClient.get).toHaveBeenCalledWith("/api/signup/check-email", {
-      email: "test@example.com",
+      query: { email: "test@example.com" },
     });
     expect(mockClearErrors).toHaveBeenCalledWith("email");
     expect(mockSetSuccessMessage).toHaveBeenCalledWith(
@@ -63,7 +63,7 @@ describe("useCheckEmail", () => {
       success: false,
       available: false,
       message: "이미 사용 중인 이메일입니다.",
-    });
+    } as Awaited<ReturnType<typeof ApiClient.get>>);
 
     const { result } = renderHook(
       () =>

@@ -36,18 +36,19 @@ export const useFinishTimer = () => {
 
   return useMutation<FinishTimerResponse, Error, FinishTimerVariables>({
     mutationFn: async ({ timerId, data }) => {
-      const res = await ApiClient.post<FinishTimerResponse>(
-        `/api/timers/${timerId}/stop`,
+      const res = await ApiClient.post(
+        "/api/timers/{timerId}/stop",
         data,
-        getAuthHeaders(),
         {
+          pathParams: { timerId },
+          headers: getAuthHeaders(),
           onNotOk: async (response) => {
             const err = await parseErrorDetail(response);
             throw new Error(
               `POST /api/timers/${timerId}/stop failed (${err.status}): ${err.message}`
             );
           },
-        }
+        },
       );
       return res;
     },

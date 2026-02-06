@@ -27,7 +27,7 @@ describe("useCheckNickname", () => {
       success: true,
       available: true,
       message: "사용 가능한 닉네임입니다.",
-    });
+    } as Awaited<ReturnType<typeof ApiClient.get>>);
 
     const { result } = renderHook(
       () =>
@@ -46,7 +46,7 @@ describe("useCheckNickname", () => {
     });
 
     expect(ApiClient.get).toHaveBeenCalledWith("/api/signup/check-nickname", {
-      nickname: "테스트닉네임",
+      query: { nickname: "테스트닉네임" },
     });
     expect(mockClearErrors).toHaveBeenCalledWith("nickname");
     expect(mockSetSuccessMessage).toHaveBeenCalledWith(
@@ -63,7 +63,7 @@ describe("useCheckNickname", () => {
       success: false,
       available: false,
       message: "이미 사용 중인 닉네임입니다.",
-    });
+    } as Awaited<ReturnType<typeof ApiClient.get>>);
 
     const { result } = renderHook(
       () =>
@@ -97,7 +97,7 @@ describe("useCheckNickname", () => {
       success: false,
       available: false,
       message: "",
-    });
+    } as Awaited<ReturnType<typeof ApiClient.get>>);
 
     const { result } = renderHook(
       () =>

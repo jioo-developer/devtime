@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 export type TodoStatus =
   | "active"
@@ -58,10 +58,7 @@ export function useTodoListItemController({
     setCurrentText(next);
   };
 
-  const normalizedText = useMemo(
-    () => String(currentText ?? "").trim(),
-    [currentText]
-  );
+  const normalizedText = String(currentText ?? "").trim();
 
   /** 아이템 클릭을 "완료 토글"로 사용 */
   const onItemClick = () => {

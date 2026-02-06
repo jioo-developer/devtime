@@ -78,19 +78,16 @@ export function useGetStudyLogsList(
     // 실제 API 호출
     queryFn: async () => {
       const queryParams = {
-        page: String(pageNumber),
-        limit: String(pageSize),
+        page: pageNumber,
+        limit: pageSize,
       };
 
-      // 인증 헤더 포함 (예: Authorization)
       const authHeaders = getAuthHeaders();
 
-      const apiResponse =
-        await ApiClient.get<StudyLogsListApiResponse>(
-          "/api/study-logs",
-          queryParams,
-          authHeaders
-        );
+      const apiResponse = await ApiClient.get("/api/study-logs", {
+        query: queryParams,
+        headers: authHeaders,
+      });
 
       // API DTO → 프론트 결과 모델 변환
       return mapToResult(apiResponse);

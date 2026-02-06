@@ -4,18 +4,13 @@ import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { clearTokens } from "@/config/utils/tokenStorage";
 
-type LogoutResponse = {
-  success: boolean;
-  message?: string;
-};
-
 export const useLogout = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: () => {
-      return AuthenticatedApiClient.post<LogoutResponse>("/api/auth/logout", {});
+      return AuthenticatedApiClient.post("/api/auth/logout", undefined);
     },
     onSuccess: () => {
       // 토큰 삭제
