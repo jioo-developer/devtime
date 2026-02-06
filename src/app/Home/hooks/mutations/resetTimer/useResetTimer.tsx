@@ -2,7 +2,7 @@
 import React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useShallow } from "zustand/react/shallow";
-import { ApiClient } from "@/config/apiConfig";
+import { ApiClient } from "@/config/apiConfig/apiConfig";
 import { QueryKey } from "@/constant/queryKeys";
 import { getAuthHeaders } from "@/utils/authUtils";
 import { useModalStore } from "@/store/modalStore";

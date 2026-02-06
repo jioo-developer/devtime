@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { ApiClient } from "@/config/apiConfig";
+import { ApiClient } from "@/config/apiConfig/apiConfig";
 import { UseChecValidationlParams } from "./hookTypes";
 
 export const useCheckEmail = ({

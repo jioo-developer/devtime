@@ -4,9 +4,11 @@
  */
 export function redirectToLogin() {
   if (typeof window === "undefined") return;
-  const current =
-    window.location.pathname + window.location.search + window.location.hash;
-  const redirect = encodeURIComponent(current || "/");
+
+  const { pathname, search, hash } = window.location;
+  const currentUrl = `${pathname}${search}${hash}`;
+
+  const redirect = encodeURIComponent(currentUrl || "/");
   window.location.replace(`/login?redirect=${redirect}`);
 }
 
@@ -15,11 +17,26 @@ export function redirectToLogin() {
  * - 토큰이 없으면 네트워크 요청 자체를 보내지 않고 에러 발생
  * - 리다이렉트는 호출부에서 처리해야 함
  */
-export class UnauthorizedError extends Error {
-  constructor(message = "Unauthorized") {
-    super(message);
-    this.name = "UnauthorizedError";
-  }
+export interface UnauthorizedError extends Error {
+  name: "UnauthorizedError";
+  code: "UNAUTHORIZED";
+}
+
+export function createUnauthorizedError(
+  message = "Access token is required",
+): UnauthorizedError {
+  const error = new Error(message) as UnauthorizedError;
+  error.name = "UnauthorizedError";
+  error.code = "UNAUTHORIZED";
+  return error;
+}
+
+export function isUnauthorizedError(
+  error: unknown,
+): error is UnauthorizedError {
+  if (!(error instanceof Error)) return false;
+  const unAuthorizedError = error as UnauthorizedError;
+  return unAuthorizedError.code === "UNAUTHORIZED";
 }
 
 /**
@@ -31,8 +48,6 @@ export function getAccessTokenOrThrow(
   getAccessToken: () => string | null,
 ): string {
   const token = getAccessToken();
-  if (!token) {
-    throw new UnauthorizedError("Access token is required");
-  }
+  if (!token) throw createUnauthorizedError();
   return token;
 }

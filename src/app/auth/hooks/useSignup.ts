@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { ApiClient } from "@/config/apiConfig";
+import { ApiClient } from "@/config/apiConfig/apiConfig";
 import { useLogin } from "@/app/login/hooks/useLogin";
 import type { LoginResponse } from "@/app/login/types";
 import { setTokens } from "@/config/utils/tokenStorage";

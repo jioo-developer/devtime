@@ -1,4 +1,4 @@
-import { AuthenticatedApiClient } from "@/config/authenticatedApiClient";
+import { AuthenticatedApiClient } from "@/config/apiConfig/authenticated/AuthApiConfig";
 import { putBinary } from "@/config/s3ImageClient";
 
 /**

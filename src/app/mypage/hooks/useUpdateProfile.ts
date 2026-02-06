@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AuthenticatedApiClient } from "@/config/authenticatedApiClient";
+import { AuthenticatedApiClient } from "@/config/apiConfig/authenticated/AuthApiConfig";
 import { QueryKey } from "@/constant/queryKeys";
 import type { UpdateProfileRequest, ProfileSuccessResponse } from "../types";
 

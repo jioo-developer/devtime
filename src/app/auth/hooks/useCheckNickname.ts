@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import type { Path } from "react-hook-form";
-import { ApiClient } from "@/config/apiConfig";
+import { ApiClient } from "@/config/apiConfig/apiConfig";
 import { UseChecValidationlParams } from "./hookTypes";
 
 const NICKNAME_FIELD = "nickname" as const;

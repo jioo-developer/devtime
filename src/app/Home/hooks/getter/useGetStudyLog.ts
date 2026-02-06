@@ -1,5 +1,5 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { ApiClient } from "@/config/apiConfig";
+import { ApiClient } from "@/config/apiConfig/apiConfig";
 import { QueryKey } from "@/constant/queryKeys";
 import { getAuthHeaders } from "@/utils/authUtils";
 import type { ApiResponseSuccess } from "@/types/api/helpers";

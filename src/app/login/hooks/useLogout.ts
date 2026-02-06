@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { AuthenticatedApiClient } from "@/config/authenticatedApiClient";
+import { AuthenticatedApiClient } from "@/config/apiConfig/authenticated/AuthApiConfig";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { clearTokens } from "@/config/utils/tokenStorage";

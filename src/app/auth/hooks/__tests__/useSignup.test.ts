@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, waitFor } from "@testing-library/react";
 import { useSignup } from "../useSignup";
 import { createTestQueryClient, createWrapper } from "./test-utils";
-import { ApiClient } from "@/config/apiConfig";
+import { ApiClient } from "@/config/apiConfig/apiConfig";
 
 vi.mock("@/config/apiConfig", () => ({
   ApiClient: {
