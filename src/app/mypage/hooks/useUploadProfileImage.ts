@@ -1,5 +1,5 @@
+import { ApiClient } from "@/config/apiConfig/apiConfig";
 import { AuthenticatedApiClient } from "@/config/apiConfig/authenticated/AuthApiConfig";
-import { putBinary } from "@/config/s3ImageClient";
 
 /**
  * 가이드: Presigned URL 발급 → S3 PUT 업로드 → key 반환.
@@ -14,7 +14,7 @@ export function useUploadProfileImage() {
           contentType: file.type,
         });
 
-      await putBinary(presignedUrl, file, file.type);
+      await ApiClient.putBinary(presignedUrl, file, file.type);
       return s3ObjectKey;
     } catch {
       return null;
