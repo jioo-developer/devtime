@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
 import CommonImage from "@/components/atoms/CommonImage/CommonImage";
@@ -8,26 +8,18 @@ import CommonButton from "@/components/atoms/CommonButton/CommonButton";
 import CommonCheckbox from "@/components/atoms/CommonCheckbox/CommonCheckbox";
 import LoginBgImage from "@/asset/images/login-background-image.png";
 import LogoBlue from "@/asset/images/logo_blue.svg";
-import { useLogin } from "./hooks/useLogin";
-import { handleDuplicateLogin } from "./hooks/handleDuplicateLogin";
-import { handleLoginError } from "./hooks/handleLoginError";
-import { setTokens } from "@/config/utils/tokenStorage";
-import type { LoginResponse } from "./types";
-import "./style.css";
-import Link from "next/link";
+import { createLoginSuccessHandler, useLogin } from "./hooks/useLogin";
+import { useSavedEmail } from "./hooks/useSavedEmail";
 import { safeInternalPath } from "@/utils/pathUtils";
 import { isAccessTokenValid } from "@/utils/cookieUtils";
-
-type LoginFormData = {
-  email: string;
-  password: string;
-};
+import { LoginData } from "./types";
+import Link from "next/link";
+import "./style.css";
 
 function Client() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isAuthCheck, setisAuthCheck] = useState(true);
-  const checkboxRef = useRef<HTMLInputElement>(null);
   const {
     register,
     watch,
@@ -35,64 +27,31 @@ function Client() {
     setValue,
     formState: { errors },
     trigger,
-  } = useForm<LoginFormData>({
+  } = useForm<LoginData>({
     mode: "onChange",
   });
 
   const { email, password } = watch();
+  const { checkboxRef, saveEmailIfChecked } = useSavedEmail(setValue);
   const { mutate: login } = useLogin();
+  const handleLoginSuccess = createLoginSuccessHandler(router, searchParams);
 
   const isFormValid =
     !!email && !!password && !errors.email && !errors.password;
 
-  const handleLoginSuccess = (result: LoginResponse) => {
-    if (result.success) {
-      // 중복 로그인 처리
-      if (result.isDuplicateLogin) {
-        handleDuplicateLogin(result, router, searchParams);
-      } else {
-        // 일반 로그인 처리
-        setTokens(result.accessToken, result.refreshToken);
-        if (result.isFirstLogin) {
-          router.replace("/profile");
-        } else {
-          const redirectParam = safeInternalPath(searchParams.get("redirect"));
-          router.replace(redirectParam ?? "/");
-        }
-      }
-    }
-  };
-
-  const onSubmit = async (data: LoginFormData) => {
+  const onSubmit = async (data: LoginData) => {
     if (isFormValid) {
-      // 체크박스 상태 확인하여 이메일 저장
-      if (checkboxRef.current?.checked) {
-        localStorage.setItem("savedEmail", data.email);
-      } else {
-        localStorage.removeItem("savedEmail");
-      }
+      saveEmailIfChecked(data.email);
       login(data, {
         onSuccess: handleLoginSuccess,
-        onError: handleLoginError,
+        onError: (error) => {
+          console.error("로그인 실패:", error);
+        },
       });
     } else {
       await trigger(["email", "password"]);
     }
   };
-
-  // 저장된 이메일 불러오기
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const saved = localStorage.getItem("savedEmail");
-    if (saved) {
-      setValue("email", saved);
-      // 체크박스도 체크 상태로 설정
-      if (checkboxRef.current) {
-        checkboxRef.current.checked = true;
-      }
-    }
-  }, [setValue]);
 
   // 로그인된 상태면 로그인 페이지 접근 불가 (렌더링 전에 체크)
   useEffect(() => {

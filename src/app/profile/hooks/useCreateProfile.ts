@@ -1,11 +1,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AuthenticatedApiClient } from "@/config/apiConfig/authenticated/AuthApiConfig";
 import { QueryKey } from "@/constant/queryKeys";
-import type { CreateProfileRequest, ProfileSuccessResponse } from "../types";
+import type {
+  CreateProfileRequest,
+  CreateProfileResponse,
+} from "@/app/profile/types";
 
 export function useCreateProfile() {
   const queryClient = useQueryClient();
-  return useMutation<ProfileSuccessResponse, Error, CreateProfileRequest>({
+  return useMutation<CreateProfileResponse, Error, CreateProfileRequest>({
     mutationFn: (createProfilePayload) =>
       AuthenticatedApiClient.post("/api/profile", createProfilePayload),
     onSuccess: () => {

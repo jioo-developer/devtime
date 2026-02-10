@@ -5,7 +5,7 @@ import {
   setRefreshTokenExpiry,
   clearTokenExpiryCookies,
 } from "@/utils/cookieUtils";
-import { clearProfileComplete } from "@/utils/profileStorage";
+import { clearProfileComplete } from "@/app/profile/utils/localStorage";
 
 /**
  * Access Token 조회

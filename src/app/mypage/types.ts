@@ -1,5 +1,5 @@
 /**
- * 마이페이지 API 타입 — OpenAPI generated + helpers 기반 (수동 정의 제거)
+ * 마이페이지 전용 타입 (프로필 타입은 @/app/profile/types)
  */
 import type { ApiRequest, ApiResponse } from "@/types/api/helpers";
 import type {
@@ -10,10 +10,19 @@ import type {
   UseFormSetValue,
   UseFormWatch,
 } from "react-hook-form";
+import type {
+  CreateProfileRequest,
+  ProfileFormData,
+  UpdateProfileRequest,
+} from "@/app/profile/types";
 
-export type GetProfileResponse = ApiResponse<"/api/profile", "get", 200>;
-export type CreateProfileRequest = ApiRequest<"/api/profile", "post">;
-export type UpdateProfileRequest = ApiRequest<"/api/profile", "put">;
+export type {
+  CreateProfileRequest,
+  GetProfileResponse,
+  ProfileFormData,
+  UpdateProfileRequest,
+} from "@/app/profile/types";
+
 export type ProfileSuccessResponse = ApiResponse<"/api/profile", "post", 200>;
 export type PresignedUrlRequest = ApiRequest<"/api/file/presigned-url", "post">;
 export type PresignedUrlResponse = ApiResponse<
@@ -21,21 +30,6 @@ export type PresignedUrlResponse = ApiResponse<
   "post",
   200
 >;
-
-/** 프로필 폼 필드 (react-hook-form) */
-export type ProfileFormData = {
-  nickname: string;
-  goal: string;
-  career: string;
-  purpose: string;
-  /** purpose가 "기타"일 때만 사용 */
-  purposeDetail: string;
-  techStacks: string[];
-  profileImage: string;
-  /** 회원정보 수정 시에만 사용(선택) */
-  newPassword?: string;
-  newPasswordConfirmation?: string;
-};
 
 export type CreateProfileMutation = (
   createPayload: CreateProfileRequest,

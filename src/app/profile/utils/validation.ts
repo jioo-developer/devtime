@@ -1,5 +1,5 @@
-import { PURPOSE_OTHER_VALUE } from "@/app/mypage/constants";
-import type { ProfileFormData } from "@/app/mypage/types";
+import { PURPOSE_OTHER_VALUE } from "@/app/profile/constants/constants";
+import type { ProfileFormData } from "@/app/profile/types";
 
 export function isProfileFormIncomplete(data: ProfileFormData): boolean {
   const isBlank = (value?: string) => (value ?? "").trim() === "";

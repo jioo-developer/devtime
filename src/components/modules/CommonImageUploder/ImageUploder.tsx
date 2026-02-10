@@ -7,8 +7,12 @@ interface ImageUploaderProps {
   label?: string;
   maxSize?: number; // MB
   acceptedFormats?: string[];
-  /** 기존 프로필 이미지 URL — 있으면 업로드 영역에 표시, 새 파일 선택 시 교체 */
+  /** 기존 이미지 URL 직접 전달 (imageKey 미사용 시) */
   currentImageUrl?: string;
+  /** 저장된 이미지 키 → imageKey + getImageUrl 사용 시 표시 URL을 컴포넌트 내부에서 계산 (키/URL 없으면 defaultImageUrl) */
+  imageKey?: string;
+  getImageUrl?: (key: string) => string;
+  defaultImageUrl?: string;
   onImageChange?: (file: File | null) => void;
 }
 
@@ -17,14 +21,23 @@ function ImageUploader({
   maxSize = 5,
   acceptedFormats = [".png", ".jpg", ".jpeg"],
   currentImageUrl,
+  imageKey,
+  getImageUrl,
+  defaultImageUrl,
   onImageChange,
 }: ImageUploaderProps) {
   const [preview, setPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const trimmedImageKey = imageKey?.trim();
+
+  const displayUrl =
+    trimmedImageKey && getImageUrl
+      ? getImageUrl(trimmedImageKey)?.trim() || defaultImageUrl
+      : currentImageUrl;
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-
     if (file) {
       // 파일 크기 체크
       if (file.size > maxSize * 1024 * 1024) {
@@ -68,10 +81,10 @@ function ImageUploader({
               width={200}
               height={200}
             />
-          ) : currentImageUrl ? (
+          ) : displayUrl ? (
             <CommonImage
               className={styles.uploadPreview}
-              src={currentImageUrl}
+              src={displayUrl}
               alt="현재 프로필"
               width={200}
               height={200}

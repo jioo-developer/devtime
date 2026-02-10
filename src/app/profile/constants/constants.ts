@@ -1,13 +1,22 @@
 /**
- * 프로필 셀렉트 옵션 (OpenAPI 스펙 기준)
- * - Career, Purpose, Tech Stack 순으로 도메인별 정의
- * - 각 도메인: API 값 목록 → 타입 → OPTIONS (정규화/라벨은 toAllowedEnumValue, getEnumLabel 사용)
+ * 프로필 셀렉트 옵션 (OpenAPI 스펙 기준) — 마이페이지에서도 사용
  */
 
 export type SelectOption<T extends string> = {
   value: T;
   label: string;
 };
+
+type EnumValues = readonly string[];
+type OptionalString = string | undefined;
+type EnumOptions<T extends string> = readonly SelectOption<T>[];
+
+function createOptions<T extends EnumValues>(allowedValues: T) {
+  return allowedValues.map((allowedValue) => ({
+    value: allowedValue,
+    label: allowedValue,
+  })) as { value: T[number]; label: string }[];
+}
 
 // ─── Career ─────────────────────────────────────────────────────────────
 export type CareerApiValue = (typeof CAREER_API_VALUES)[number];
@@ -78,18 +87,7 @@ const TECH_STACK_NAMES = [
 
 export const TECH_STACK_OPTIONS = createOptions(TECH_STACK_NAMES);
 
-// ─── 내부 헬퍼 (위 도메인에서 공통 사용) ─────────────────────────────────
-
-type EnumValues = readonly string[];
-type OptionalString = string | undefined;
-type EnumOptions<T extends string> = readonly SelectOption<T>[];
-
-function createOptions<T extends EnumValues>(allowedValues: T) {
-  return allowedValues.map((allowedValue) => ({
-    value: allowedValue,
-    label: allowedValue,
-  })) as { value: T[number]; label: string }[];
-}
+// ─── 유틸 ───────────────────────────────────────────────────────────────
 
 export function toAllowedEnumValue<T extends EnumValues>(
   userInput: OptionalString,

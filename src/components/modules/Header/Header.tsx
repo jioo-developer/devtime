@@ -7,7 +7,7 @@ import Navigation from "./component/Navigation";
 import AccountMenu from "./component/AccountMenu";
 import Link from "next/link";
 import { useIsLoggedIn } from "@/hooks/useIsLoggedIn";
-import { getProfileComplete } from "@/utils/profileStorage";
+import { getProfileComplete } from "@/app/profile/utils/localStorage";
 
 function Header() {
   const { isLoggedIn } = useIsLoggedIn();

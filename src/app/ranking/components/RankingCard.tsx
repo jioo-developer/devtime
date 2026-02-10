@@ -1,5 +1,4 @@
 "use client";
-
 import CommonBadge from "@/components/atoms/CommonBadge/CommonBadge";
 import CommonChip from "@/components/atoms/CommonChip/CommonChip";
 import CommonImage from "@/components/atoms/CommonImage/CommonImage";

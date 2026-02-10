@@ -5,10 +5,8 @@ import type {
   ProfileFormData,
   UpdateProfileMutation,
 } from "../types";
-import {
-  getFormDefaultValuesFromProfile,
-  getUpdateProfilePayload,
-} from "../utils/profileFormHandler";
+import { getFormDefaultValuesFromProfile } from "../utils/getFormDefaultValuesFromProfile";
+import { getUpdateProfilePayload } from "../../profile/utils/payload";
 
 export function useMypageForm(
   profileData: GetProfileResponse | undefined,

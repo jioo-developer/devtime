@@ -1,30 +1,32 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { setProfileComplete } from "@/utils/profileStorage";
+import { getCreateProfilePayload } from "@/app/profile/utils/payload";
+import { setProfileComplete } from "@/app/profile/utils/localStorage";
 import CommonImage from "@/components/atoms/CommonImage/CommonImage";
 import CommonButton from "@/components/atoms/CommonButton/CommonButton";
 import CommonInput from "@/components/atoms/CommonInput/CommonInput";
 import CommonAutocomplete from "@/components/modules/CommonAutoComplate/CommonAutoComplate";
 import CommonDropdown from "@/components/modules/CommonDropdown/CommonDropdown";
 import ImageUploader from "@/components/modules/CommonImageUploder/ImageUploder";
-import Logo from "@/asset/images/Logo.svg";
-import Background from "@/asset/images/logo_background.jpg";
+import { useModalStore } from "@/store/modalStore";
+import { useCreateProfile } from "@/app/profile/hooks/useCreateProfile";
+import { useUploadProfileImage } from "@/app/mypage/hooks";
+import { getProfileImageUrl } from "@/app/mypage/constants";
+import { isProfileFormIncomplete } from "./utils/validation";
+import type { ProfileFormData } from "@/app/profile/types";
 import {
   CAREER_OPTIONS,
-  getProfileImageUrl,
   PURPOSE_OPTIONS_WITH_OTHER,
   PURPOSE_OTHER_VALUE,
   TECH_STACK_OPTIONS,
-} from "@/app/mypage/constants";
-import { useModalStore } from "@/store/modalStore";
-import { useCreateProfile, useUploadProfileImage } from "@/app/mypage/hooks";
-import { getCreateProfilePayload } from "@/app/mypage/utils/profileFormHandler";
-import type { ProfileFormData } from "@/app/mypage/types";
-import { isProfileFormIncomplete } from "./utils/profileFormValidation";
+} from "@/app/profile/constants/constants";
+import Background from "@/asset/images/logo_background.jpg";
+import Logo from "@/asset/images/Logo.svg";
+import DEFAULT_PROFILE_IMAGE from "@/asset/images/default_profile_image.svg";
 import "./style.css";
 
-const PROFILE_SETTING_DEFAULTS: ProfileFormData = {
+const DefaultFormData: ProfileFormData = {
   nickname: "",
   goal: "",
   career: "",
@@ -34,20 +36,20 @@ const PROFILE_SETTING_DEFAULTS: ProfileFormData = {
   profileImage: "",
 };
 
-export default function ProfileSettingClient() {
-  // 라우터
+export default function Client() {
   const router = useRouter();
-  // 폼 상태 관리
-  const { register, watch, setValue, handleSubmit } = useForm<ProfileFormData>({
-    defaultValues: PROFILE_SETTING_DEFAULTS,
+  const {
+    register,
+    watch: formWatch,
+    setValue,
+    handleSubmit,
+  } = useForm<ProfileFormData>({
+    defaultValues: DefaultFormData,
     mode: "onChange",
   });
-  // 모달 스토어
   const openModal = useModalStore((state) => state.push);
   const closeModal = useModalStore((state) => state.closeTop);
-  // 프로필 생성 훅
   const { mutate: createProfile } = useCreateProfile();
-  // 프로필 이미지 업로드 훅
   const { upload: uploadProfileImage } = useUploadProfileImage();
 
   const onSubmit = (formData: ProfileFormData) => {
@@ -62,12 +64,10 @@ export default function ProfileSettingClient() {
         ),
         BackdropMiss: false,
       });
-      // 입력 오류 모달 띄우고 종료
       return;
     }
 
-    const payload = getCreateProfilePayload(formData, undefined);
-    // 프로필 생성 요청
+    const payload = getCreateProfilePayload(formData);
     createProfile(payload, {
       onSuccess: () => {
         setProfileComplete();
@@ -75,7 +75,6 @@ export default function ProfileSettingClient() {
       },
       onError: (error) => console.error(error),
     });
-    // 프로필 생성 실패 시 에러 콘솔 출력
   };
 
   return (
@@ -111,7 +110,7 @@ export default function ProfileSettingClient() {
               label="개발 경력"
               placeholder="선택하세요"
               options={CAREER_OPTIONS}
-              value={watch().career}
+              value={formWatch("career")}
               onChange={(value) => setValue("career", value)}
               className="profileSettingDropdown"
             />
@@ -122,11 +121,11 @@ export default function ProfileSettingClient() {
               label="공부 목적"
               placeholder="선택하세요"
               options={PURPOSE_OPTIONS_WITH_OTHER}
-              value={watch().purpose}
+              value={formWatch("purpose")}
               onChange={(value) => setValue("purpose", value)}
               className="profileSettingDropdown"
             />
-            {watch().purpose === PURPOSE_OTHER_VALUE && (
+            {formWatch("purpose") === PURPOSE_OTHER_VALUE && (
               <div className="profileSettingPurposeDetailWrap">
                 <CommonInput<ProfileFormData>
                   id="purposeDetail"
@@ -159,7 +158,7 @@ export default function ProfileSettingClient() {
               options={TECH_STACK_OPTIONS}
               multiSelect
               showAddButton
-              selectedItems={watch().techStacks ?? []}
+              selectedItems={formWatch("techStacks") ?? []}
               onSelectedItemsChange={(items) => setValue("techStacks", items)}
             />
           </div>
@@ -168,9 +167,9 @@ export default function ProfileSettingClient() {
             <span className="profileSettingLabel">프로필 이미지</span>
             <ImageUploader
               label=""
-              currentImageUrl={
-                getProfileImageUrl(watch().profileImage) || undefined
-              }
+              imageKey={formWatch("profileImage")}
+              getImageUrl={getProfileImageUrl}
+              defaultImageUrl={DEFAULT_PROFILE_IMAGE}
               onImageChange={(file) => {
                 if (!file) return;
 

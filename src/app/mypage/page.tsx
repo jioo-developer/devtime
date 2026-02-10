@@ -11,7 +11,7 @@ import {
 } from "./hooks";
 import { ProfileHeader, ProfileForm, ProfileView } from "./components";
 import { useIsLoggedIn } from "@/hooks/useIsLoggedIn";
-import { getProfileComplete } from "@/utils/profileStorage";
+import { getProfileComplete } from "@/app/profile/utils/localStorage";
 
 export default function MypagePage() {
   const router = useRouter();
