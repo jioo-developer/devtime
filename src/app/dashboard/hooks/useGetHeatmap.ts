@@ -1,9 +1,7 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { ApiClient } from "@/config/apiConfig/apiConfig";
 import { QueryKey } from "@/constant/queryKeys";
-import { getAuthHeaders } from "@/utils/authUtils";
 import type { HeatmapResponse } from "../types";
-import { normalizeHeatmap } from "../utils/heatMap/normalizeHeatmapResponse";
+import { getMockGrid } from "../utils/mockHeatmapGrid";
 
 export function useGetHeatmap(
   enabled: boolean = true,
@@ -12,10 +10,8 @@ export function useGetHeatmap(
     queryKey: [QueryKey.HEATMAP],
     enabled,
     queryFn: async () => {
-      const res = await ApiClient.get("/api/heatmap", {
-        headers: getAuthHeaders(),
-      });
-      return normalizeHeatmap(res);
+      const cells = getMockGrid(new Date().getFullYear());
+      return { heatmap: cells };
     },
     staleTime: 60 * 1000,
   });

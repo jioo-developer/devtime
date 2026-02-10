@@ -1,7 +1,5 @@
 "use client";
-
 import "./RankingTabs.css";
-
 export type RankingTabType = "total" | "dailyAvg";
 
 type RankingTabsProps = {

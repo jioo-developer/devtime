@@ -1,7 +1,7 @@
 /**
  * 마이페이지 전용 타입 (프로필 타입은 @/app/profile/types)
+ * - 마이페이지는 프로필 완료 후에만 진입하므로 PUT(수정)만 사용, POST(생성)는 /profile에서만 사용
  */
-import type { ApiRequest, ApiResponse } from "@/types/api/helpers";
 import type {
   FieldErrors,
   UseFormClearErrors,
@@ -10,31 +10,26 @@ import type {
   UseFormSetValue,
   UseFormWatch,
 } from "react-hook-form";
+import type { ApiRequest, ApiResponse } from "@/types/api/helpers";
 import type {
-  CreateProfileRequest,
   ProfileFormData,
   UpdateProfileRequest,
 } from "@/app/profile/types";
 
 export type {
-  CreateProfileRequest,
   GetProfileResponse,
   ProfileFormData,
   UpdateProfileRequest,
 } from "@/app/profile/types";
 
-export type ProfileSuccessResponse = ApiResponse<"/api/profile", "post", 200>;
+/** PUT /api/profile 응답 (마이페이지는 수정만 사용) */
+export type UpdateProfileResponse = ApiResponse<"/api/profile", "put", 200>;
 export type PresignedUrlRequest = ApiRequest<"/api/file/presigned-url", "post">;
 export type PresignedUrlResponse = ApiResponse<
   "/api/file/presigned-url",
   "post",
   200
 >;
-
-export type CreateProfileMutation = (
-  createPayload: CreateProfileRequest,
-  callbacks?: { onSuccess?: () => void; onError?: (err: Error) => void },
-) => void;
 
 export type UpdateProfileMutation = (
   updatePayload: UpdateProfileRequest,

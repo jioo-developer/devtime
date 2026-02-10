@@ -2,12 +2,8 @@ import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { ApiClient } from "@/config/apiConfig/apiConfig";
 import { QueryKey } from "@/constant/queryKeys";
 import { getAuthHeaders } from "@/utils/authUtils";
-import {
-  toStatsDisplay,
-  type StatsDisplay,
-} from "../utils/heatMap/normalizeStatsResponse";
-
-export type { StatsDisplay } from "../utils/heatMap/normalizeStatsResponse";
+import type { StatsDisplay } from "../utils/normalizeStatsResponse";
+import { toStatsDisplay } from "../utils/normalizeStatsResponse";
 
 export function useGetStats(
   enabled: boolean = true,

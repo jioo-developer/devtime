@@ -1,5 +1,6 @@
 "use client";
 import CommonButton from "@/components/atoms/CommonButton/CommonButton";
+
 type RecordsPaginationProps = {
   page: number;
   totalPages: number;

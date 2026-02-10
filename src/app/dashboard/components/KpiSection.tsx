@@ -5,7 +5,7 @@ import {
   WEEKDAY_LABELS,
   WEEKDAY_KEYS,
   HEATMAP_Y_LABELS,
-} from "../utils/data";
+} from "../constants/data";
 import { useGetStats } from "../hooks/useGetStats";
 
 export function KpiSection() {

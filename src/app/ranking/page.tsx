@@ -1,25 +1,11 @@
-"use client";
+import type { Metadata } from "next";
+import { Client } from "./Client";
 
-import { useState } from "react";
-import "./style.css";
-import { RankingTabs } from "./components/RankingTabs";
-import { RankingCard } from "./components/RankingCard";
-import type { RankingTabType } from "./components/RankingTabs";
-import { MOCK_RANKING } from "./data/mockRanking";
+export const metadata: Metadata = {
+  title: "랭킹",
+  description: "공부 시간 랭킹을 확인해 보세요.",
+};
 
 export default function RankingPage() {
-  const [tab, setTab] = useState<RankingTabType>("total");
-
-  return (
-    <main className="rankingPage">
-      <RankingTabs value={tab} onChange={setTab} />
-      <ol className="rankingList">
-        {MOCK_RANKING.map((entry) => (
-          <li key={entry.rank}>
-            <RankingCard entry={entry} />
-          </li>
-        ))}
-      </ol>
-    </main>
-  );
+  return <Client />;
 }

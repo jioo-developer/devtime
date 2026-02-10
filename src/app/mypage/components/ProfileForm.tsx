@@ -1,9 +1,10 @@
 "use client";
-
 import { useState } from "react";
+import type { RegisterOptions } from "react-hook-form";
 import CommonButton from "@/components/atoms/CommonButton/CommonButton";
 import CommonInput from "@/components/atoms/CommonInput/CommonInput";
 import CommonAutocomplete from "@/components/modules/CommonAutoComplate/CommonAutoComplate";
+import CommonDropdown from "@/components/modules/CommonDropdown/CommonDropdown";
 import ImageUploader from "@/components/modules/CommonImageUploder/ImageUploder";
 import { useCheckNickname } from "@/app/auth/hooks/useCheckNickname";
 import {
@@ -15,7 +16,6 @@ import {
 } from "../constants";
 import type { GetProfileResponse, ProfileFormData } from "../types";
 import type { MypageFormReturn } from "../hooks";
-import { newPasswordValidation } from "../utils/passwordValidation";
 
 type ProfileFormProps = {
   profileData: GetProfileResponse | undefined;
@@ -91,17 +91,14 @@ export function ProfileForm({
 
           <section className="profileSection">
             <span className="profileSectionLabel">공부 목적</span>
-            <select
+            <CommonDropdown
+              label=""
+              placeholder="선택하세요"
+              options={PURPOSE_OPTIONS_WITH_OTHER}
+              value={mypageForm.watch("purpose")}
+              onChange={(value) => mypageForm.setValue("purpose", value)}
               className="profileFormSelect"
-              {...mypageForm.register("purpose")}
-            >
-              <option value="">선택하세요</option>
-              {PURPOSE_OPTIONS_WITH_OTHER.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+            />
             {mypageForm.watch("purpose") === PURPOSE_OTHER_VALUE && (
               <div className="profileFormPurposeDetailWrap">
                 <CommonInput
@@ -121,9 +118,19 @@ export function ProfileForm({
               id="newPassword"
               type="password"
               label="새 비밀번호"
-              placeholder="비밀번호를 입력해 주세요."
+              placeholder="새 비밀번호를 입력해 주세요."
               register={mypageForm.register}
-              validation={newPasswordValidation}
+              validation={{
+                required: "새 비밀번호를 입력하세요.",
+                minLength: {
+                  value: 8,
+                  message: "새 비밀번호는 8자리 이상이어야 합니다.",
+                },
+                pattern: {
+                  value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/,
+                  message: "비밀번호는 영문과 숫자를 포함해야 합니다.",
+                },
+              }}
               error={mypageForm.errors.newPassword}
               className="profileFormInput"
             />
@@ -131,17 +138,16 @@ export function ProfileForm({
           <section className="profileSection">
             <CommonInput
               id="newPasswordConfirmation"
+              testId="new-password-confirmation-input"
+              label="비밀번호 확인"
               type="password"
-              label="새 비밀번호 재입력"
-              placeholder="비밀번호를 한 번 더 입력해 주세요."
+              placeholder="비밀번호를 다시 입력해 주세요."
               register={mypageForm.register}
               validation={{
-                validate: (value: string | string[] | undefined) => {
-                  const str = typeof value === "string" ? value : value?.[0];
-                  const newPw = mypageForm.watch("newPassword");
-                  if (!newPw && !str) return true;
-                  return str === newPw || "비밀번호가 일치하지 않습니다.";
-                },
+                required: "비밀번호를 다시 입력해 주세요.",
+                validate: ((value: string) =>
+                  value === mypageForm.watch("newPassword") ||
+                  "비밀번호가 일치하지 않습니다.") as RegisterOptions<ProfileFormData>["validate"],
               }}
               error={mypageForm.errors.newPasswordConfirmation}
               className="profileFormInput"
@@ -152,17 +158,14 @@ export function ProfileForm({
         <div className="profileFormRight">
           <section className="profileSection">
             <span className="profileSectionLabel">개발 경력</span>
-            <select
+            <CommonDropdown
+              label=""
+              placeholder="선택하세요"
+              options={CAREER_OPTIONS}
+              value={mypageForm.watch("career")}
+              onChange={(value) => mypageForm.setValue("career", value)}
               className="profileFormSelect"
-              {...mypageForm.register("career")}
-            >
-              <option value="">선택하세요</option>
-              {CAREER_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+            />
           </section>
 
           <section className="profileSection">

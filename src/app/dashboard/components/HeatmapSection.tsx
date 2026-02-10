@@ -4,8 +4,8 @@ import {
   HEATMAP_WEEKDAY_LABELS,
   HEATMAP_LEGEND_LEVELS,
   HEATMAP_LEGEND_BG,
-} from "../utils/data";
-import { getMockGrid } from "../utils/heatMap/mockHeatmapGrid";
+} from "../constants/data";
+import { getMockGrid } from "../utils/mockHeatmapGrid";
 import { formatHrToHms } from "../utils/formatStats";
 
 export function HeatmapSection() {

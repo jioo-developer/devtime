@@ -1,10 +1,6 @@
-import type { StatsResponse } from "../../types";
-import {
-  formatMinToHm,
-  formatConsecDays,
-  formatTaskRate,
-} from "../formatStats";
-import { MAX_HOURS } from "../data";
+import type { StatsResponse } from "../types";
+import { formatMinToHm, formatConsecDays, formatTaskRate } from "./formatStats";
+import { MAX_HOURS } from "../constants/data";
 
 /** KpiSection 표시용으로 가공된 통계 */
 export type StatsDisplay = {

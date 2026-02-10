@@ -5,12 +5,12 @@ import { StudyLogDetailContent } from "../components/records/StudyLogDetailConte
 import { useDeleteStudyLog } from "./useDeleteStudyLog";
 
 export function useStudyLogModals() {
-  const pushModal = useModalStore((state) => state.push);
-  const closeTop = useModalStore((state) => state.closeTop);
+  const openModal = useModalStore((state) => state.push);
+  const closeModal = useModalStore((state) => state.closeTop);
   const { mutate: deleteStudyLog, isPending: isDeleting } = useDeleteStudyLog();
 
   const openDeleteConfirmModal = (studyLogId: string | number) => {
-    pushModal({
+    openModal({
       title: "학습 기록 삭제",
       content: (
         <p className="studyLogModalConfirmText">
@@ -19,7 +19,7 @@ export function useStudyLogModals() {
       ),
       footer: (
         <div className="studyLogModalActions">
-          <CommonButton theme="secondary" onClick={closeTop}>
+          <CommonButton theme="secondary" onClick={closeModal}>
             취소
           </CommonButton>
           <CommonButton
@@ -27,7 +27,7 @@ export function useStudyLogModals() {
             className="studyLogModalDelete"
             disabled={isDeleting}
             onClick={() => {
-              deleteStudyLog(studyLogId, { onSuccess: closeTop });
+              deleteStudyLog(studyLogId, { onSuccess: closeModal });
             }}
           >
             {isDeleting ? "삭제 중…" : "삭제"}
@@ -42,19 +42,19 @@ export function useStudyLogModals() {
 
   const openStudyLogDetailModal = (studyLogId: string | number) => {
     const id = String(studyLogId);
-    pushModal({
+    openModal({
       title: "학습 기록 상세",
       content: <StudyLogDetailContent studyLogId={id} />,
       footer: (
         <div className="studyLogModalActions">
-          <CommonButton theme="secondary" onClick={closeTop}>
+          <CommonButton theme="secondary" onClick={closeModal}>
             닫기
           </CommonButton>
           <CommonButton
             theme="tertiary"
             className="studyLogModalDelete"
             onClick={() => {
-              closeTop();
+              closeModal();
               openDeleteConfirmModal(studyLogId);
             }}
           >

@@ -6,22 +6,16 @@ import type { RankingEntry } from "../types";
 import DefaultProfileImage from "@/asset/images/default_profile_image.svg";
 import "./RankingCard.css";
 
-type RankingCardProps = {
-  entry: RankingEntry;
-};
-
-export function RankingCard({ entry }: RankingCardProps) {
-  const {
-    rank,
-    nickname,
-    motto,
-    totalHours,
-    dailyAvgHours,
-    career,
-    tags,
-    profileImageUrl,
-  } = entry;
-
+export function RankingCard({
+  rank,
+  nickname,
+  motto,
+  totalHours,
+  dailyAvgHours,
+  career,
+  tags,
+  profileImageUrl,
+}: RankingEntry) {
   return (
     <article className="rankingCard">
       <div className="rankingCard__inner">

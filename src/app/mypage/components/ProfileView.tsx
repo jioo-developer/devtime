@@ -1,5 +1,4 @@
 "use client";
-
 import CommonChip from "@/components/atoms/CommonChip/CommonChip";
 import { CAREER_OPTIONS, getEnumLabel, getPurposeLabel } from "../constants";
 import type { GetProfileResponse } from "../types";
