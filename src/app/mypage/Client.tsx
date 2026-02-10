@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useIsLoggedIn } from "@/hooks/useIsLoggedIn";
 import { getProfileComplete } from "@/app/profile/utils/localStorage";
 import { MypageSkeleton } from "./components";
-import { MypageContent } from "./content";
+import { MypageContent } from "./Content";
 import "./style.css";
 
 export function Client() {

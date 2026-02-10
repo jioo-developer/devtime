@@ -10,8 +10,7 @@ import LoginBgImage from "@/asset/images/login-background-image.png";
 import LogoBlue from "@/asset/images/logo_blue.svg";
 import { createLoginSuccessHandler, useLogin } from "./hooks/useLogin";
 import { useSavedEmail } from "./hooks/useSavedEmail";
-import { safeInternalPath } from "@/utils/pathUtils";
-import { isAccessTokenValid } from "@/utils/cookieUtils";
+import { redirectIfAlreadyLoggedIn } from "@/config/utils/authRedirect";
 import { LoginData } from "./types";
 import Link from "next/link";
 import "./style.css";
@@ -53,21 +52,11 @@ function Client() {
     }
   };
 
-  // 로그인된 상태면 로그인 페이지 접근 불가 (렌더링 전에 체크)
+  // 로그인된 상태면 로그인 페이지 접근 불가
   useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    // 쿠키에서 만료 시간 확인
-    if (isAccessTokenValid()) {
-      const token = localStorage.getItem("accessToken");
-      if (token) {
-        const redirectParam = safeInternalPath(searchParams.get("redirect"));
-        router.replace(redirectParam ?? "/");
-        return;
-      }
-    }
+    if (redirectIfAlreadyLoggedIn(searchParams.get("redirect"))) return;
     setisAuthCheck(false);
-  }, [router, searchParams]);
+  }, [searchParams]);
 
   if (isAuthCheck) {
     return null;
