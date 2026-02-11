@@ -7,34 +7,60 @@ import { MypageSkeleton } from "./components";
 import { MypageContent } from "./Content";
 import "./style.css";
 
-export function Client() {
-  // 1) 라우팅/로그인 상태
-  const router = useRouter();
-  const { isLoggedIn, isReady } = useIsLoggedIn();
+type MypageGateState = "redirectToProfile" | "showContent" | "showSkeleton";
 
-  // 2) 프로필 완료 여부(로컬 스토리지)
+export function Client() {
+  const state = useMypageGateState();
+
+  switch (state) {
+    case "redirectToProfile":
+      return <RedirectToProfile />;
+    case "showContent":
+      return <MypageContentPage />;
+    default:
+      return <MypageSkeletonPage />;
+  }
+}
+
+function useMypageGateState(): MypageGateState {
+  const { isLoggedIn, isReady } = useIsLoggedIn();
   const hasProfileCompleteFlag = getProfileComplete();
 
-  // 3) 프로필 조회 여부(조건 명확화)
-  const shouldRedirectToProfile =
-    isReady && isLoggedIn && !hasProfileCompleteFlag;
-  const shouldFetchProfile = isReady && isLoggedIn && hasProfileCompleteFlag;
+  if (!isReady || !isLoggedIn) {
+    return "showSkeleton";
+  }
 
-  // 4) 가드: 완료 플래그 없으면 /profile로 이동
+  if (!hasProfileCompleteFlag) {
+    return "redirectToProfile";
+  }
+
+  return "showContent";
+}
+
+function RedirectToProfile() {
+  const router = useRouter();
+
   useEffect(() => {
-    if (!shouldRedirectToProfile) return;
     router.replace("/profile");
-  }, [shouldRedirectToProfile, router]);
+  }, [router]);
 
-  // 5) 리다이렉트 직전 깜빡임 방지
-  if (shouldRedirectToProfile) return null;
+  return null;
+}
 
-  // 6) 렌더링
+function MypageContentPage() {
   return (
     <main className="mypagePage">
       <Suspense fallback={<MypageSkeleton />}>
-        {shouldFetchProfile ? <MypageContent /> : <MypageSkeleton />}
+        <MypageContent />
       </Suspense>
+    </main>
+  );
+}
+
+function MypageSkeletonPage() {
+  return (
+    <main className="mypagePage">
+      <MypageSkeleton />
     </main>
   );
 }

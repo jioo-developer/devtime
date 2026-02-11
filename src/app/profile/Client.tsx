@@ -167,6 +167,8 @@ export default function Client() {
             <span className="profileSettingLabel">프로필 이미지</span>
             <ImageUploader
               label=""
+              alt="현재 프로필"
+              previewAlt="프로필 미리보기"
               imageKey={formWatch("profileImage")}
               getImageUrl={getProfileImageUrl}
               defaultImageUrl={DEFAULT_PROFILE_IMAGE}

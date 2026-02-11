@@ -1,5 +1,7 @@
 "use client";
+import CommonButton from "@/components/atoms/CommonButton/CommonButton";
 import "./RankingTabs.css";
+
 export type RankingTabType = "total" | "dailyAvg";
 
 type RankingTabsProps = {
@@ -16,9 +18,9 @@ export function RankingTabs({ value, onChange }: RankingTabsProps) {
   return (
     <div className="rankingTabs" role="tablist">
       {TABS.map((tab) => (
-        <button
+        <CommonButton
           key={tab.value}
-          type="button"
+          theme="none"
           role="tab"
           aria-selected={value === tab.value}
           className={
@@ -27,7 +29,7 @@ export function RankingTabs({ value, onChange }: RankingTabsProps) {
           onClick={() => onChange(tab.value)}
         >
           {tab.label}
-        </button>
+        </CommonButton>
       ))}
     </div>
   );

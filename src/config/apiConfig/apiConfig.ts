@@ -115,8 +115,8 @@ export const ApiClient = {
     });
   },
 
-  /** S3 presigned URL 업로드 전용. baseURL/Authorization 미사용. */
-  async putBinary(
+  /** S3 presigned URL로 이미지 업로드. baseURL/Authorization 미사용. */
+  async uploadImageToS3(
     url: string,
     body: Blob | File,
     contentType: string,

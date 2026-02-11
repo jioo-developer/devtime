@@ -14,9 +14,7 @@ export function Client() {
       <RankingTabs value={tab} onChange={setTab} />
       <ol className="rankingList">
         {MOCK_RANKING.map((entry) => (
-          <li key={entry.rank}>
-            <RankingCard {...entry} />
-          </li>
+          <RankingCard key={entry.rank} {...entry} />
         ))}
       </ol>
     </main>

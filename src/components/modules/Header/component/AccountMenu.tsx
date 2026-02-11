@@ -18,7 +18,7 @@ type AccountMenuProps = {
 function AccountMenu({ isLoggedIn, hasProfile }: AccountMenuProps) {
   const { isOpen, toggle, rootRef } = useDropdown<HTMLLIElement>();
 
-  const { data: profile } = useGetProfile(isLoggedIn);
+  const { data: profile } = useGetProfile({ enabled: isLoggedIn });
   const nickname = profile?.nickname;
   const profileImageDisplayUrl = getProfileImageUrl(
     profile?.profile?.profileImage,

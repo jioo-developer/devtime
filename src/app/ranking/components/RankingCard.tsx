@@ -17,7 +17,7 @@ export function RankingCard({
   profileImageUrl,
 }: RankingEntry) {
   return (
-    <article className="rankingCard">
+    <li className="rankingCard">
       <div className="rankingCard__inner">
         <CommonBadge
           text={`${rank}위`}
@@ -57,6 +57,6 @@ export function RankingCard({
           )}
         </div>
       </div>
-    </article>
+    </li>
   );
 }

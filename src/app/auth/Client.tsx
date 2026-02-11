@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import { useCheckEmail } from "./hooks/useCheckEmail";
 import { useCheckNickname } from "./hooks/useCheckNickname";
 import { useSignup } from "./hooks/useSignup";
+import { PASSWORD_MIN_LENGTH, PASSWORD_PATTERN } from "@/constant/password";
 import { isAuthFormValid } from "./utils/authFormValidation";
 import "./style.css";
 
@@ -167,16 +168,16 @@ function AuthPage({ onSubmit }: AuthPageProps = {}) {
             testId="password-input"
             label="비밀번호"
             type="password"
-            placeholder="비밀번호를 8자리 이상 입력하세요"
+            placeholder={`비밀번호를 ${PASSWORD_MIN_LENGTH}자리 이상 입력하세요`}
             register={register}
             validation={{
               required: "비밀번호를 입력하세요.",
               minLength: {
-                value: 8,
-                message: "비밀번호는 8자리 이상이어야 합니다.",
+                value: PASSWORD_MIN_LENGTH,
+                message: `비밀번호는 ${PASSWORD_MIN_LENGTH}자리 이상이어야 합니다.`,
               },
               pattern: {
-                value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/,
+                value: PASSWORD_PATTERN,
                 message: "비밀번호는 영문과 숫자를 포함해야 합니다.",
               },
             }}

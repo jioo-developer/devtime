@@ -13,6 +13,7 @@ import { useSavedEmail } from "./hooks/useSavedEmail";
 import { redirectIfAlreadyLoggedIn } from "@/config/utils/authRedirect";
 import { LoginData } from "./types";
 import Link from "next/link";
+import { PASSWORD_MIN_LENGTH, PASSWORD_PATTERN } from "@/constant/password";
 import "./style.css";
 
 function Client() {
@@ -126,11 +127,11 @@ function Client() {
               validation={{
                 required: "비밀번호를 입력하세요.",
                 minLength: {
-                  value: 8,
-                  message: "비밀번호는 8자 이상이어야 합니다.",
+                  value: PASSWORD_MIN_LENGTH,
+                  message: `비밀번호는 ${PASSWORD_MIN_LENGTH}자 이상이어야 합니다.`,
                 },
                 pattern: {
-                  value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/,
+                  value: PASSWORD_PATTERN,
                   message: "비밀번호는 영문과 숫자 조합이어야 합니다.",
                 },
               }}

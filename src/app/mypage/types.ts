@@ -12,6 +12,7 @@ import type {
 } from "react-hook-form";
 import type { ApiRequest, ApiResponse } from "@/types/api/helpers";
 import type {
+  GetProfileResponse,
   ProfileFormData,
   UpdateProfileRequest,
 } from "@/app/profile/types";
@@ -38,6 +39,8 @@ export type UpdateProfileMutation = (
 
 /** useMypageForm 반환값 */
 export type MypageFormReturn = {
+  profileData: GetProfileResponse | undefined;
+  isUpdating: boolean;
   register: UseFormRegister<ProfileFormData>;
   watch: UseFormWatch<ProfileFormData>;
   setValue: UseFormSetValue<ProfileFormData>;

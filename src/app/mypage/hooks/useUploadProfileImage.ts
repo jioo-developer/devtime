@@ -14,7 +14,7 @@ export function useUploadProfileImage() {
           contentType: file.type,
         });
 
-      await ApiClient.putBinary(presignedUrl, file, file.type);
+      await ApiClient.uploadImageToS3(presignedUrl, file, file.type);
       return s3ObjectKey;
     } catch {
       return null;

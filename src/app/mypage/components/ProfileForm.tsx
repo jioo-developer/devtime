@@ -7,6 +7,7 @@ import CommonAutocomplete from "@/components/modules/CommonAutoComplate/CommonAu
 import CommonDropdown from "@/components/modules/CommonDropdown/CommonDropdown";
 import ImageUploader from "@/components/modules/CommonImageUploder/ImageUploder";
 import { useCheckNickname } from "@/app/auth/hooks/useCheckNickname";
+import { PASSWORD_MIN_LENGTH, PASSWORD_PATTERN } from "@/constant/password";
 import {
   CAREER_OPTIONS,
   PURPOSE_OPTIONS_WITH_OTHER,
@@ -48,6 +49,8 @@ export function ProfileForm({
             <span className="profileSectionLabel">프로필 이미지</span>
             <ImageUploader
               label=""
+              alt="현재 프로필"
+              previewAlt="프로필 미리보기"
               currentImageUrl={
                 currentProfileImage
                   ? getProfileImageUrl(currentProfileImage)
@@ -123,11 +126,11 @@ export function ProfileForm({
               validation={{
                 required: "새 비밀번호를 입력하세요.",
                 minLength: {
-                  value: 8,
-                  message: "새 비밀번호는 8자리 이상이어야 합니다.",
+                  value: PASSWORD_MIN_LENGTH,
+                  message: `새 비밀번호는 ${PASSWORD_MIN_LENGTH}자리 이상이어야 합니다.`,
                 },
                 pattern: {
-                  value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/,
+                  value: PASSWORD_PATTERN,
                   message: "비밀번호는 영문과 숫자를 포함해야 합니다.",
                 },
               }}

@@ -8,18 +8,22 @@ import { AuthenticatedApiClient } from "@/config/apiConfig/authenticated/AuthApi
 import { QueryKey } from "@/constant/queryKeys";
 import type { GetProfileResponse } from "../types";
 
-const profileQueryOptions = {
+const profileQueryConfig = {
   queryKey: [QueryKey.PROFILE],
   queryFn: () => AuthenticatedApiClient.get("/api/profile"),
   staleTime: 60 * 1000,
 } as const;
 
+type UseGetProfileOptions = Partial<
+  Parameters<typeof useQuery<GetProfileResponse, Error>>[0]
+>;
+
 export function useGetProfile(
-  isQueryEnabled: boolean = true,
+  options?: UseGetProfileOptions,
 ): UseQueryResult<GetProfileResponse, Error> {
   return useQuery({
-    ...profileQueryOptions,
-    enabled: isQueryEnabled,
+    ...profileQueryConfig,
+    ...options,
   });
 }
 
@@ -27,5 +31,5 @@ export function useGetProfileSuspense(): UseSuspenseQueryResult<
   GetProfileResponse,
   Error
 > {
-  return useSuspenseQuery(profileQueryOptions);
+  return useSuspenseQuery(profileQueryConfig);
 }

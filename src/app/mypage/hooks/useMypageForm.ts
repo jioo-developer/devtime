@@ -1,15 +1,13 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import type {
-  GetProfileResponse,
-  ProfileFormData,
-  UpdateProfileMutation,
-} from "../types";
+import type { GetProfileResponse, ProfileFormData } from "../types";
 import {
   PURPOSE_OTHER_VALUE,
   type PurposeFromApi,
 } from "@/app/profile/constants/constants";
 import { getUpdateProfilePayload } from "@/app/profile/utils/payload";
+import { useGetProfileSuspense } from "./useGetProfile";
+import { useUpdateProfile } from "./useUpdateProfile";
 
 /** API purpose → 폼용 purpose, purposeDetail (프로필 상수 타입 기준) */
 function apiPurposeToForm(purpose: PurposeFromApi): {
@@ -27,6 +25,11 @@ function apiPurposeToForm(purpose: PurposeFromApi): {
   }
   return { purpose: "", purposeDetail: "" };
 }
+
+export type UseMypageFormCallbacks = {
+  onUpdateSuccess?: () => void;
+  onUpdateError?: (error: Error) => void;
+};
 
 function getFormDefaultValue(
   profileData: GetProfileResponse | undefined,
@@ -48,12 +51,12 @@ function getFormDefaultValue(
   };
 }
 
-export function useMypageForm(
-  profileData: GetProfileResponse | undefined,
-  isEditing: boolean,
-  setIsEditing: (value: boolean) => void,
-  updateProfileMutation: UpdateProfileMutation,
-) {
+export function useMypageForm(callbacks?: UseMypageFormCallbacks) {
+  const { data: profileData } = useGetProfileSuspense();
+  const { mutate: updateProfileMutation, isPending: isUpdating } =
+    useUpdateProfile();
+  const { onUpdateSuccess, onUpdateError } = callbacks ?? {};
+  const [isEditing, setIsEditing] = useState(false);
   const defaultValues = getFormDefaultValue(profileData);
   const {
     register,
@@ -77,12 +80,19 @@ export function useMypageForm(
 
   const onSubmit = (formData: ProfileFormData) => {
     updateProfileMutation(getUpdateProfilePayload(formData, profileData), {
-      onSuccess: () => setIsEditing(false),
-      onError: (error: Error) => alert(error.message),
+      onSuccess: () => {
+        setIsEditing(false);
+        onUpdateSuccess?.();
+      },
+      onError: (error: Error) => {
+        onUpdateError?.(error);
+      },
     });
   };
 
   return {
+    profileData,
+    isUpdating,
     register,
     watch,
     setValue,

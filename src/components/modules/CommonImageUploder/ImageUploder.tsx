@@ -13,6 +13,14 @@ interface ImageUploaderProps {
   imageKey?: string;
   getImageUrl?: (key: string) => string;
   defaultImageUrl?: string;
+  /** 표시 중인 이미지의 대체 텍스트 */
+  alt?: string;
+  /** 미리보기 이미지의 대체 텍스트 */
+  previewAlt?: string;
+  /** 미리보기/표시 이미지 너비 (px) */
+  imageWidth?: number;
+  /** 미리보기/표시 이미지 높이 (px) */
+  imageHeight?: number;
   onImageChange?: (file: File | null) => void;
 }
 
@@ -24,6 +32,10 @@ function ImageUploader({
   imageKey,
   getImageUrl,
   defaultImageUrl,
+  alt = "이미지",
+  previewAlt = "미리보기",
+  imageWidth = 200,
+  imageHeight = 200,
   onImageChange,
 }: ImageUploaderProps) {
   const [preview, setPreview] = useState<string | null>(null);
@@ -77,17 +89,17 @@ function ImageUploader({
             <CommonImage
               className={styles.uploadPreview}
               src={preview}
-              alt="Preview"
-              width={200}
-              height={200}
+              alt={previewAlt}
+              width={imageWidth}
+              height={imageHeight}
             />
           ) : displayUrl ? (
             <CommonImage
               className={styles.uploadPreview}
               src={displayUrl}
-              alt="현재 프로필"
-              width={200}
-              height={200}
+              alt={alt}
+              width={imageWidth}
+              height={imageHeight}
             />
           ) : (
             <span className={styles.uploadPlus}>+</span>

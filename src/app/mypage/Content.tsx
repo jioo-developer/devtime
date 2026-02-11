@@ -1,28 +1,17 @@
 import { ProfileHeader, ProfileForm, ProfileView } from "./components";
-import {
-  useGetProfileSuspense,
-  useUpdateProfile,
-  useUploadProfileImage,
-  useMypageForm,
-} from "./hooks";
-import { useState } from "react";
+import { useUploadProfileImage, useMypageForm } from "./hooks";
 
 export function MypageContent() {
-  const { data: profileData } = useGetProfileSuspense();
-  const [isEditing, setIsEditing] = useState(false);
   const { upload: uploadProfileImage } = useUploadProfileImage();
-  const { mutate: updateProfileMutation, isPending: isUpdating } =
-    useUpdateProfile();
 
-  const mypageForm = useMypageForm(
-    profileData,
-    isEditing,
-    setIsEditing,
-    updateProfileMutation,
-  );
+  const mypageForm = useMypageForm({
+    onUpdateError: (error) => console.error(error.message),
+  });
+
+  const { profileData, isUpdating, isEditing } = mypageForm;
 
   const hasExistingProfile = Boolean(profileData?.profile);
-  const isEditMode = mypageForm.isEditing;
+  const isEditMode = isEditing;
 
   const handleProfileImageUpload = async (file: File) => {
     const uploadedImageKey = await uploadProfileImage(file);
