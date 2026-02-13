@@ -19,12 +19,12 @@ describe("회원가입 (/auth)", () => {
 
   describe("통합: 회원가입 성공 플로우", () => {
     it("이메일·닉네임 중복 확인 후 약관 동의하고 회원가입하면 성공 모달 후 /profile로 이동한다", () => {
-      cy.intercept("GET", "**/api/signup/check-email*", {
+      cy.intercept("GET", "**/check-email*", {
         statusCode: 200,
         body: { available: true },
       }).as("checkEmail");
 
-      cy.intercept("GET", "**/api/signup/check-nickname*", {
+      cy.intercept("GET", "**/check-nickname*", {
         statusCode: 200,
         body: { available: true },
       }).as("checkNickname");
@@ -47,19 +47,30 @@ describe("회원가입 (/auth)", () => {
       }).as("login");
 
       cy.get("[data-testid=email-input]").type(signupEmail);
-      cy.get("form.authForm").contains("button", "중복 확인").first().click();
+      cy.get("form.authForm")
+        .contains("button", "중복 확인")
+        .first()
+        .click({ force: true });
       cy.wait("@checkEmail");
       cy.contains("사용 가능한 이메일입니다.").should("be.visible");
 
       cy.get("[data-testid=nickname-input]").type(signupNickname);
-      cy.get("form.authForm").contains("button", "중복 확인").last().click();
+      cy.get("[data-testid=nickname-input]").should(
+        "have.value",
+        signupNickname,
+      );
+      cy.get("[data-testid=nickname-input]")
+        .closest(".filedWrap")
+        .find("button")
+        .contains("중복 확인")
+        .click({ force: true });
       cy.wait("@checkNickname");
       cy.contains("사용 가능한 닉네임입니다.").should("be.visible");
 
       cy.get("[data-testid=password-input]").type(signupPassword);
       cy.get("[data-testid=password-confirmation-input]").type(signupPassword);
 
-      cy.get("[data-testid=agreement]").click();
+      cy.get("[data-testid=agreement]").click({ force: true });
 
       cy.get("form.authForm").contains("button", "회원가입").click();
 

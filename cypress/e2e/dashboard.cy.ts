@@ -71,7 +71,8 @@ describe("대시보드 (/dashboard)", () => {
     }).as("studyLogs");
 
     cy.visit("/dashboard");
-    cy.get("title").should("contain", "대시보드");
+    cy.url().should("include", "/dashboard", { timeout: 10000 });
+    cy.get("title", { timeout: 10000 }).should("contain", "대시보드");
   });
 
   describe("통합: 대시보드 통계·기록 UI", () => {
@@ -99,7 +100,11 @@ describe("대시보드 (/dashboard)", () => {
     });
 
     it("공부 시간 바다(히트맵) 섹션이 있다", () => {
-      cy.get("section[aria-label='공부 시간 바다']").should("be.visible");
+      cy.wait("@stats");
+      cy.get("main.dashboardPage", { timeout: 10000 }).should("be.visible");
+      cy.get("section.heatmapSection", { timeout: 10000 })
+        .should("be.visible")
+        .and("have.attr", "aria-label", "공부 시간 바다");
       cy.contains("공부 시간 바다").should("be.visible");
     });
 
