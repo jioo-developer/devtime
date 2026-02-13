@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, Suspense } from "react";
 import "./style.css";
 import { RankingTabs } from "./components/RankingTabs";
