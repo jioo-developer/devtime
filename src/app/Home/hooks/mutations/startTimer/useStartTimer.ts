@@ -38,8 +38,13 @@ export const useStartTimer = () => {
           let message = "POST /api/timers failed";
 
           if (response.status === 409) {
-            const { error } = await response.json();
-            message = `POST /api/timers failed: ${error.message}`;
+            const body = (await response.json()) as {
+              error?: { message?: string };
+            };
+            const errorMessage = body.error?.message;
+            if (errorMessage) {
+              message = `POST /api/timers failed: ${errorMessage}`;
+            }
           }
 
           throw new Error(message);

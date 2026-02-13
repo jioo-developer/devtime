@@ -32,6 +32,8 @@ export function toNotOkResponse(err: AxiosError): NotOkResponse {
   const data = err.response?.data;
   return {
     status,
+    statusText: (err.response as { statusText?: string } | undefined)
+      ?.statusText,
     json: () => Promise.resolve(data ?? {}),
   };
 }
