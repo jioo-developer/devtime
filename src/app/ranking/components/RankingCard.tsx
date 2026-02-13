@@ -9,11 +9,11 @@ import "./RankingCard.css";
 export function RankingCard({
   rank,
   nickname,
-  motto,
   totalHours,
   dailyAvgHours,
   career,
-  tags,
+  purposeLabel,
+  techStacks,
   profileImageUrl,
 }: RankingEntry) {
   return (
@@ -36,15 +36,15 @@ export function RankingCard({
         </div>
         <div className="rankingCard__body">
           <h3 className="rankingCard__nickname">{nickname}</h3>
-          <p className="rankingCard__motto">{motto}</p>
+          {purposeLabel && <p className="rankingCard__motto">{purposeLabel}</p>}
           <ul className="rankingCard__metrics">
             <li>누적 {totalHours}시간</li>
             <li>일 평균 {dailyAvgHours}시간</li>
             <li>경력 {career}</li>
           </ul>
-          {tags.length > 0 && (
+          {techStacks.length > 0 && (
             <div className="rankingCard__tags">
-              {tags.map((tag, index) => (
+              {techStacks.map((tag, index) => (
                 <CommonChip
                   key={`${tag}-${index}`}
                   size="sm"
