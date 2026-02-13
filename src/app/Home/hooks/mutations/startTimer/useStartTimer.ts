@@ -38,8 +38,12 @@ export const useStartTimer = () => {
           let message = "POST /api/timers failed";
 
           if (response.status === 409) {
-            const { error } = await response.json();
-            message = `POST /api/timers failed: ${error.message}`;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const body: any = await response.json();
+            const errorMessage = body.error.message as string;
+            if (errorMessage) {
+              message = `POST /api/timers failed: ${errorMessage}`;
+            }
           }
 
           throw new Error(message);
