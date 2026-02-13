@@ -1,11 +1,14 @@
 "use client";
-import { useState } from "react";
+import { useState, Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import "./style.css";
 import { RankingTabs } from "./components/RankingTabs";
 import type { RankingTabType } from "./components/RankingTabs";
 import { RankingPageContent } from "./Content";
+import { RankingSkeleton } from "./components/RankingSkeleton";
 import CommonDropdown from "@/components/modules/CommonDropdown/CommonDropdown";
 import { TECH_STACK_OPTIONS } from "@/app/profile/constants/constants";
+import { PageErrorFallback } from "@/components/PageErrorFallback";
 
 const TECH_STACK_FILTER_OPTIONS = [
   { value: "", label: "전체" },
@@ -31,7 +34,19 @@ export function Client() {
           className="rankingPage__filterDropdown"
         />
       </div>
-      <RankingPageContent sortBy={sortBy} techStackFilter={techStackFilter} />
+      <ErrorBoundary
+        fallbackRender={(props) => (
+          <PageErrorFallback {...props} message="랭킹을 불러오지 못했습니다." />
+        )}
+        key={`${sortBy}-${techStackFilter}`}
+      >
+        <Suspense fallback={<RankingSkeleton />}>
+          <RankingPageContent
+            sortBy={sortBy}
+            techStackFilter={techStackFilter}
+          />
+        </Suspense>
+      </ErrorBoundary>
     </main>
   );
 }

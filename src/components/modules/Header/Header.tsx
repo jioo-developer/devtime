@@ -7,11 +7,9 @@ import Navigation from "./component/Navigation";
 import AccountMenu from "./component/AccountMenu";
 import Link from "next/link";
 import { useIsLoggedIn } from "@/hooks/useIsLoggedIn";
-import { getProfileComplete } from "@/app/profile/utils/localStorage";
 
 function Header() {
   const { isLoggedIn } = useIsLoggedIn();
-  const hasProfile = getProfileComplete();
 
   return (
     <header className={styles.header}>
@@ -29,7 +27,7 @@ function Header() {
           <Navigation isLoggedIn={isLoggedIn} />
         </div>
         <div className={styles.rightCon}>
-          <AccountMenu isLoggedIn={isLoggedIn} hasProfile={hasProfile} />
+          <AccountMenu isLoggedIn={isLoggedIn} />
         </div>
       </div>
     </header>

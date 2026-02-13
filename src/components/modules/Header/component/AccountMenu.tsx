@@ -12,10 +12,9 @@ import { MdPerson, MdLogout } from "react-icons/md";
 
 type AccountMenuProps = {
   isLoggedIn: boolean;
-  hasProfile: boolean;
 };
 
-function AccountMenu({ isLoggedIn, hasProfile }: AccountMenuProps) {
+function AccountMenu({ isLoggedIn }: AccountMenuProps) {
   const { isOpen, toggle, rootRef } = useDropdown<HTMLLIElement>();
 
   const { data: profile } = useGetProfile({ enabled: isLoggedIn });
@@ -50,12 +49,12 @@ function AccountMenu({ isLoggedIn, hasProfile }: AccountMenuProps) {
           {isOpen && (
             <div className={styles.accountMenu}>
               <Link
-                href={hasProfile ? "/mypage" : "/profile"}
+                href="/mypage"
                 className={styles.accountMenuItem}
                 onClick={toggle}
               >
                 <MdPerson size={20} className={styles.accountMenuIcon} />
-                {hasProfile ? "마이페이지" : "프로필 설정"}
+                마이페이지
               </Link>
               <div className={styles.accountMenuDivider} />
               <button

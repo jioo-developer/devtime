@@ -1,20 +1,29 @@
 "use client";
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useRef } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { useRouter } from "next/navigation";
 import { useIsLoggedIn } from "@/hooks/useIsLoggedIn";
-import { getProfileComplete } from "@/app/profile/utils/localStorage";
+import { useGetProfile } from "./hooks/useGetProfile";
 import { MypageSkeleton } from "./components";
 import { MypageContent } from "./Content";
+import { PageErrorFallback } from "@/components/PageErrorFallback";
+import { useModalStore } from "@/store/modalStore";
+import CommonButton from "@/components/atoms/CommonButton/CommonButton";
 import "./style.css";
 
-type MypageGateState = "redirectToProfile" | "showContent" | "showSkeleton";
+type MypageGateState = "showSkeleton" | "noProfile" | "showContent";
+
+const NO_PROFILE_MODAL = {
+  title: "알림",
+  content: "작성된 프로필이 없습니다. 프로필페이지로 이동하겠습니다.",
+} as const;
 
 export function Client() {
   const state = useMypageGateState();
 
   switch (state) {
-    case "redirectToProfile":
-      return <RedirectToProfile />;
+    case "noProfile":
+      return <NoProfileModalThenRedirect />;
     case "showContent":
       return <MypageContentPage />;
     default:
@@ -24,35 +33,65 @@ export function Client() {
 
 function useMypageGateState(): MypageGateState {
   const { isLoggedIn, isReady } = useIsLoggedIn();
-  const hasProfileCompleteFlag = getProfileComplete();
+  const { data, isPending, isError, isSuccess } = useGetProfile();
 
-  if (!isReady || !isLoggedIn) {
+  if (!isReady || !isLoggedIn || isPending) {
     return "showSkeleton";
   }
 
-  if (!hasProfileCompleteFlag) {
-    return "redirectToProfile";
+  if (isError || (isSuccess && !data?.profile)) {
+    return "noProfile";
   }
 
   return "showContent";
 }
 
-function RedirectToProfile() {
+function NoProfileModalThenRedirect() {
   const router = useRouter();
+  const openModal = useModalStore((state) => state.push);
+  const closeModal = useModalStore((state) => state.closeTop);
+  const openedRef = useRef(false);
 
   useEffect(() => {
-    router.replace("/profile");
-  }, [router]);
+    if (openedRef.current) return;
+    openedRef.current = true;
 
-  return null;
+    openModal({
+      title: NO_PROFILE_MODAL.title,
+      content: NO_PROFILE_MODAL.content,
+      footer: (
+        <CommonButton
+          theme="primary"
+          onClick={() => {
+            closeModal();
+            router.replace("/profile");
+          }}
+        >
+          확인
+        </CommonButton>
+      ),
+      BackdropMiss: false,
+    });
+  }, [openModal, closeModal, router]);
+
+  return <MypageSkeletonPage />;
 }
 
 function MypageContentPage() {
   return (
     <main className="mypagePage">
-      <Suspense fallback={<MypageSkeleton />}>
-        <MypageContent />
-      </Suspense>
+      <ErrorBoundary
+        fallbackRender={(props) => (
+          <PageErrorFallback
+            {...props}
+            message="프로필을 불러오지 못했습니다."
+          />
+        )}
+      >
+        <Suspense fallback={<MypageSkeleton />}>
+          <MypageContent />
+        </Suspense>
+      </ErrorBoundary>
     </main>
   );
 }

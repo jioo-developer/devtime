@@ -6,18 +6,18 @@ import {
   WEEKDAY_KEYS,
   HEATMAP_Y_LABELS,
 } from "../constants/data";
-import { useGetStats } from "../hooks/useGetStats";
+import { useGetStatsSuspense } from "../hooks/useGetStats";
 
 export function KpiSection() {
-  const { data, isLoading, isError } = useGetStats();
+  const { data } = useGetStatsSuspense();
 
   return (
     <section className="kpiSection" aria-label="요약 통계">
       {KPI_ITEMS.map(({ label, value }) => (
         <div key={value} className="kpiCard">
           <p className="kpiCardLabel">{label}</p>
-          <p className="kpiCardValue kpiCardValueLarge" aria-busy={isLoading}>
-            {isLoading ? "—" : isError ? "—" : (data?.[value] ?? "—")}
+          <p className="kpiCardValue kpiCardValueLarge">
+            {data?.[value] ?? "—"}
           </p>
         </div>
       ))}
@@ -34,7 +34,7 @@ export function KpiSection() {
               className="weekdayBarsWrap"
               role="img"
               aria-label="요일별 평균 공부 시간"
-              aria-busy={isLoading}
+              aria-busy={false}
             >
               {(data?.weekdayHours ?? [0, 0, 0, 0, 0, 0, 0]).map(
                 (hours, weekdayIndex) => (
