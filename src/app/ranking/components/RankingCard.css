@@ -1,0 +1,77 @@
+.rankingCard {
+  background: var(--gray-white);
+  border-radius: var(--radius-md);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--gray-200);
+  overflow: hidden;
+}
+
+.rankingCard__inner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap-2xl);
+  padding: var(--gap-2xl);
+}
+
+.rankingCard__rankBadge {
+  flex-shrink: 0;
+  min-width: 48px;
+  text-align: center;
+  border-radius: var(--radius-md);
+}
+
+.rankingCard__avatarWrap {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--gray-100);
+}
+
+.rankingCard__avatar {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+}
+
+.rankingCard__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.rankingCard__nickname {
+  font-size: var(--fontsize-subtitle);
+  font-weight: var(--font-weight-bold);
+  color: var(--gray-900);
+  margin: 0 0 var(--gap-sm);
+  line-height: var(--lineheight-subtitle);
+}
+
+.rankingCard__motto {
+  font-size: var(--fontsize-body-small);
+  color: var(--gray-500);
+  margin: 0 0 var(--gap-lg);
+  line-height: var(--lineheight-body-small);
+}
+
+.rankingCard__metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-lg);
+  margin: 0 0 var(--gap-lg);
+  padding: 0;
+  list-style: none;
+  font-size: var(--fontsize-body-small);
+  color: var(--gray-700);
+}
+
+.rankingCard__metrics li {
+  font-weight: var(--font-weight-semibold);
+}
+
+.rankingCard__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-lg);
+}

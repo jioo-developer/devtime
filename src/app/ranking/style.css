@@ -1,0 +1,24 @@
+.rankingPage {
+  --ranking-max: 1200px;
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--gray-50);
+  max-width: var(--ranking-max);
+  margin: 0 auto;
+  padding: var(--margin-xl) var(--gap-2xl);
+  display: flex;
+  flex-direction: column;
+}
+
+.rankingList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xl);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rankingList li {
+  list-style: none;
+}
