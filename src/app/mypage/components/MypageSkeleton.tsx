@@ -1,5 +1,5 @@
 "use client";
-import "./MypageSkeleton.css";
+import "./skeleton.css";
 
 export function MypageSkeleton() {
   return (
