@@ -7,11 +7,10 @@ export function useDeleteStudyLog() {
   const queryClient = useQueryClient();
   return useMutation<unknown, Error, string | number>({
     mutationFn: async (studyLogId) => {
-      await ApiClient.delete(
-        `/api/study-logs/${studyLogId}`,
-        undefined,
-        getAuthHeaders(),
-      );
+      await ApiClient.delete("/api/study-logs/{studyLogId}", {
+        pathParams: { studyLogId: String(studyLogId) },
+        headers: getAuthHeaders(),
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.STUDY_LOGS_LIST] });

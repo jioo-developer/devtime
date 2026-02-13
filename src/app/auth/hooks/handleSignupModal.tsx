@@ -13,7 +13,7 @@ export const handleSignupSuccess = (router: ReturnType<typeof useRouter>) => {
         theme="primary"
         onClick={() => {
           closeModal();
-          router.push("/login");
+          router.push("/profile");
         }}
       >
         확인

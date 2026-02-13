@@ -7,8 +7,8 @@ export interface CheckDuplicateResponse {
   message: string;
 }
 
-export interface UseChecValidationlParams {
-  setError: UseFormSetError<AuthFormData>;
-  clearErrors: UseFormClearErrors<AuthFormData>;
+export interface UseChecValidationlParams<T extends { nickname: string } = AuthFormData> {
+  setError: UseFormSetError<T>;
+  clearErrors: UseFormClearErrors<T>;
   setSuccessMessage: (message: string) => void;
 }

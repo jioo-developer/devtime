@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import Header from "./Header";
 
-const PUBLIC_PATH_PREFIXES = ["/login", "/auth"];
+const PUBLIC_PATH_PREFIXES = ["/login", "/auth", "/profile"];
 
 function isPublicPath(pathname: string | null): boolean {
   const path = pathname ?? "/";

@@ -32,23 +32,20 @@ export const useStartTimer = () => {
   return useMutation<StartTimerResponse, Error, StartTimerRequest>({
     mutationFn: async (data) => {
       setClientStartedAt(Date.now());
-      return await ApiClient.post<StartTimerResponse>(
-        "/api/timers",
-        data,
-        getAuthHeaders(),
-        {
-          onNotOk: async (response) => {
-            let message = "POST /api/timers failed";
+      const res = await ApiClient.post("/api/timers", data, {
+        headers: getAuthHeaders(),
+        onNotOk: async (response) => {
+          let message = "POST /api/timers failed";
 
-            if (response.status === 409) {
-              const { error } = await response.json();
-              message = `POST /api/timers failed: ${error.message}`;
-            }
+          if (response.status === 409) {
+            const { error } = await response.json();
+            message = `POST /api/timers failed: ${error.message}`;
+          }
 
-            throw new Error(message);
-          },
+          throw new Error(message);
         },
-      );
+      });
+      return res as StartTimerResponse;
     },
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.TIMERS] });

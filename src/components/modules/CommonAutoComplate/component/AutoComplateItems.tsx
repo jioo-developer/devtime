@@ -1,5 +1,6 @@
 import { MdAdd } from "react-icons/md";
 import styles from "../style.module.css";
+import CommonButton from "../../../atoms/CommonButton/CommonButton";
 import CommonChip from "../../../atoms/CommonChip/CommonChip";
 export type AutocompleteOption = {
   value: string;
@@ -99,10 +100,16 @@ export function AutocompleteMenu({
       )}
 
       {showAddButton && inputValue && (
-        <button type="button" className={styles.addButton} onClick={onAddNew}>
+        <CommonButton
+          type="button"
+          theme="none"
+          className={styles.addButton}
+          onClick={onAddNew}
+          width="100%"
+        >
           <MdAdd size={18} />
-          <span>Add New Item</span>
-        </button>
+          <span>추가</span>
+        </CommonButton>
       )}
     </div>
   );

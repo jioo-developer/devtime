@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { ApiClient } from "@/config/apiConfig";
-import type { LoginData, LoginResponse } from "../types";
+import type { LoginData } from "../types";
 
 export const useLogin = () => {
   return useMutation({
@@ -9,7 +9,7 @@ export const useLogin = () => {
         email: data.email,
         password: data.password,
       };
-      return ApiClient.post<LoginResponse>("/api/auth/login", payload);
+      return ApiClient.post("/api/auth/login", payload);
     },
   });
 };

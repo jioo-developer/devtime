@@ -5,6 +5,12 @@ import {
   redirectToLogin,
 } from "./utils/authRedirect";
 import { refreshAccessToken } from "./utils/tokenRefresh";
+import type {
+  ApiPath,
+  ApiQueryParams,
+  ApiRequest,
+  ApiResponse,
+} from "@/types/api/helpers";
 
 /**
  * 인증된 HTTP 요청 처리
@@ -43,11 +49,26 @@ async function request<T>(
     ...init,
     headers,
   });
-
   if (res.status !== 401) {
-    if (!res.ok) throw new Error(`${init.method ?? "GET"} ${endpoint} failed`);
+    if (!res.ok) {
+      const contentType = res.headers.get("content-type") ?? "";
+      const isJsonResponse = contentType.includes("application/json");
+
+      let errorMessage: string | null = null;
+
+      if (isJsonResponse) {
+        const body = (await res.json()) as { message?: string } | undefined;
+        errorMessage = body?.message ?? null;
+      }
+
+      const fallbackMessage = `${init.method ?? "GET"} ${endpoint} failed`;
+
+      throw new Error(errorMessage || fallbackMessage);
+    }
+
     return res.json();
   }
+
 
   // 401 처리: refresh 시도 후 1회 재시도
   if (init._retried) {
@@ -82,22 +103,46 @@ export const AuthenticatedApiClient = {
     return refreshAccessToken(baseUrl);
   },
 
-  async get<T>(endpoint: string, params?: Record<string, string>): Promise<T> {
+  async get<Path extends ApiPath>(
+    endpoint: Path,
+    params?: ApiQueryParams<Path, "get">,
+  ): Promise<ApiResponse<Path, "get">> {
     const baseUrl = this.config.baseUrl;
     if (!baseUrl) throw new Error("NEXT_PUBLIC_API_BASE_URL is not configured");
 
-    const queryString = params
-      ? `?${new URLSearchParams(params).toString()}`
-      : "";
-    return request<T>(baseUrl, `${endpoint}${queryString}`, { method: "GET" });
+    const queryString =
+      params && typeof params === "object" && Object.keys(params).length > 0
+        ? `?${new URLSearchParams(params as Record<string, string>).toString()}`
+        : "";
+    return request<ApiResponse<Path, "get">>(
+      baseUrl,
+      `${String(endpoint)}${queryString}`,
+      { method: "GET" },
+    );
   },
 
-  async post<T>(endpoint: string, data?: unknown): Promise<T> {
+  async post<Path extends ApiPath>(
+    endpoint: Path,
+    data?: ApiRequest<Path, "post">,
+  ): Promise<ApiResponse<Path, "post">> {
     const baseUrl = this.config.baseUrl;
     if (!baseUrl) throw new Error("NEXT_PUBLIC_API_BASE_URL is not configured");
 
-    return request<T>(baseUrl, endpoint, {
+    return request<ApiResponse<Path, "post">>(baseUrl, String(endpoint), {
       method: "POST",
+      body: data ? JSON.stringify(data) : undefined,
+    });
+  },
+
+  async put<Path extends ApiPath>(
+    endpoint: Path,
+    data?: ApiRequest<Path, "put">,
+  ): Promise<ApiResponse<Path, "put">> {
+    const baseUrl = this.config.baseUrl;
+    if (!baseUrl) throw new Error("NEXT_PUBLIC_API_BASE_URL is not configured");
+
+    return request<ApiResponse<Path, "put">>(baseUrl, String(endpoint), {
+      method: "PUT",
       body: data ? JSON.stringify(data) : undefined,
     });
   },

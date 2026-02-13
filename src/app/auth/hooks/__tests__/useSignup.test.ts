@@ -24,7 +24,9 @@ describe("useSignup", () => {
       message: "회원가입이 완료되었습니다.",
     };
 
-    vi.mocked(ApiClient.post).mockResolvedValueOnce(mockResponse);
+    vi.mocked(ApiClient.post).mockResolvedValueOnce(
+      mockResponse as Awaited<ReturnType<typeof ApiClient.post>>,
+    );
 
     const { result } = renderHook(() => useSignup(), { wrapper });
 
@@ -80,7 +82,9 @@ describe("useSignup", () => {
     const queryClient = createTestQueryClient();
     const wrapper = createWrapper(queryClient);
 
-    vi.mocked(ApiClient.post).mockResolvedValueOnce({ success: true });
+    vi.mocked(ApiClient.post).mockResolvedValueOnce(
+      { success: true } as Awaited<ReturnType<typeof ApiClient.post>>,
+    );
 
     const { result } = renderHook(() => useSignup(), { wrapper });
 

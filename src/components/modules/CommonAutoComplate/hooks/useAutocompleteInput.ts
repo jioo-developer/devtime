@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { AutocompleteOption } from "../component/AutoComplateItems";
 
 type UseAutocompleteInputParams = {
@@ -18,10 +18,10 @@ export function useAutocompleteInput({
     setInputValue(value || "");
   }, [value]);
 
-  const filteredOptions = useMemo(() => {
-    const q = inputValue.toLowerCase();
-    return options.filter((o) => o.label.toLowerCase().includes(q));
-  }, [options, inputValue]);
+  const searchQueryLower = inputValue.toLowerCase();
+  const filteredOptions = options.filter((option) =>
+    option.label.toLowerCase().includes(searchQueryLower),
+  );
 
   const changeInput = (next: string) => {
     setInputValue(next);
