@@ -20,6 +20,7 @@ export type RequestConfig<T = unknown> = {
 /** axios 4xx/5xx 시 request()에서 onNotOk에 넘기는 객체 (fetch Response 대체) */
 export type NotOkResponse = {
   status: number;
+  statusText?: string;
   json(): Promise<unknown>;
 };
 
