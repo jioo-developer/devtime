@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import type { RegisterOptions } from "react-hook-form";
 import CommonButton from "@/components/atoms/CommonButton/CommonButton";
 import CommonInput from "@/components/atoms/CommonInput/CommonInput";
 import CommonAutocomplete from "@/components/modules/CommonAutoComplate/CommonAutoComplate";
@@ -124,14 +123,14 @@ export function ProfileForm({
               placeholder="새 비밀번호를 입력해 주세요."
               register={mypageForm.register}
               validation={{
-                required: "새 비밀번호를 입력하세요.",
-                minLength: {
-                  value: PASSWORD_MIN_LENGTH,
-                  message: `새 비밀번호는 ${PASSWORD_MIN_LENGTH}자리 이상이어야 합니다.`,
-                },
-                pattern: {
-                  value: PASSWORD_PATTERN,
-                  message: "비밀번호는 영문과 숫자를 포함해야 합니다.",
+                validate: (value: string | string[] | undefined) => {
+                  const str = typeof value === "string" ? value : "";
+                  if (!str.trim()) return true;
+                  if (str.length < PASSWORD_MIN_LENGTH)
+                    return `새 비밀번호는 ${PASSWORD_MIN_LENGTH}자리 이상이어야 합니다.`;
+                  if (!PASSWORD_PATTERN.test(str))
+                    return "비밀번호는 영문과 숫자를 포함해야 합니다.";
+                  return true;
                 },
               }}
               error={mypageForm.errors.newPassword}
@@ -147,10 +146,14 @@ export function ProfileForm({
               placeholder="비밀번호를 다시 입력해 주세요."
               register={mypageForm.register}
               validation={{
-                required: "비밀번호를 다시 입력해 주세요.",
-                validate: ((value: string) =>
-                  value === mypageForm.watch("newPassword") ||
-                  "비밀번호가 일치하지 않습니다.") as RegisterOptions<ProfileFormData>["validate"],
+                validate: (value: string | string[] | undefined) => {
+                  const str = typeof value === "string" ? value : "";
+                  if (!str.trim()) return true;
+                  return (
+                    str === mypageForm.watch("newPassword") ||
+                    "비밀번호가 일치하지 않습니다."
+                  );
+                },
               }}
               error={mypageForm.errors.newPasswordConfirmation}
               className="profileFormInput"

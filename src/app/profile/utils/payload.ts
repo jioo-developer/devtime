@@ -51,12 +51,18 @@ function formPurpose(
   formData: ProfileFormData, // 현재 폼 입력값
   profileData: GetProfileResponse, // 기존 프로필 데이터(없으면 DEFAULT_PROFILE_RESPONSE 사용)
 ): CreateProfileRequest["purpose"] {
-  // 폼에서 '기타'를 선택한 경우 → object 형태로 전송
+  // 폼에서 '기타'를 선택한 경우 → detail이 있을 때만 object 전송 (빈 detail은 서버 400 방지)
   if (formData.purpose === PURPOSE_OTHER_VALUE) {
-    return {
-      type: "기타",
-      detail: trimmedOrEmpty(formData.purposeDetail), // 기타 상세는 trim 후 전달
-    };
+    const detail = trimmedOrEmpty(formData.purposeDetail);
+    if (detail) {
+      return { type: "기타", detail };
+    }
+    // detail 없으면 기존 purpose 또는 enum fallback 사용
+    const fallback =
+      typeof profileData.profile?.purpose === "string"
+        ? profileData.profile.purpose
+        : PURPOSE_API_VALUES[0];
+    return toAllowedEnumValue(fallback, PURPOSE_API_VALUES);
   }
 
   /* 기타가 아닌 경우 → string enum으로 전송
@@ -115,7 +121,22 @@ export function getCreateProfilePayload(
 }
 
 /**
+ * payload에서 빈 값 제거 (서버 400 방지)
+ * - 빈 문자열, undefined, null 제외
+ */
+function omitEmptyValues<T extends Record<string, unknown>>(
+  obj: T,
+): Partial<T> {
+  return Object.fromEntries(
+    Object.entries(obj).filter(
+      ([, v]) => v !== "" && v !== undefined && v !== null,
+    ),
+  ) as Partial<T>;
+}
+
+/**
  * 폼 데이터 → 프로필 수정 요청 body
+ * - 빈 문자열은 전송하지 않음 (서버 검증 400 방지)
  */
 export function getUpdateProfilePayload(
   formData: ProfileFormData, // 현재 폼 입력값
@@ -124,7 +145,7 @@ export function getUpdateProfilePayload(
   const effectiveProfileData = profileData ?? DEFAULT_PROFILE_RESPONSE;
   const base = getCreateProfilePayload(formData, effectiveProfileData);
 
-  // nickname: 폼 값 우선, 없으면 기존 nickname
+  // nickname: 폼 값 우선, 없으면 기존 nickname (빈 문자열이면 기존 값 사용)
   const nickname = preferredOrFallback(
     formData.nickname,
     effectiveProfileData.nickname,
@@ -139,10 +160,12 @@ export function getUpdateProfilePayload(
   // - 확인값과 일치할 때만
   const shouldIncludePassword = !!newPassword && newPassword === confirmation;
 
-  // UpdateProfileRequest 형태로 payload 조립
-  return {
-    ...base, // create payload 베이스
-    nickname, // nickname은 수정 시 항상 포함
-    ...(shouldIncludePassword && { password: newPassword }), // 조건 충족 시만 password 포함
+  const raw: Record<string, unknown> = {
+    ...base,
+    nickname: nickname || effectiveProfileData.nickname || undefined,
+    ...(shouldIncludePassword && { password: newPassword }),
   };
+
+  // 빈 값 제거 후 반환 (서버가 "" 또는 [] 거부하는 경우 대비)
+  return omitEmptyValues(raw) as UpdateProfileRequest;
 }

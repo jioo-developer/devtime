@@ -1,5 +1,5 @@
-import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
-import { ApiClient } from "@/config/apiConfig/apiConfig";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { AuthenticatedApiClient } from "@/config/apiConfig/authenticated/AuthApiConfig";
 import { QueryKey } from "@/constant/queryKeys";
 import type { GetRankingsResponse, RankingSortBy } from "../types";
 import { toRankingEntry } from "../utils/mapRanking";
@@ -26,10 +26,10 @@ export function useGetRankings({
   sortBy,
   limit = DEFAULT_LIMIT,
 }: UseGetRankingsParams) {
-  return useSuspenseInfiniteQuery({
+  return useInfiniteQuery({
     queryKey: [QueryKey.RANKINGS, sortBy, limit],
     queryFn: async ({ pageParam = 1 }) => {
-      const res = (await ApiClient.get("/api/rankings", {
+      const res = (await AuthenticatedApiClient.get("/api/rankings", {
         query: { sortBy, page: pageParam, limit },
       })) as GetRankingsResponse;
 

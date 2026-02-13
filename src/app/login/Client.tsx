@@ -32,7 +32,8 @@ function Client() {
   });
 
   const { email, password } = watch();
-  const { checkboxRef, saveEmailIfChecked } = useSavedEmail(setValue);
+  const { isChecked, handleCheckboxChange, saveEmailIfChecked } =
+    useSavedEmail(setValue);
   const { mutate: login } = useLogin();
   const handleLoginSuccess = createLoginSuccessHandler(router, searchParams);
 
@@ -95,26 +96,13 @@ function Client() {
             />
             <div className="saveEmailCheckboxWrap">
               <CommonCheckbox
+                id="save-email-checkbox"
                 size={18}
-                ref={checkboxRef}
-                onChange={(e) => {
-                  if (!e.target.checked) {
-                    // 체크 해제 시 저장된 이메일 삭제
-                    localStorage.removeItem("savedEmail");
-                  }
-                }}
+                checked={isChecked}
+                onChange={(e) => handleCheckboxChange(e.target.checked)}
                 testId="save-email-checkbox"
               />
-              <label
-                htmlFor="save-email-checkbox"
-                onClick={() => {
-                  if (checkboxRef.current) {
-                    checkboxRef.current.click();
-                  }
-                }}
-              >
-                아이디 저장
-              </label>
+              <label htmlFor="save-email-checkbox">아이디 저장</label>
             </div>
             <CommonInput
               id="password"

@@ -22,3 +22,18 @@
 .rankingList li {
   list-style: none;
 }
+
+.rankingPage__filter {
+  margin-bottom: var(--margin-xl);
+}
+
+.rankingPage__filterDropdown {
+  max-width: 200px;
+}
+
+.rankingPage__filterLabel {
+  font-size: var(--fontsize-body-large);
+  font-weight: var(--font-weight-medium);
+  color: var(--gray-500);
+  margin-bottom: var(--gap-md);
+}

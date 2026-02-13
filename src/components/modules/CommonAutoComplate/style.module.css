@@ -1,7 +1,6 @@
 .autocompleteWrapper {
   position: relative;
   width: 100%;
-  max-width: 300px;
 }
 
 .label {
@@ -22,6 +21,7 @@
   color: var(--gray-900);
   transition: all 0.2s ease;
   outline: none;
+  box-sizing: border-box;
 }
 
 .input::placeholder {

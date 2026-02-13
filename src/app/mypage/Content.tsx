@@ -5,7 +5,11 @@ export function MypageContent() {
   const { upload: uploadProfileImage } = useUploadProfileImage();
 
   const mypageForm = useMypageForm({
-    onUpdateError: (error) => console.error(error.message),
+    onUpdateError: (error) => {
+      console.error("PUT /api/profile failed", error.message);
+      const err = error as { response?: { data?: unknown } };
+      if (err.response?.data) console.error("서버 응답:", err.response.data);
+    },
   });
 
   const { profileData, isUpdating, isEditing } = mypageForm;

@@ -27,7 +27,7 @@ export function RankingCard({
         />
         <div className="rankingCard__avatarWrap">
           <CommonImage
-            src={profileImageUrl ?? DefaultProfileImage}
+            src={profileImageUrl || DefaultProfileImage}
             alt={`${nickname} 프로필`}
             width={64}
             height={64}
