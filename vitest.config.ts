@@ -1,16 +1,16 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-
 import { defineConfig } from "vitest/config";
-
 import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
-
 import { preview } from "@vitest/browser-preview";
 
-const dirname =
-  typeof __dirname !== "undefined"
-    ? __dirname
-    : path.dirname(fileURLToPath(import.meta.url));
+let dirname: string;
+
+if (typeof __dirname !== "undefined") {
+  dirname = __dirname; // CommonJS
+} else {
+  dirname = path.dirname(fileURLToPath(import.meta.url)); // ESM
+}
 
 export default defineConfig({
   test: {

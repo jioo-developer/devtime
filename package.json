@@ -11,7 +11,6 @@
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "e2e": "npx kill-port 3000 && start-server-and-test dev http://localhost:3000 cypress:run",
-    "cypress:screenshots": "node scripts/copy-cypress-screenshots.js",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "generate:types": "openapi-typescript https://devtime.prokit.app/docs/json -o src/types/api/generated.ts",
