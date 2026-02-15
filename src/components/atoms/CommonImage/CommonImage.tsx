@@ -25,6 +25,7 @@ export default function CommonImage({
       className={className}
       sizes={sizes ?? (fill ? "100vw" : undefined)}
       {...rest}
+      priority
     />
   );
 }
