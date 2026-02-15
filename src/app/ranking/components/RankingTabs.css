@@ -1,0 +1,29 @@
+.rankingTabs {
+  display: flex;
+  gap: var(--gap-2xl);
+  margin-bottom: var(--margin-xl);
+}
+
+.rankingTabs__tab,
+.rankingTabs__tabActive {
+  padding: var(--gap-md) 0;
+  font-size: var(--fontsize-body);
+  font-weight: var(--font-weight-semibold);
+  color: var(--gray-500);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.rankingTabs__tab:hover {
+  color: var(--gray-700);
+}
+
+.rankingTabs__tabActive {
+  color: var(--secondary-indigo);
+  border-bottom-color: var(--secondary-indigo);
+}

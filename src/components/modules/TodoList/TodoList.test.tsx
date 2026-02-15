@@ -18,6 +18,7 @@ describe("TodoListItem", () => {
       render(
         <TodoListItem
           text="Test Todo"
+          mode="edit"
           onTextChange={mockOnTextChange}
           onStatusChange={mockOnStatusChange}
           onDelete={mockOnDelete}
@@ -33,6 +34,7 @@ describe("TodoListItem", () => {
         <TodoListItem
           text="Test Todo"
           initialStatus="active"
+          mode="edit"
           onTextChange={mockOnTextChange}
           onStatusChange={mockOnStatusChange}
           onDelete={mockOnDelete}
@@ -48,6 +50,7 @@ describe("TodoListItem", () => {
         <TodoListItem
           text="Test Todo"
           initialStatus="disabled"
+          mode="edit"
           onTextChange={mockOnTextChange}
           onStatusChange={mockOnStatusChange}
           onDelete={mockOnDelete}
@@ -65,6 +68,7 @@ describe("TodoListItem", () => {
         <TodoListItem
           text="Test Todo"
           initialStatus="active"
+          mode="edit"
           onTextChange={mockOnTextChange}
           onStatusChange={mockOnStatusChange}
           onDelete={mockOnDelete}
@@ -87,6 +91,7 @@ describe("TodoListItem", () => {
         <TodoListItem
           text="Test Todo"
           initialStatus="active"
+          mode="edit"
           onTextChange={mockOnTextChange}
           onStatusChange={mockOnStatusChange}
           onDelete={mockOnDelete}
@@ -109,6 +114,7 @@ describe("TodoListItem", () => {
         <TodoListItem
           text="Test Todo"
           initialStatus="active"
+          mode="edit"
           onTextChange={mockOnTextChange}
           onStatusChange={mockOnStatusChange}
           onDelete={mockOnDelete}
@@ -134,6 +140,7 @@ describe("TodoListItem", () => {
         <TodoListItem
           text="Original Todo"
           initialStatus="active"
+          mode="edit"
           onTextChange={mockOnTextChange}
           onStatusChange={mockOnStatusChange}
           onDelete={mockOnDelete}
@@ -147,12 +154,11 @@ describe("TodoListItem", () => {
       await user.type(input, " Modified{Escape}");
 
       await waitFor(() => {
-        expect(mockOnStatusChange).toHaveBeenCalledWith("active");
+        expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
       });
 
-      // userEvent.type은 각 키 입력마다 onChange를 트리거하므로
-      // 텍스트 변경이 호출되었는지 확인
-      expect(mockOnTextChange).toHaveBeenCalled();
+      // Escape 취소 시 부모에 텍스트 변경 전달하지 않음
+      expect(mockOnTextChange).not.toHaveBeenCalled();
     });
 
     it("체크 버튼 클릭으로 편집을 완료한다", async () => {
@@ -161,6 +167,7 @@ describe("TodoListItem", () => {
         <TodoListItem
           text="Test Todo"
           initialStatus="active"
+          mode="edit"
           onTextChange={mockOnTextChange}
           onStatusChange={mockOnStatusChange}
           onDelete={mockOnDelete}
@@ -189,6 +196,7 @@ describe("TodoListItem", () => {
         <TodoListItem
           text="Test Todo"
           initialStatus="active"
+          mode="edit"
           onTextChange={mockOnTextChange}
           onStatusChange={mockOnStatusChange}
           onDelete={mockOnDelete}
@@ -204,8 +212,8 @@ describe("TodoListItem", () => {
 
       await waitFor(() => {
         expect(mockOnTextChange).toHaveBeenCalledWith("");
-        expect(mockOnStatusChange).toHaveBeenCalledWith("empty");
       });
+      // 빈 텍스트 저장 시 status는 갱신하지 않음(empty는 UI 전용)
     });
   });
 
@@ -215,6 +223,7 @@ describe("TodoListItem", () => {
         <TodoListItem
           text="Test Todo"
           initialStatus="active"
+          mode="edit"
           onTextChange={mockOnTextChange}
           onStatusChange={mockOnStatusChange}
           onDelete={mockOnDelete}
@@ -232,6 +241,7 @@ describe("TodoListItem", () => {
         <TodoListItem
           text="Test Todo"
           initialStatus="disabled"
+          mode="edit"
           onTextChange={mockOnTextChange}
           onStatusChange={mockOnStatusChange}
           onDelete={mockOnDelete}
@@ -248,6 +258,7 @@ describe("TodoListItem", () => {
         <TodoListItem
           text="Test Todo"
           initialStatus="active"
+          mode="edit"
           onTextChange={mockOnTextChange}
           onStatusChange={mockOnStatusChange}
           onDelete={mockOnDelete}
@@ -267,6 +278,7 @@ describe("TodoListItem", () => {
         <TodoListItem
           text="Test Todo"
           initialStatus="disabled"
+          mode="edit"
           onTextChange={mockOnTextChange}
           onStatusChange={mockOnStatusChange}
           onDelete={mockOnDelete}
@@ -286,6 +298,7 @@ describe("TodoListItem", () => {
         <TodoListItem
           text="Test Todo"
           initialStatus="disabled"
+          mode="edit"
           onTextChange={mockOnTextChange}
           onStatusChange={mockOnStatusChange}
           onDelete={mockOnDelete}
@@ -306,6 +319,7 @@ describe("TodoListItem", () => {
           <TodoListItem
             text="Test Todo"
             initialStatus="active"
+            mode="edit"
             onTextChange={mockOnTextChange}
             onStatusChange={mockOnStatusChange}
             onDelete={mockOnDelete}
@@ -331,6 +345,7 @@ describe("TodoListItem", () => {
           <TodoListItem
             text="Test Todo"
             initialStatus="active"
+            mode="edit"
             onTextChange={mockOnTextChange}
             onStatusChange={mockOnStatusChange}
             onDelete={mockOnDelete}
@@ -352,6 +367,7 @@ describe("TodoListItem", () => {
         <TodoListItem
           text="Test Todo"
           initialStatus="disabled"
+          mode="edit"
           onTextChange={mockOnTextChange}
           onStatusChange={mockOnStatusChange}
           onDelete={mockOnDelete}
@@ -366,6 +382,7 @@ describe("TodoListItem", () => {
         <TodoListItem
           text="Test Todo"
           initialStatus="disabled"
+          mode="edit"
           onTextChange={mockOnTextChange}
           onStatusChange={mockOnStatusChange}
           onDelete={mockOnDelete}

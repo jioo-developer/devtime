@@ -1,10 +1,10 @@
 import React from "react";
 import CommonCheckbox from "@/components/atoms/CommonCheckbox/CommonCheckbox";
 
-interface AgreementListProps {
+type AgreementListProps = {
   agreed: boolean;
   setAgreed: (value: boolean) => void;
-}
+};
 
 function AgreementList({ agreed, setAgreed }: AgreementListProps) {
   return (

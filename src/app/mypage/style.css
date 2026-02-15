@@ -1,0 +1,370 @@
+.mypagePage {
+  --mypage-max: 1200px;
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--gray-50);
+  max-width: var(--mypage-max);
+  margin: 0 auto;
+  padding: var(--margin-xl) var(--gap-2xl);
+}
+
+.profileCard {
+  background: var(--gray-white);
+  border-radius: var(--radius-md);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--gray-200);
+  padding: var(--gap-2xl);
+}
+
+.profileHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap-2xl);
+  margin-bottom: var(--margin-xl);
+}
+
+.profileHeader .editProfileButton {
+  align-self: flex-start;
+  margin-left: auto;
+}
+
+.profileAvatarWrap {
+  flex-shrink: 0;
+  width: 120px;
+  height: 120px;
+  border-radius: var(--radius-md);
+  background-color: var(--gray-100);
+  border: 1px solid var(--gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.profileAvatarWrap img,
+.profileAvatarWrap [data-placeholder] {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profileAvatarPlaceholder {
+  color: var(--gray-400);
+  width: 48px;
+  height: 48px;
+}
+
+.profileInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.profileName {
+  font-size: var(--fontsize-title);
+  font-weight: var(--font-weight-bold);
+  color: var(--secondary-indigo);
+  line-height: var(--lineheight-title);
+}
+
+.profileMotto {
+  font-size: var(--fontsize-body);
+  color: var(--gray-500);
+  line-height: var(--lineheight-body);
+  margin-top: var(--gap-xs);
+}
+
+.editProfileButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  padding: var(--gap-sm) var(--gap-md);
+  border: none;
+  background: none;
+  font-size: var(--fontsize-body-small);
+  font-weight: var(--font-weight-medium);
+  color: var(--gray-600);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+  flex-shrink: 0;
+}
+
+.editProfileButton:hover {
+  background-color: var(--gray-100);
+  color: var(--gray-900);
+}
+
+.editProfileButton svg {
+  flex-shrink: 0;
+  color: var(--gray-500);
+}
+
+.profileSection {
+  padding-top: var(--gap-xl);
+}
+
+.profileSection:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.profileSection + .profileSection {
+  margin-top: 0;
+  padding-top: var(--gap-xl);
+}
+
+/* 두 컬럼 레이아웃에서는 섹션 간격은 위에서 지정 */
+.profileFormColumns .profileSection + .profileSection {
+  margin-top: 0;
+}
+
+.profileSectionLabel {
+  font-size: var(--fontsize-body-small);
+  font-weight: var(--font-weight-medium);
+  color: var(--gray-500);
+  margin-bottom: var(--gap-md);
+  display: block;
+}
+
+.profileSectionValue {
+  font-size: var(--fontsize-body);
+  color: var(--gray-900);
+  line-height: var(--lineheight-body);
+}
+
+.profileSectionPlaceholder {
+  font-size: var(--fontsize-body);
+  color: var(--gray-400);
+  line-height: var(--lineheight-body);
+}
+
+.stackTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-md);
+}
+
+.profileSection .stackTags {
+  margin-top: 0;
+}
+
+/* ---------- 프로필 보기(회원정보 수정 아님) — 섹션에 padding-bottom, border-bottom ---------- */
+.profileView .profileSection {
+  padding-bottom: var(--gap-xl);
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.profileView .profileSection:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* ---------- 편집 모드 폼 (두 컬럼 레이아웃) ---------- */
+.profileForm {
+  margin-top: 0;
+}
+
+.profileFormColumns {
+  position: relative;
+  height: 70vh;
+  --profile-form-gap: var(--gap-2xl);
+}
+
+.profileFormLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: calc(50% - var(--profile-form-gap) / 2);
+  padding-right: var(--profile-form-gap);
+  min-width: 0;
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+.profileFormRight {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  width: calc(50% - var(--profile-form-gap) / 2);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .profileFormColumns {
+    height: auto;
+  }
+
+  .profileFormLeft {
+    width: 100%;
+    padding-right: 0;
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  .profileFormRight {
+    position: static;
+    top: auto;
+    right: auto;
+    transform: none;
+    width: 100%;
+  }
+}
+
+.profileFormLeft .profileSection,
+.profileFormRight .profileSection {
+  margin-top: 0;
+  padding-top: var(--gap-xl);
+}
+
+.profileFormPurposeDetailWrap {
+  margin-top: var(--gap-md);
+  margin-bottom: var(--gap-md);
+}
+
+.profileFormLeft .profileSection:first-child,
+.profileFormRight .profileSection:first-child {
+  padding-top: 0;
+}
+
+.profileFormLeft .profileSection:last-child,
+.profileFormRight .profileSection:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.profileFormFieldWrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--gap-md);
+}
+
+.profileFormFieldWrap > label {
+  flex: 1;
+  min-width: 0;
+}
+
+.profileFormFieldWrap:has(.error, .success) {
+  align-items: flex-start;
+}
+
+/* 두 컬럼 안에서는 입력 필드가 컬럼 너비 전체 사용 */
+.profileFormColumns .profileFormInput,
+.profileFormColumns .profileFormSelect {
+  max-width: none;
+}
+
+.profileFormLabel {
+  font-size: var(--fontsize-body-small);
+  font-weight: var(--font-weight-medium);
+  color: var(--gray-500);
+  margin-bottom: var(--gap-sm);
+  display: block;
+}
+
+.profileFormInput,
+.profileFormSelect {
+  width: 100%;
+  box-sizing: border-box;
+  height: 44px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  font-size: var(--fontsize-body);
+  color: var(--gray-900);
+  background-color: var(--gray-white);
+  margin-bottom: 0;
+}
+
+.profileFormInput {
+  padding: 0 var(--gap-lg);
+}
+
+.profileForm .profileSection .profileFormInput,
+.profileForm .profileSection .profileFormSelect {
+  margin-top: var(--gap-sm);
+}
+
+.profileFormInput::placeholder {
+  color: var(--gray-400);
+}
+
+.profileFormInput:hover,
+.profileFormSelect:hover {
+  border-color: var(--gray-300);
+}
+
+.profileFormInput:focus,
+.profileFormSelect:focus {
+  outline: none;
+  border-color: var(--primary-core);
+  box-shadow: 0 0 0 2px rgba(76, 121, 255, 0.1);
+}
+
+.profileSectionValueReadOnly {
+  color: var(--gray-500);
+}
+
+.profileFormActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--gap-md);
+  margin-top: var(--margin-xl);
+  padding-top: var(--gap-2xl);
+  padding-bottom: var(--gap-2xl);
+  border-top: 1px solid var(--gray-200);
+}
+
+.profileFormButton {
+  padding: var(--gap-lg) var(--gap-2xl);
+  border-radius: var(--radius-md);
+  font-size: var(--fontsize-body-small);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.profileFormButtonCancel {
+  border: 1px solid var(--gray-200);
+  background: var(--gray-white);
+  color: var(--gray-700);
+}
+
+.profileFormButtonCancel:hover {
+  background: var(--gray-100);
+}
+
+.profileFormButtonSave {
+  border: none;
+  background: var(--primary-core);
+  color: var(--gray-white);
+}
+
+.profileFormButtonSave:hover:not(:disabled) {
+  background: var(--primary-vivid);
+}
+
+.profileFormButtonSave:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.profileCardLoading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  color: var(--gray-500);
+  font-size: var(--fontsize-body);
+}
+
+.profileSectionAutocomplete > div {
+  max-width: 100%;
+}

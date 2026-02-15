@@ -1,0 +1,70 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { ApiClient } from "@/config/apiConfig/apiConfig";
+import { QueryKey } from "@/constant/queryKeys";
+import { getAuthHeaders } from "@/utils/authUtils";
+import { useModalStore } from "@/store/modalStore";
+import { useTimerStore } from "@/store/timerStore";
+
+type StartTimerRequest = {
+  todayGoal: string;
+  tasks: string[];
+};
+
+export type StartTimerResponse = {
+  message: string;
+  studyLogId: string;
+  timerId: string;
+  startTime: string; // ISO date string
+};
+
+export const useStartTimer = () => {
+  const queryClient = useQueryClient();
+  const {
+    setTodoTitle,
+    setSavedTodos,
+    setIsTimerRunning,
+    setStartTime,
+    setClientStartedAt,
+    setTotalPausedDuration,
+  } = useTimerStore.getState();
+  const closeTop = useModalStore.getState().closeTop;
+
+  return useMutation<StartTimerResponse, Error, StartTimerRequest>({
+    mutationFn: async (data) => {
+      setClientStartedAt(Date.now());
+      const res = await ApiClient.post("/api/timers", data, {
+        headers: getAuthHeaders(),
+        onNotOk: async (response) => {
+          let message = "POST /api/timers failed";
+
+          if (response.status === 409) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const body: any = await response.json();
+            const errorMessage = body.error.message as string;
+            if (errorMessage) {
+              message = `POST /api/timers failed: ${errorMessage}`;
+            }
+          }
+
+          throw new Error(message);
+        },
+      });
+      return res as StartTimerResponse;
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: [QueryKey.TIMERS] });
+      setTodoTitle(variables.todayGoal);
+      setSavedTodos(variables.tasks);
+      setStartTime(data.startTime);
+      setTotalPausedDuration(0);
+      setIsTimerRunning(true);
+      closeTop();
+    },
+    onError: (error) => {
+      if (error.message.includes("409")) {
+        queryClient.invalidateQueries({ queryKey: [QueryKey.TIMERS] });
+        closeTop();
+      }
+    },
+  });
+};

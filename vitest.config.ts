@@ -1,16 +1,16 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-
 import { defineConfig } from "vitest/config";
-
 import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
+import { preview } from "@vitest/browser-preview";
 
-import { playwright } from "@vitest/browser-playwright";
+let dirname: string;
 
-const dirname =
-  typeof __dirname !== "undefined"
-    ? __dirname
-    : path.dirname(fileURLToPath(import.meta.url));
+if (typeof __dirname !== "undefined") {
+  dirname = __dirname; // CommonJS
+} else {
+  dirname = path.dirname(fileURLToPath(import.meta.url)); // ESM
+}
 
 export default defineConfig({
   test: {
@@ -34,8 +34,7 @@ export default defineConfig({
           name: "storybook",
           browser: {
             enabled: true,
-            headless: true,
-            provider: playwright({}),
+            provider: preview(),
             instances: [{ browser: "chromium" }],
           },
           setupFiles: [".storybook/vitest.setup.ts"],

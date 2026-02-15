@@ -5,6 +5,7 @@ import {
   RegisterOptions,
   UseFormRegister,
 } from "react-hook-form";
+import { CSSProperties } from "react";
 import styles from "./style.module.css";
 import clsx from "clsx";
 
@@ -19,6 +20,10 @@ export interface CommonInputProps<T extends FieldValues> {
   label?: string;
   testId?: string;
   success?: string;
+  style?: CSSProperties;
+  className?: string;
+  autoComplete?: string;
+  maxLength?: number;
 }
 
 function CommonInput<T extends FieldValues>({
@@ -32,6 +37,10 @@ function CommonInput<T extends FieldValues>({
   label,
   testId,
   success,
+  style,
+  className,
+  autoComplete,
+  maxLength,
 }: CommonInputProps<T>) {
   return (
     <label htmlFor={String(id)} className={styles.labelArea}>
@@ -43,8 +52,11 @@ function CommonInput<T extends FieldValues>({
         value={value}
         placeholder={placeholder}
         data-testid={testId}
-        className={clsx(styles.input)}
+        className={clsx(styles.input, className)}
+        style={style}
+        maxLength={maxLength}
         {...(register && register(id, validation))}
+        autoComplete={autoComplete}
       />
 
       {error && <span className="error">{error.message}</span>}

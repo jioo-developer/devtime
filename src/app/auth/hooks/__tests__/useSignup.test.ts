@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, waitFor } from "@testing-library/react";
 import { useSignup } from "../useSignup";
 import { createTestQueryClient, createWrapper } from "./test-utils";
-import { ApiClient } from "@/config/apiConfig";
+import { ApiClient } from "@/config/apiConfig/apiConfig";
 
 vi.mock("@/config/apiConfig", () => ({
   ApiClient: {
@@ -10,14 +10,36 @@ vi.mock("@/config/apiConfig", () => ({
   },
 }));
 
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn() }),
+}));
+
+vi.mock("@/store/modalStore", () => ({
+  useModalStore: () => ({
+    push: vi.fn(),
+    closeTop: vi.fn(),
+  }),
+}));
+
+vi.mock("@/app/login/hooks/useLogin", () => ({
+  useLogin: () => ({
+    mutateAsync: vi.fn().mockResolvedValue({
+      success: true,
+      accessToken: "token",
+      refreshToken: "refresh",
+      message: "",
+      isFirstLogin: false,
+      isDuplicateLogin: false,
+    }),
+  }),
+}));
+
 describe("useSignup", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.spyOn(console, "log").mockImplementation(() => {});
-    vi.spyOn(console, "error").mockImplementation(() => {});
   });
 
-  it("회원가입에 성공하면 성공 로그를 출력한다", async () => {
+  it("회원가입에 성공하면 isSuccess가 true가 된다", async () => {
     const queryClient = createTestQueryClient();
     const wrapper = createWrapper(queryClient);
 
@@ -26,7 +48,9 @@ describe("useSignup", () => {
       message: "회원가입이 완료되었습니다.",
     };
 
-    vi.mocked(ApiClient.post).mockResolvedValueOnce(mockResponse);
+    vi.mocked(ApiClient.post).mockResolvedValueOnce(
+      mockResponse as Awaited<ReturnType<typeof ApiClient.post>>,
+    );
 
     const { result } = renderHook(() => useSignup(), { wrapper });
 
@@ -51,11 +75,9 @@ describe("useSignup", () => {
       password: "password123!",
       confirmPassword: "password123!",
     });
-
-    expect(console.log).toHaveBeenCalledWith("회원가입 성공:", mockResponse);
   });
 
-  it("회원가입 실패 시 에러 로그를 출력한다", async () => {
+  it("회원가입 실패 시 isError가 true가 된다", async () => {
     const queryClient = createTestQueryClient();
     const wrapper = createWrapper(queryClient);
 
@@ -78,15 +100,15 @@ describe("useSignup", () => {
     await waitFor(() => {
       expect(result.current.isError).toBe(true);
     });
-
-    expect(console.error).toHaveBeenCalledWith("회원가입 오류:", mockError);
   });
 
   it("폼 데이터를 올바른 API 형식으로 변환한다", async () => {
     const queryClient = createTestQueryClient();
     const wrapper = createWrapper(queryClient);
 
-    vi.mocked(ApiClient.post).mockResolvedValueOnce({ success: true });
+    vi.mocked(ApiClient.post).mockResolvedValueOnce({
+      success: true,
+    } as Awaited<ReturnType<typeof ApiClient.post>>);
 
     const { result } = renderHook(() => useSignup(), { wrapper });
 

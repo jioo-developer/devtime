@@ -1,13 +1,39 @@
-import React from "react";
-import styles from "./style.module.css";
+"use client";
 
-function Navigation() {
+import React from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import styles from "../style.module.css";
+
+type NavigationProps = {
+  isLoggedIn: boolean;
+};
+
+function Navigation({ isLoggedIn }: NavigationProps) {
+  const pathname = usePathname();
+
   return (
     <nav>
-      <ul className={styles.navigation}>
-        <li>대시보드</li>
-        <li>랭킹</li>
-      </ul>
+      {isLoggedIn ? (
+        <ul className={styles.navigation}>
+          <li>
+            <Link
+              href="/dashboard"
+              className={pathname === "/dashboard" ? styles.active : undefined}
+            >
+              대시보드
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/ranking"
+              className={pathname === "/ranking" ? styles.active : undefined}
+            >
+              랭킹
+            </Link>
+          </li>
+        </ul>
+      ) : null}
     </nav>
   );
 }
