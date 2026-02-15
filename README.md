@@ -16,7 +16,7 @@
 
 | 구분             | 기술                                  |
 | ---------------- | ------------------------------------- |
-| **프레임워크**   | Next.js 14 (App Router)               |
+| **프레임워크**   | Next.js 14                            |
 | **언어**         | TypeScript                            |
 | **상태 관리**    | Zustand, TanStack React Query         |
 | **폼**           | React Hook Form                       |
