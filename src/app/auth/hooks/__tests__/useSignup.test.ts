@@ -10,10 +10,14 @@ vi.mock("@/config/apiConfig", () => ({
   },
 }));
 
-vi.mock("../useSignupModal", () => ({
-  useSignupModal: () => ({
-    showSignupSuccessModal: vi.fn(),
-    showSignupErrorModal: vi.fn(),
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn() }),
+}));
+
+vi.mock("@/store/modalStore", () => ({
+  useModalStore: () => ({
+    push: vi.fn(),
+    closeTop: vi.fn(),
   }),
 }));
 

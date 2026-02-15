@@ -12,24 +12,31 @@ export const isAuthFormValid = ({
   agreed,
   errors,
 }: FormValidationParams): boolean => {
-  const {
-    email,
-    nickname,
-    password,
-    passwordConfirmation,
-    emailVerified,
-    nicknameVerified,
-  } = watch();
+  const formData = watch();
 
+  // 필수 필드 검증
+  const requiredFields: (keyof AuthFormData)[] = [
+    "email",
+    "nickname",
+    "password",
+    "passwordConfirmation",
+  ];
+
+  // 모든 필수 필드가 입력되었는지 검증
+  const hasAllRequiredFields = requiredFields.every(
+    (field) => !!formData[field],
+  );
+
+  // 중복 확인 성공 메시지가 있는지 검증
+  const hasSuccessMessages = !!(
+    formData.emailVerified && formData.nicknameVerified
+  );
+
+  // 비밀번호 확인 필드 에러 검증
+  const hasPasswordErrors = !!(errors.password || errors.passwordConfirmation);
+
+  // 모든 검증 조건을 충족하는지 검증
   return (
-    !!email &&
-    !!emailVerified &&
-    !!nickname &&
-    !!nicknameVerified &&
-    !!password &&
-    !!passwordConfirmation &&
-    !errors.password &&
-    !errors.passwordConfirmation &&
-    agreed
+    hasAllRequiredFields && hasSuccessMessages && !hasPasswordErrors && agreed
   );
 };
