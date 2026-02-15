@@ -3,6 +3,10 @@ import { AuthenticatedApiClient } from "@/config/apiConfig/authenticated/AuthApi
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { clearTokens } from "@/config/utils/tokenStorage";
+import type { ApiResponse } from "@/types/api/helpers";
+
+/** POST /api/auth/logout 200 응답 (generated.ts 기반) */
+export type LogoutResponse = ApiResponse<"/api/auth/logout", "post", 200>;
 
 export const useLogout = () => {
   const router = useRouter();
@@ -13,10 +17,8 @@ export const useLogout = () => {
     router.replace("/login");
   };
 
-  return useMutation({
-    mutationFn: () => {
-      return AuthenticatedApiClient.post("/api/auth/logout", undefined);
-    },
+  return useMutation<LogoutResponse, Error, void>({
+    mutationFn: () => AuthenticatedApiClient.post("/api/auth/logout"),
     onSuccess: () => {
       queryClient.clear();
       redirectToLogin();

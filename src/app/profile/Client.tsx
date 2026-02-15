@@ -54,6 +54,15 @@ export default function Client() {
   const { mutate: createProfile } = useCreateProfile();
   const { upload: uploadProfileImage } = useUploadProfileImage();
 
+  // 프로필 이미지 변경 핸들러
+  const handleImageChange = (file: File | null) => {
+    if (!file) return;
+    uploadProfileImage(file).then((key) => {
+      if (!key) return;
+      setValue("profileImage", key);
+    });
+  };
+
   const onSubmit = (formData: ProfileFormData) => {
     if (isProfileFormIncomplete(formData)) {
       openModal({
@@ -75,7 +84,17 @@ export default function Client() {
         setProfileComplete();
         router.replace("/");
       },
-      onError: (error) => console.error(error),
+      onError: (error) => {
+        openModal({
+          title: "프로필 설정 실패",
+          content: error?.message ?? "프로필 설정에 실패했습니다.",
+          footer: (
+            <CommonButton theme="primary" onClick={() => closeModal()}>
+              확인
+            </CommonButton>
+          ),
+        });
+      },
     });
   };
 
@@ -182,14 +201,7 @@ export default function Client() {
                 imageKey={formWatch("profileImage")}
                 getImageUrl={getProfileImageUrl}
                 defaultImageUrl={DEFAULT_PROFILE_IMAGE}
-                onImageChange={(file) => {
-                  if (!file) return;
-
-                  uploadProfileImage(file).then((key) => {
-                    if (!key) return;
-                    setValue("profileImage", key);
-                  });
-                }}
+                onImageChange={handleImageChange}
               />
             </div>
 

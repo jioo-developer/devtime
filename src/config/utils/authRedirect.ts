@@ -6,9 +6,7 @@ import { safeInternalPath } from "@/utils/pathUtils";
  * - Access Token이 유효하면 redirectParam 또는 "/"로 이동 후 true 반환
  * - 유효하지 않으면 아무것도 하지 않고 false 반환 (로그인 폼 노출)
  */
-export function redirectIfAlreadyLoggedIn(
-  redirectParam: string | null,
-): boolean {
+export function redirectAlreadyLoggedIn(redirectParam: string | null): boolean {
   if (typeof window === "undefined") return false;
 
   const token = getAccessToken();

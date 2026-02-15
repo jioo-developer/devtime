@@ -1,13 +1,7 @@
-export type LoginData = {
-  email: string;
-  password: string;
-};
+import type { ApiRequest, ApiResponse } from "@/types/api/helpers";
 
-export type LoginResponse = {
-  success: boolean;
-  message: string;
-  accessToken: string;
-  refreshToken: string;
-  isFirstLogin: boolean;
-  isDuplicateLogin: boolean;
-};
+/** POST /api/auth/login 요청 (generated.ts 기반) */
+export type LoginData = ApiRequest<"/api/auth/login", "post">;
+
+/** POST /api/auth/login 200 응답 (generated.ts 기반) */
+export type LoginResponse = ApiResponse<"/api/auth/login", "post", 200>;

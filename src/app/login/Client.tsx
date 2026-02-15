@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
 import CommonImage from "@/components/atoms/CommonImage/CommonImage";
@@ -8,10 +8,12 @@ import CommonButton from "@/components/atoms/CommonButton/CommonButton";
 import CommonCheckbox from "@/components/atoms/CommonCheckbox/CommonCheckbox";
 import LoginBgImage from "@/asset/images/login-background-image.png";
 import LogoBlue from "@/asset/images/logo_blue.svg";
-import { createLoginSuccessHandler, useLogin } from "./hooks/useLogin";
+import { useLogin } from "./hooks/useLogin";
 import { useSavedEmail } from "./hooks/useSavedEmail";
-import { redirectIfAlreadyLoggedIn } from "@/config/utils/authRedirect";
-import { LoginData } from "./types";
+import { redirectAlreadyLoggedIn } from "@/config/utils/authRedirect";
+import { setTokens } from "@/config/utils/tokenStorage";
+import { safeInternalPath } from "@/utils/pathUtils";
+import type { LoginData, LoginResponse } from "./types";
 import Link from "next/link";
 import { PASSWORD_MIN_LENGTH, PASSWORD_PATTERN } from "@/constant/password";
 import "./style.css";
@@ -19,7 +21,6 @@ import "./style.css";
 function Client() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [isAuthCheck, setisAuthCheck] = useState(true);
   const {
     register,
     watch,
@@ -32,11 +33,14 @@ function Client() {
   });
 
   const { email, password } = watch();
+
+  // 이메일 저장 체크박스 상태 관리
   const { isChecked, handleCheckboxChange, saveEmailIfChecked } =
     useSavedEmail(setValue);
-  const { mutate: login } = useLogin();
-  const handleLoginSuccess = createLoginSuccessHandler(router, searchParams);
 
+  const { mutate: login } = useLogin();
+
+  // 폼 유효성 검사
   const isFormValid =
     !!email && !!password && !errors.email && !errors.password;
 
@@ -44,7 +48,22 @@ function Client() {
     if (isFormValid) {
       saveEmailIfChecked(data.email);
       login(data, {
-        onSuccess: handleLoginSuccess,
+        onSuccess: (result: LoginResponse) => {
+          if (!result.success) {
+            throw new Error(result.message ?? "로그인에 실패했습니다.");
+          }
+          // 로그인 관련 토큰 저장 (accessToken, refreshToken)
+          setTokens(result.accessToken, result.refreshToken);
+          // 첫 로그인 여부에 따라 프로필 페이지 또는 리다이렉트
+          if (result.isFirstLogin) {
+            router.replace("/profile");
+          } else {
+            const redirectParam = safeInternalPath(
+              searchParams.get("redirect"),
+            );
+            router.replace(redirectParam ?? "/");
+          }
+        },
         onError: (error) => {
           console.error("로그인 실패:", error);
         },
@@ -54,15 +73,8 @@ function Client() {
     }
   };
 
-  // 로그인된 상태면 로그인 페이지 접근 불가
-  useEffect(() => {
-    if (redirectIfAlreadyLoggedIn(searchParams.get("redirect"))) return;
-    setisAuthCheck(false);
-  }, [searchParams]);
-
-  if (isAuthCheck) {
-    return null;
-  }
+  // 이미 로그인된 경우 로그인 페이지에서 나가기
+  if (redirectAlreadyLoggedIn(searchParams.get("redirect"))) return null;
 
   return (
     <main className="loginLayout">
