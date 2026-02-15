@@ -4,9 +4,8 @@ import {
   getNextDayMidnight, // 전달된 자정 기준으로 다음 날 자정(Date 객체) 반환
 } from "./dateUtils";
 
-/**
- * 외부로 반환되는 날짜별 분할 시간 타입
- */
+// 함수 사용처 : 화면에 표시되는 날짜별 분할 시간을 계산하는 함수
+
 export type SplitTime = {
   date: string; // UTC 자정 기준 날짜 ISO 문자열
   timeSpent: number; // 해당 날짜에 소비된 시간(ms)

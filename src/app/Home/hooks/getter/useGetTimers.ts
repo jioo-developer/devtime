@@ -22,14 +22,14 @@ export const useGetTimers = (
     queryKey: [QueryKey.TIMERS],
     enabled,
     queryFn: async (): Promise<TimerResponse> => {
-      const res = await ApiClient.get("/api/timers", {
+      const response = await ApiClient.get("/api/timers", {
         headers: getAuthHeaders(),
-        onNotOk: async (response) => {
-          if (response.status === 404) return defaultTimerResponse;
+        onNotOk: async (res) => {
+          if (res.status === 404) return defaultTimerResponse as TimerResponse;
           throw new Error("GET /api/timers failed");
         },
       });
-      return "error" in res ? defaultTimerResponse : res;
+      return response as TimerResponse;
     },
     retry: 3,
     staleTime: 0,

@@ -2,6 +2,8 @@ import { getUTCMidnight, getNextDayMidnight } from "./dateUtils";
 // getUTCMidnight: 전달된 Date를 UTC 기준 자정(Date)으로 정규화
 // getNextDayMidnight: 전달된 UTC 자정(Date) 기준 다음 날 자정(Date) 반환
 
+// 함수 사용처 : 타이머 정지시 정지된 시간을 빼고 보내야 하기 때문에 날짜별 분할 시간을 계산하는 함수
+
 /**
  * stop 시점에 서버로 보낼(혹은 저장할) 날짜별 분할 시간(초 단위) 타입
  */

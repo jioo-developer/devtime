@@ -2,6 +2,7 @@ import localFont from "next/font/local";
 import TanstackProvider from "@/provider/TanstackProvider";
 import ConditionalHeader from "@/components/modules/Header/ConditionalHeader";
 import UIModalStack from "@/components/atoms/CommonModal/modalContainer";
+import LoginGuard from "@/hooks/LoginGuard";
 import "../asset/reset.css";
 import "../asset/common.css";
 
@@ -22,6 +23,7 @@ export default function RootLayout({
       <body>
         <TanstackProvider>
           <div className="wrap">
+            <LoginGuard />
             <ConditionalHeader />
             {children}
           </div>

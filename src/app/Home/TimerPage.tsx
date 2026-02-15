@@ -4,19 +4,15 @@ import "./style.css";
 import { TimerControls } from "./component/TimerControls";
 import { TimerDisplay } from "./component/TimerDisplay";
 import { useTimerPageController } from "./hooks/useTimerPageController";
-import { useIsLoggedIn, useLoginRequiredModal } from "@/hooks/useIsLoggedIn";
+import { useIsLoggedIn } from "@/hooks/useIsLoggedIn";
 import { PageErrorFallback } from "@/components/PageErrorFallback";
 
 export default function TimerPage() {
-  // 로그인 여부
-  const { isLoggedIn, isReady } = useIsLoggedIn();
+  const { isLoggedIn } = useIsLoggedIn();
 
   // 타이머 페이지 컨트롤러
   const { todoTitle, isTimerRunning, isTimerPaused, display, handlers } =
     useTimerPageController(isLoggedIn);
-
-  // 비로그인시 "로그인 필요" 모달 노출
-  useLoginRequiredModal(isLoggedIn, isReady);
 
   return (
     <ErrorBoundary

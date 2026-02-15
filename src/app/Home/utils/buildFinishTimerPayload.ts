@@ -4,6 +4,8 @@ import type {
   FinishTimerTaskItem,
 } from "@/app/Home/hooks/mutations/finishTimer/useFinishTimer";
 
+// 함수 사용처 : 폼 종료 시간 입력값을 기준으로 종료 시간을 계산하고, 날짜별 분할 시간을 계산하는 함수
+
 export type BuildFinishPayloadInput = {
   timerId: string;
   startTime: string;

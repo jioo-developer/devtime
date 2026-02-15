@@ -4,24 +4,27 @@ import { QueryKey } from "@/constant/queryKeys";
 import { getAuthHeaders } from "@/utils/authUtils";
 import type { ApiResponseSuccess } from "@/types/api/helpers";
 
-/** @deprecated API 응답 타입은 ApiResponseSuccess<"/api/study-logs/{studyLogId}", "get"> 사용 */
-export type StudyLogResponse = {
-  data: {
-    todayGoal: string;
-    tasks: Array<{ id?: number; content: string; isCompleted?: boolean }>;
-  };
-};
-
 export type StudyLogTaskItem = { content: string; isCompleted: boolean };
 
 export type StudyLogData = {
   data: { todayGoal: string; tasks: StudyLogTaskItem[] };
 };
 
+// 타입 : 학습 기록 조회 시 할 일 목록을 표시하기 위해 사용
+
+// request type
 type StudyLogApiResponse = ApiResponseSuccess<
   "/api/study-logs/{studyLogId}",
   "get"
 >;
+
+// response result type
+export type StudyLogResponse = {
+  data: {
+    todayGoal: string;
+    tasks: Array<{ id?: number; content: string; isCompleted?: boolean }>;
+  };
+};
 
 export const useGetStudyLog = (
   studyLogId: string | undefined,

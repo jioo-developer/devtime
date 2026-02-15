@@ -1,9 +1,16 @@
 import { useMutation } from "@tanstack/react-query";
 import { ApiClient } from "@/config/apiConfig/apiConfig";
-import type { LoginData } from "../types";
+
+import type { ApiRequest, ApiResponse } from "@/types/api/helpers";
+
+/** POST /api/auth/login 요청 (generated.ts 기반) */
+export type LoginData = ApiRequest<"/api/auth/login", "post">;
+
+/** POST /api/auth/login 200 응답 (generated.ts 기반) */
+export type LoginResponse = ApiResponse<"/api/auth/login", "post", 200>;
 
 export const useLogin = () => {
-  return useMutation({
+  return useMutation<LoginResponse, Error, LoginData>({
     mutationFn: (data: LoginData) => ApiClient.post("/api/auth/login", data),
   });
 };

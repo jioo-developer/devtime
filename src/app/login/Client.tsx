@@ -13,7 +13,7 @@ import { useSavedEmail } from "./hooks/useSavedEmail";
 import { redirectAlreadyLoggedIn } from "@/config/utils/authRedirect";
 import { setTokens } from "@/config/utils/tokenStorage";
 import { safeInternalPath } from "@/utils/pathUtils";
-import type { LoginData, LoginResponse } from "./types";
+import type { LoginData, LoginResponse } from "./hooks/useLogin";
 import Link from "next/link";
 import { PASSWORD_MIN_LENGTH, PASSWORD_PATTERN } from "@/constant/password";
 import "./style.css";
