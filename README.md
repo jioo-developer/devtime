@@ -115,9 +115,46 @@ API 타입은 `generate:types`로 백엔드 OpenAPI 문서(`https://devtime.prok
 - 요청·응답 타입은 `ApiRequest`, `ApiResponse`로 정의하고, 주석에 **"(generated.ts 기반)"**을 달아 스펙과의 연동을 표시합니다.
 - 예: `ApiResponse<"/api/profile", "get", 200>`, `ApiRequest<"/api/profile", "put">` 등.
 
-### 5. 흐름 요약
+### 5. 헤더·인증
+
+- **인증이 필요한 요청**: `getAuthHeaders()`(`@/utils/authUtils`)로 `{ Authorization: "Bearer <accessToken>" }`을 넘깁니다. 토큰이 없으면 빈 객체 `{}`를 넘기며, 401 시 `AuthenticatedApiClient`가 refresh 후 재시도합니다.
+- **비인증 요청**: 로그인, 회원가입, 이메일/닉네임 중복 확인, Presigned URL 등은 헤더 없이 호출합니다.
+
+### 6. 페이지별 useQuery / useMutation 사용 내역
+
+아래는 **페이지(기능)별**로 어떤 훅이 어떤 API를 어떻게 호출하는지 정리한 표입니다.  
+`args`는 클라이언트 메서드 두 번째 인자(`get(경로, args)` 등)에 넣는 옵션입니다.
+
+| 페이지/기능 | 훅 | API | 메서드 | 파라미터·바디 | 헤더 | 비고 |
+| ---------- | -- | --- | ------ | -------------- | ---- | ---- |
+| **Home (타이머)** | `useGetTimers` | `/api/timers` | GET | 없음 | `getAuthHeaders()` | 404 시 `onNotOk`로 기본값 반환, `staleTime: 0` |
+| | `useGetStudyLog` | `/api/study-logs/{studyLogId}` | GET | `pathParams: { studyLogId }` | `getAuthHeaders()` | `studyLogId` 없으면 쿼리 비활성화 |
+| | `useStartTimer` | `/api/timers` | POST | body: `{ todayGoal, tasks }` | `getAuthHeaders()` | 409 시 `onNotOk`에서 에러 메시지 추출 후 throw |
+| | `useFinishTimer` | `/api/timers/{timerId}/stop` | POST | `pathParams: { timerId }`, body: `{ splitTimes, tasks, review }` | `getAuthHeaders()` | 성공 시 `QueryKey.TIMERS` invalidate |
+| | `useResetTimer` | `/api/timers/{timerId}` | DELETE | `pathParams: { timerId }` | `getAuthHeaders()` | 성공 시 `QueryKey.TIMERS` invalidate |
+| | `useUpdateStudyLogTasks` | `/api/{studyLogId}/tasks` | PUT | `pathParams: { studyLogId }`, body: `{ tasks }` | `getAuthHeaders()` | 성공 시 해당 `QueryKey.STUDY_LOGS` invalidate |
+| **Login** | `useLogin` | `/api/auth/login` | POST | body: `{ email, password }` | 없음 | |
+| | `useLogout` | `/api/auth/logout` | POST | 없음 | AuthenticatedApiClient 내부에서 Authorization 자동 첨부 | 성공/실패 모두 쿼리 클리어 후 로그인 페이지로 이동 |
+| **Auth (회원가입)** | `useCheckEmail` | `/api/signup/check-email` | GET | `query: { email }` | 없음 | useMutation으로 호출 (폼 제출 전 검사) |
+| | `useCheckNickname` | `/api/signup/check-nickname` | GET | `query: { nickname }` | 없음 | useMutation으로 호출 |
+| | `useSignup` | `/api/signup` | POST | body: `{ email, nickname, password, confirmPassword }` | 없음 | 성공 후 동일 계정으로 `useLogin` 호출해 자동 로그인·토큰 저장 |
+| **Profile** | `useCreateProfile` | `/api/profile` | POST | body: 프로필 생성 DTO (career, purpose, goal, techStacks 등) | AuthenticatedApiClient | 성공 시 `QueryKey.PROFILE` invalidate |
+| **Mypage** | `useGetProfile` | `/api/profile` | GET | 없음 | AuthenticatedApiClient | `staleTime: 60_000`, Suspense용 `useGetProfileSuspense` 동일 설정 |
+| | `useUpdateProfile` | `/api/profile` | PUT | body: `UpdateProfileRequest` (nickname, career, purpose 등) | AuthenticatedApiClient | 성공 시 `QueryKey.PROFILE` invalidate |
+| | `useUploadProfileImage` | `/api/file/presigned-url` → S3 PUT | POST 후 별도 PUT | body: `{ fileName, contentType }` | AuthenticatedApiClient (presigned 요청만) | 훅 내부에서 Presigned URL 발급 → S3 업로드 → key 반환 (useMutation 아님) |
+| **Dashboard** | `useGetStats` | `/api/stats` | GET | 없음 | `getAuthHeaders()` | 응답을 `toStatsDisplay`로 변환, `staleTime: 60_000` |
+| | `useGetHeatmap` | — | — | — | — | **API 미호출**: `getMockGrid()` 목데이터 사용 |
+| | `useGetStudyLogsList` | `/api/study-logs` | GET | `query: { page, limit }` (기본 limit 10) | `getAuthHeaders()` | `staleTime: 30_000`, 응답을 `mapToResult`로 변환 |
+| | `useDeleteStudyLog` | `/api/study-logs/{studyLogId}` | DELETE | `pathParams: { studyLogId }` | `getAuthHeaders()` | 성공 시 `STUDY_LOGS_LIST`·`STUDY_LOGS` invalidate |
+| **Ranking** | `useGetRankings` | `/api/rankings` | GET | `query: { sortBy, page, limit }` (무한 스크롤용 pageParam) | AuthenticatedApiClient | **useInfiniteQuery** 사용, `getNextPageParam`으로 다음 페이지 계산 |
+
+- **GET 요청의 쿼리**: 위 표의 `query`는 모두 `ApiClient.get(경로, { query: { ... } })` 형태로 넘깁니다. 내부적으로 axios `params`로 전달됩니다.
+- **pathParams**: 경로에 `{ timerId }`, `{ studyLogId }` 등이 있을 때 `pathParams`로 넣으면 URL이 치환됩니다.
+
+### 7. 흐름 요약
 
 1. 백엔드 OpenAPI 스펙 → `generate:types` → `generated.ts` 갱신  
 2. `helpers.ts`가 `paths`를 이용해 경로·메서드별 타입 제공  
 3. `ApiClient` / `AuthenticatedApiClient`가 경로 리터럴 기반으로 타입 안전한 요청  
-4. 훅에서 `ApiRequest`·`ApiResponse`로 요청/응답 타입을 고정하고 React Query와 연동
+4. 훅에서 `ApiRequest`·`ApiResponse`로 요청/응답 타입을 고정하고 React Query와 연동  
+5. 인증 필요 시 `getAuthHeaders()` 또는 `AuthenticatedApiClient` 사용
