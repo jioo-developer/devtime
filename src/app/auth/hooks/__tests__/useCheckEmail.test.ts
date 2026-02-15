@@ -13,7 +13,7 @@ vi.mock("@/config/apiConfig", () => ({
 describe("useCheckEmail", () => {
   const mockSetError = vi.fn();
   const mockClearErrors = vi.fn();
-  const mockSetSuccessMessage = vi.fn();
+  const mockSetValue = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -34,7 +34,8 @@ describe("useCheckEmail", () => {
         useCheckEmail({
           setError: mockSetError,
           clearErrors: mockClearErrors,
-          setSuccessMessage: mockSetSuccessMessage,
+          setValue: mockSetValue,
+          successField: "emailVerified",
         }),
       { wrapper },
     );
@@ -49,7 +50,8 @@ describe("useCheckEmail", () => {
       query: { email: "test@example.com" },
     });
     expect(mockClearErrors).toHaveBeenCalledWith("email");
-    expect(mockSetSuccessMessage).toHaveBeenCalledWith(
+    expect(mockSetValue).toHaveBeenCalledWith(
+      "emailVerified",
       "사용 가능한 이메일입니다.",
     );
     expect(mockSetError).not.toHaveBeenCalled();
@@ -70,7 +72,8 @@ describe("useCheckEmail", () => {
         useCheckEmail({
           setError: mockSetError,
           clearErrors: mockClearErrors,
-          setSuccessMessage: mockSetSuccessMessage,
+          setValue: mockSetValue,
+          successField: "emailVerified",
         }),
       { wrapper },
     );
@@ -86,7 +89,7 @@ describe("useCheckEmail", () => {
       message: "이미 사용 중인 이메일입니다.",
     });
     expect(mockClearErrors).not.toHaveBeenCalled();
-    expect(mockSetSuccessMessage).not.toHaveBeenCalled();
+    expect(mockSetValue).not.toHaveBeenCalled();
   });
 
   it("API 호출 실패 시 에러를 표시한다", async () => {
@@ -100,7 +103,8 @@ describe("useCheckEmail", () => {
         useCheckEmail({
           setError: mockSetError,
           clearErrors: mockClearErrors,
-          setSuccessMessage: mockSetSuccessMessage,
+          setValue: mockSetValue,
+          successField: "emailVerified",
         }),
       { wrapper },
     );

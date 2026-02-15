@@ -13,7 +13,7 @@ vi.mock("@/config/apiConfig", () => ({
 describe("useCheckNickname", () => {
   const mockSetError = vi.fn();
   const mockClearErrors = vi.fn();
-  const mockSetSuccessMessage = vi.fn();
+  const mockSetValue = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -34,7 +34,8 @@ describe("useCheckNickname", () => {
         useCheckNickname({
           setError: mockSetError,
           clearErrors: mockClearErrors,
-          setSuccessMessage: mockSetSuccessMessage,
+          setValue: mockSetValue,
+          successField: "nicknameVerified",
         }),
       { wrapper },
     );
@@ -49,7 +50,8 @@ describe("useCheckNickname", () => {
       query: { nickname: "테스트닉네임" },
     });
     expect(mockClearErrors).toHaveBeenCalledWith("nickname");
-    expect(mockSetSuccessMessage).toHaveBeenCalledWith(
+    expect(mockSetValue).toHaveBeenCalledWith(
+      "nicknameVerified",
       "사용 가능한 닉네임입니다.",
     );
     expect(mockSetError).not.toHaveBeenCalled();
@@ -70,7 +72,8 @@ describe("useCheckNickname", () => {
         useCheckNickname({
           setError: mockSetError,
           clearErrors: mockClearErrors,
-          setSuccessMessage: mockSetSuccessMessage,
+          setValue: mockSetValue,
+          successField: "nicknameVerified",
         }),
       { wrapper },
     );
@@ -86,7 +89,7 @@ describe("useCheckNickname", () => {
       message: "이미 사용 중인 닉네임입니다.",
     });
     expect(mockClearErrors).not.toHaveBeenCalled();
-    expect(mockSetSuccessMessage).not.toHaveBeenCalled();
+    expect(mockSetValue).not.toHaveBeenCalled();
   });
 
   it("응답에 메시지가 없을 때 기본 에러 메시지를 표시한다", async () => {
@@ -104,7 +107,8 @@ describe("useCheckNickname", () => {
         useCheckNickname({
           setError: mockSetError,
           clearErrors: mockClearErrors,
-          setSuccessMessage: mockSetSuccessMessage,
+          setValue: mockSetValue,
+          successField: "nicknameVerified",
         }),
       { wrapper },
     );
@@ -132,7 +136,8 @@ describe("useCheckNickname", () => {
         useCheckNickname({
           setError: mockSetError,
           clearErrors: mockClearErrors,
-          setSuccessMessage: mockSetSuccessMessage,
+          setValue: mockSetValue,
+          successField: "nicknameVerified",
         }),
       { wrapper },
     );

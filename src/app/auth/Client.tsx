@@ -20,33 +20,45 @@ export type AuthFormData = {
   nickname: string;
   password: string;
   passwordConfirmation: string;
+  /** 중복 확인 성공 메시지 (react-hook-form 상태로 관리) */
+  emailVerified?: string;
+  nicknameVerified?: string;
 };
-
 interface AuthPageProps {
   // 테스트 코드용 속성
   onSubmit?: (data: AuthFormData) => Promise<void>;
 }
+
+const AUTH_DEFAULT_VALUES: AuthFormData = {
+  email: "",
+  nickname: "",
+  password: "",
+  passwordConfirmation: "",
+  emailVerified: "",
+  nicknameVerified: "",
+};
 
 function AuthPage({ onSubmit }: AuthPageProps = {}) {
   // 테스트 코드용 속성
   const {
     register,
     watch,
+    setValue,
     setError,
     clearErrors,
     handleSubmit,
     formState: { errors },
   } = useForm<AuthFormData>({
     mode: "onChange",
+    defaultValues: AUTH_DEFAULT_VALUES,
   });
-  const [emailSuccess, setEmailSuccess] = useState<string>("");
-  const [nicknameSuccess, setNicknameSuccess] = useState<string>("");
   const [agreed, setAgreed] = useState(false);
+
+  const emailVerified = watch("emailVerified") ?? "";
+  const nicknameVerified = watch("nicknameVerified") ?? "";
 
   const isFormValid = isAuthFormValid({
     watch,
-    emailSuccess,
-    nicknameSuccess,
     agreed,
     errors,
   });
@@ -54,13 +66,15 @@ function AuthPage({ onSubmit }: AuthPageProps = {}) {
   const { mutate: checkEmail } = useCheckEmail({
     setError,
     clearErrors,
-    setSuccessMessage: setEmailSuccess,
+    setValue,
+    successField: "emailVerified",
   });
 
   const { mutate: checkNickname } = useCheckNickname({
     setError,
     clearErrors,
-    setSuccessMessage: setNicknameSuccess,
+    setValue,
+    successField: "nicknameVerified",
   });
 
   const { mutate } = useSignup();
@@ -118,7 +132,7 @@ function AuthPage({ onSubmit }: AuthPageProps = {}) {
                 },
               }}
               error={errors.email}
-              success={emailSuccess}
+              success={emailVerified}
             />
             <CommonButton
               type="button"
@@ -128,7 +142,7 @@ function AuthPage({ onSubmit }: AuthPageProps = {}) {
               onClick={() => {
                 const emailValue = watch("email");
                 if (emailValue) {
-                  setEmailSuccess("");
+                  setValue("emailVerified", "");
                   checkEmail(emailValue);
                 }
               }}
@@ -147,7 +161,7 @@ function AuthPage({ onSubmit }: AuthPageProps = {}) {
                 required: "닉네임을 입력하세요.",
               }}
               error={errors.nickname}
-              success={nicknameSuccess}
+              success={nicknameVerified}
             />
             <CommonButton
               type="button"
@@ -157,7 +171,7 @@ function AuthPage({ onSubmit }: AuthPageProps = {}) {
               onClick={() => {
                 const nicknameValue = watch("nickname");
                 if (nicknameValue) {
-                  setNicknameSuccess("");
+                  setValue("nicknameVerified", "");
                   checkNickname(nicknameValue);
                 }
               }}
@@ -194,7 +208,7 @@ function AuthPage({ onSubmit }: AuthPageProps = {}) {
             register={register}
             validation={{
               required: "비밀번호를 다시 입력해 주세요.",
-              validate: (value: string) =>
+              validate: (value: string | undefined) =>
                 value === watch("password") || "비밀번호가 일치하지 않습니다.",
             }}
             error={errors.passwordConfirmation}

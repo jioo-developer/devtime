@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import type { Path } from "react-hook-form";
+import type { Path, PathValue } from "react-hook-form";
 import { ApiClient } from "@/config/apiConfig/apiConfig";
 import { UseChecValidationlParams } from "./hookTypes";
 
@@ -8,7 +8,8 @@ const NICKNAME_FIELD = "nickname" as const;
 export const useCheckNickname = <T extends { nickname: string }>({
   setError,
   clearErrors,
-  setSuccessMessage,
+  setValue,
+  successField,
 }: UseChecValidationlParams<T>) => {
   return useMutation({
     mutationFn: (nickname: string) =>
@@ -22,8 +23,13 @@ export const useCheckNickname = <T extends { nickname: string }>({
           message: data.message || "이미 사용 중인 닉네임입니다.",
         });
       } else {
-        clearErrors(NICKNAME_FIELD as Path<T>);
-        setSuccessMessage("사용 가능한 닉네임입니다.");
+        const field = successField as Path<T>;
+        const message = "사용 가능한 닉네임입니다." as PathValue<
+          T,
+          typeof field
+        >;
+        clearErrors(field);
+        setValue(field, message);
       }
     },
     onError: () => {

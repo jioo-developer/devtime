@@ -48,6 +48,7 @@ function getFormDefaultValue(
     profileImage: profileData?.profile?.profileImage ?? "",
     newPassword: "",
     newPasswordConfirmation: "",
+    nicknameVerified: "",
   };
 }
 

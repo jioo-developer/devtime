@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import CommonButton from "@/components/atoms/CommonButton/CommonButton";
 import CommonInput from "@/components/atoms/CommonInput/CommonInput";
 import CommonAutocomplete from "@/components/modules/CommonAutoComplate/CommonAutoComplate";
@@ -32,12 +31,13 @@ export function ProfileForm({
 }: ProfileFormProps) {
   const selectedTechStacks = mypageForm.watch("techStacks");
   const currentProfileImage = mypageForm.watch("profileImage");
-  const [nicknameSuccess, setNicknameSuccess] = useState<string>("");
+  const nicknameVerified = mypageForm.watch("nicknameVerified") ?? "";
 
   const { mutate: checkNickname } = useCheckNickname<ProfileFormData>({
     setError: mypageForm.setError,
     clearErrors: mypageForm.clearErrors,
-    setSuccessMessage: setNicknameSuccess,
+    setValue: mypageForm.setValue,
+    successField: "nicknameVerified",
   });
 
   return (
@@ -70,7 +70,7 @@ export function ProfileForm({
                 register={mypageForm.register}
                 validation={{ required: "닉네임을 입력하세요." }}
                 error={mypageForm.errors.nickname}
-                success={nicknameSuccess}
+                success={nicknameVerified}
                 className="profileFormInput"
               />
               <CommonButton
@@ -81,7 +81,7 @@ export function ProfileForm({
                 onClick={() => {
                   const nicknameValue = mypageForm.watch("nickname");
                   if (nicknameValue) {
-                    setNicknameSuccess("");
+                    mypageForm.setValue("nicknameVerified", "");
                     checkNickname(nicknameValue);
                   }
                 }}

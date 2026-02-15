@@ -18,4 +18,6 @@ export type ProfileFormData = {
   /** 회원정보 수정 시에만 사용(선택) */
   newPassword?: string;
   newPasswordConfirmation?: string;
+  /** 닉네임 중복 확인 성공 메시지 (UI 전용, API 전송 제외) */
+  nicknameVerified?: string;
 };

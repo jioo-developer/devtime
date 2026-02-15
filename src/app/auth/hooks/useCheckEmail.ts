@@ -5,7 +5,8 @@ import { UseChecValidationlParams } from "./hookTypes";
 export const useCheckEmail = ({
   setError,
   clearErrors,
-  setSuccessMessage,
+  setValue,
+  successField,
 }: UseChecValidationlParams) => {
   return useMutation({
     mutationFn: (email: string) =>
@@ -20,7 +21,7 @@ export const useCheckEmail = ({
         });
       } else {
         clearErrors("email");
-        setSuccessMessage("사용 가능한 이메일입니다.");
+        setValue(successField, "사용 가능한 이메일입니다.");
       }
     },
     onError: () => {
