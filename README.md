@@ -25,43 +25,6 @@
 | **테스트**       | Vitest (단위·스토리북), Cypress (E2E) |
 | **문서/UI 개발** | Storybook                             |
 
-## 요구 사항
-
-- Node.js 20+
-- npm
-
-## 시작하기
-
-### 설치
-
-```bash
-npm install
-```
-
-### 환경 변수
-
-프로젝트 루트에 `.env.development` (또는 `.env.local`) 파일을 만들고 다음 변수를 설정하세요.
-
-```env
-NEXT_PUBLIC_API_BASE_URL=https://devtime.prokit.app
-NEXT_PUBLIC_S3_IMAGE_BASE_URL=https://dev-time-bucket.s3.ap-northeast-2.amazonaws.com
-```
-
-### 개발 서버
-
-```bash
-npm run dev
-```
-
-[http://localhost:3000](http://localhost:3000) 에서 확인할 수 있습니다.
-
-### 빌드 및 실행
-
-```bash
-npm run build
-npm start
-```
-
 ## 프로젝트 구조
 
 ```
