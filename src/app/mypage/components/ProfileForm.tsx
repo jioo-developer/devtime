@@ -4,7 +4,10 @@ import CommonInput from "@/components/atoms/CommonInput/CommonInput";
 import CommonAutocomplete from "@/components/modules/CommonAutoComplate/CommonAutoComplate";
 import CommonDropdown from "@/components/modules/CommonDropdown/CommonDropdown";
 import ImageUploader from "@/components/modules/CommonImageUploder/ImageUploder";
-import { useCheckNickname } from "@/app/auth/hooks/useCheckNickname";
+import {
+  useCheckNickname,
+  type CheckNicknameResponse,
+} from "@/app/auth/hooks/useCheckNickname";
 import { PASSWORD_MIN_LENGTH, PASSWORD_PATTERN } from "@/constant/password";
 import {
   CAREER_OPTIONS,
@@ -13,7 +16,7 @@ import {
   TECH_STACK_OPTIONS,
   getProfileImageUrl,
 } from "../constants";
-import type { GetProfileResponse, ProfileFormData } from "../types";
+import type { GetProfileResponse } from "../types";
 import type { MypageFormReturn } from "../hooks";
 
 type ProfileFormProps = {
@@ -33,12 +36,32 @@ export function ProfileForm({
   const currentProfileImage = mypageForm.watch("profileImage");
   const nicknameVerified = mypageForm.watch("nicknameVerified") ?? "";
 
-  const { mutate: checkNickname } = useCheckNickname<ProfileFormData>({
-    setError: mypageForm.setError,
-    clearErrors: mypageForm.clearErrors,
-    setValue: mypageForm.setValue,
-    successField: "nicknameVerified",
-  });
+  const { mutate: checkNickname } = useCheckNickname();
+
+  const handleCheckNickname = () => {
+    const nicknameValue = mypageForm.watch("nickname");
+    if (!nicknameValue) return;
+    mypageForm.setValue("nicknameVerified", "");
+    checkNickname(nicknameValue, {
+      onSuccess: (data: CheckNicknameResponse) => {
+        if (!data.available) {
+          mypageForm.setError("nickname", {
+            type: "manual",
+            message: data.message || "이미 사용 중인 닉네임입니다.",
+          });
+        } else {
+          mypageForm.clearErrors("nickname");
+          mypageForm.setValue("nicknameVerified", "사용 가능한 닉네임입니다.");
+        }
+      },
+      onError: () => {
+        mypageForm.setError("nickname", {
+          type: "manual",
+          message: "닉네임 중복 체크에 실패했습니다.",
+        });
+      },
+    });
+  };
 
   return (
     <form className="profileForm" onSubmit={mypageForm.handleSave} noValidate>
@@ -78,13 +101,7 @@ export function ProfileForm({
                 theme="overlap"
                 width={104.6}
                 height={44}
-                onClick={() => {
-                  const nicknameValue = mypageForm.watch("nickname");
-                  if (nicknameValue) {
-                    mypageForm.setValue("nicknameVerified", "");
-                    checkNickname(nicknameValue);
-                  }
-                }}
+                onClick={handleCheckNickname}
               >
                 중복 확인
               </CommonButton>

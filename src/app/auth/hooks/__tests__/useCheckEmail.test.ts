@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { renderHook, waitFor } from "@testing-library/react";
+import { renderHook } from "@testing-library/react";
 import { useCheckEmail } from "../useCheckEmail";
 import { createTestQueryClient, createWrapper } from "./test-utils";
 import { ApiClient } from "@/config/apiConfig/apiConfig";
@@ -11,15 +11,11 @@ vi.mock("@/config/apiConfig", () => ({
 }));
 
 describe("useCheckEmail", () => {
-  const mockSetError = vi.fn();
-  const mockClearErrors = vi.fn();
-  const mockSetValue = vi.fn();
-
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("이메일이 사용 가능할 때 성공 메시지를 표시한다", async () => {
+  it("이메일이 사용 가능할 때 응답을 반환한다", async () => {
     const queryClient = createTestQueryClient();
     const wrapper = createWrapper(queryClient);
 
@@ -29,35 +25,21 @@ describe("useCheckEmail", () => {
       message: "사용 가능한 이메일입니다.",
     } as Awaited<ReturnType<typeof ApiClient.get>>);
 
-    const { result } = renderHook(
-      () =>
-        useCheckEmail({
-          setError: mockSetError,
-          clearErrors: mockClearErrors,
-          setValue: mockSetValue,
-          successField: "emailVerified",
-        }),
-      { wrapper },
-    );
+    const { result } = renderHook(() => useCheckEmail(), { wrapper });
 
-    result.current.mutate("test@example.com");
-
-    await waitFor(() => {
-      expect(result.current.isSuccess).toBe(true);
-    });
+    const data = await result.current.mutateAsync("test@example.com");
 
     expect(ApiClient.get).toHaveBeenCalledWith("/api/signup/check-email", {
       query: { email: "test@example.com" },
     });
-    expect(mockClearErrors).toHaveBeenCalledWith("email");
-    expect(mockSetValue).toHaveBeenCalledWith(
-      "emailVerified",
-      "사용 가능한 이메일입니다.",
-    );
-    expect(mockSetError).not.toHaveBeenCalled();
+    expect(data).toEqual({
+      success: true,
+      available: true,
+      message: "사용 가능한 이메일입니다.",
+    });
   });
 
-  it("이메일이 중복일 때 에러를 표시한다", async () => {
+  it("이메일이 중복일 때 available: false 응답을 반환한다", async () => {
     const queryClient = createTestQueryClient();
     const wrapper = createWrapper(queryClient);
 
@@ -67,57 +49,24 @@ describe("useCheckEmail", () => {
       message: "이미 사용 중인 이메일입니다.",
     } as Awaited<ReturnType<typeof ApiClient.get>>);
 
-    const { result } = renderHook(
-      () =>
-        useCheckEmail({
-          setError: mockSetError,
-          clearErrors: mockClearErrors,
-          setValue: mockSetValue,
-          successField: "emailVerified",
-        }),
-      { wrapper },
-    );
+    const { result } = renderHook(() => useCheckEmail(), { wrapper });
 
-    result.current.mutate("duplicate@example.com");
+    const data = await result.current.mutateAsync("duplicate@example.com");
 
-    await waitFor(() => {
-      expect(result.current.isSuccess).toBe(true);
-    });
-
-    expect(mockSetError).toHaveBeenCalledWith("email", {
-      type: "manual",
-      message: "이미 사용 중인 이메일입니다.",
-    });
-    expect(mockClearErrors).not.toHaveBeenCalled();
-    expect(mockSetValue).not.toHaveBeenCalled();
+    expect(data.available).toBe(false);
+    expect(data.message).toBe("이미 사용 중인 이메일입니다.");
   });
 
-  it("API 호출 실패 시 에러를 표시한다", async () => {
+  it("API 호출 실패 시 에러를 던진다", async () => {
     const queryClient = createTestQueryClient();
     const wrapper = createWrapper(queryClient);
 
     vi.mocked(ApiClient.get).mockRejectedValueOnce(new Error("Network Error"));
 
-    const { result } = renderHook(
-      () =>
-        useCheckEmail({
-          setError: mockSetError,
-          clearErrors: mockClearErrors,
-          setValue: mockSetValue,
-          successField: "emailVerified",
-        }),
-      { wrapper },
-    );
+    const { result } = renderHook(() => useCheckEmail(), { wrapper });
 
-    result.current.mutate("test@example.com");
-
-    await waitFor(() => {
-      expect(result.current.isError).toBe(true);
-    });
-
-    expect(mockSetError).toHaveBeenCalledWith("email", {
-      type: "manual",
-      message: "이메일 중복 체크에 실패했습니다.",
-    });
+    await expect(
+      result.current.mutateAsync("test@example.com"),
+    ).rejects.toThrow("Network Error");
   });
 });

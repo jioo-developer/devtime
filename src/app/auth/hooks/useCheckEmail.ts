@@ -1,34 +1,19 @@
 import { useMutation } from "@tanstack/react-query";
 import { ApiClient } from "@/config/apiConfig/apiConfig";
-import { UseChecValidationlParams } from "./hookTypes";
+import type { ApiResponse } from "@/types/api/helpers";
 
-export const useCheckEmail = ({
-  setError,
-  clearErrors,
-  setValue,
-  successField,
-}: UseChecValidationlParams) => {
+/** GET /api/signup/check-email 200 응답 (generated.ts 기반) */
+export type CheckEmailResponse = ApiResponse<
+  "/api/signup/check-email",
+  "get",
+  200
+>;
+
+export const useCheckEmail = () => {
   return useMutation({
     mutationFn: (email: string) =>
       ApiClient.get("/api/signup/check-email", {
         query: { email },
-      }),
-    onSuccess: (data) => {
-      if (!data.available) {
-        setError("email", {
-          type: "manual",
-          message: data.message,
-        });
-      } else {
-        clearErrors("email");
-        setValue(successField, "사용 가능한 이메일입니다.");
-      }
-    },
-    onError: () => {
-      setError("email", {
-        type: "manual",
-        message: "이메일 중복 체크에 실패했습니다.",
-      });
-    },
+      }) as Promise<CheckEmailResponse>,
   });
 };

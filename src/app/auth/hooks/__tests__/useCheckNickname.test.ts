@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { renderHook, waitFor } from "@testing-library/react";
+import { renderHook } from "@testing-library/react";
 import { useCheckNickname } from "../useCheckNickname";
 import { createTestQueryClient, createWrapper } from "./test-utils";
 import { ApiClient } from "@/config/apiConfig/apiConfig";
@@ -11,15 +11,11 @@ vi.mock("@/config/apiConfig", () => ({
 }));
 
 describe("useCheckNickname", () => {
-  const mockSetError = vi.fn();
-  const mockClearErrors = vi.fn();
-  const mockSetValue = vi.fn();
-
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("닉네임이 사용 가능할 때 성공 메시지를 표시한다", async () => {
+  it("닉네임이 사용 가능할 때 응답을 반환한다", async () => {
     const queryClient = createTestQueryClient();
     const wrapper = createWrapper(queryClient);
 
@@ -29,35 +25,21 @@ describe("useCheckNickname", () => {
       message: "사용 가능한 닉네임입니다.",
     } as Awaited<ReturnType<typeof ApiClient.get>>);
 
-    const { result } = renderHook(
-      () =>
-        useCheckNickname({
-          setError: mockSetError,
-          clearErrors: mockClearErrors,
-          setValue: mockSetValue,
-          successField: "nicknameVerified",
-        }),
-      { wrapper },
-    );
+    const { result } = renderHook(() => useCheckNickname(), { wrapper });
 
-    result.current.mutate("테스트닉네임");
-
-    await waitFor(() => {
-      expect(result.current.isSuccess).toBe(true);
-    });
+    const data = await result.current.mutateAsync("테스트닉네임");
 
     expect(ApiClient.get).toHaveBeenCalledWith("/api/signup/check-nickname", {
       query: { nickname: "테스트닉네임" },
     });
-    expect(mockClearErrors).toHaveBeenCalledWith("nickname");
-    expect(mockSetValue).toHaveBeenCalledWith(
-      "nicknameVerified",
-      "사용 가능한 닉네임입니다.",
-    );
-    expect(mockSetError).not.toHaveBeenCalled();
+    expect(data).toEqual({
+      success: true,
+      available: true,
+      message: "사용 가능한 닉네임입니다.",
+    });
   });
 
-  it("닉네임이 중복일 때 에러를 표시한다", async () => {
+  it("닉네임이 중복일 때 available: false 응답을 반환한다", async () => {
     const queryClient = createTestQueryClient();
     const wrapper = createWrapper(queryClient);
 
@@ -67,32 +49,15 @@ describe("useCheckNickname", () => {
       message: "이미 사용 중인 닉네임입니다.",
     } as Awaited<ReturnType<typeof ApiClient.get>>);
 
-    const { result } = renderHook(
-      () =>
-        useCheckNickname({
-          setError: mockSetError,
-          clearErrors: mockClearErrors,
-          setValue: mockSetValue,
-          successField: "nicknameVerified",
-        }),
-      { wrapper },
-    );
+    const { result } = renderHook(() => useCheckNickname(), { wrapper });
 
-    result.current.mutate("중복닉네임");
+    const data = await result.current.mutateAsync("중복닉네임");
 
-    await waitFor(() => {
-      expect(result.current.isSuccess).toBe(true);
-    });
-
-    expect(mockSetError).toHaveBeenCalledWith("nickname", {
-      type: "manual",
-      message: "이미 사용 중인 닉네임입니다.",
-    });
-    expect(mockClearErrors).not.toHaveBeenCalled();
-    expect(mockSetValue).not.toHaveBeenCalled();
+    expect(data.available).toBe(false);
+    expect(data.message).toBe("이미 사용 중인 닉네임입니다.");
   });
 
-  it("응답에 메시지가 없을 때 기본 에러 메시지를 표시한다", async () => {
+  it("응답에 메시지가 없을 때 available: false를 반환한다", async () => {
     const queryClient = createTestQueryClient();
     const wrapper = createWrapper(queryClient);
 
@@ -102,55 +67,24 @@ describe("useCheckNickname", () => {
       message: "",
     } as Awaited<ReturnType<typeof ApiClient.get>>);
 
-    const { result } = renderHook(
-      () =>
-        useCheckNickname({
-          setError: mockSetError,
-          clearErrors: mockClearErrors,
-          setValue: mockSetValue,
-          successField: "nicknameVerified",
-        }),
-      { wrapper },
-    );
+    const { result } = renderHook(() => useCheckNickname(), { wrapper });
 
-    result.current.mutate("중복닉네임");
+    const data = await result.current.mutateAsync("중복닉네임");
 
-    await waitFor(() => {
-      expect(result.current.isSuccess).toBe(true);
-    });
-
-    expect(mockSetError).toHaveBeenCalledWith("nickname", {
-      type: "manual",
-      message: "이미 사용 중인 닉네임입니다.",
-    });
+    expect(data.available).toBe(false);
+    expect(data.message).toBe("");
   });
 
-  it("API 호출 실패 시 에러를 표시한다", async () => {
+  it("API 호출 실패 시 에러를 던진다", async () => {
     const queryClient = createTestQueryClient();
     const wrapper = createWrapper(queryClient);
 
     vi.mocked(ApiClient.get).mockRejectedValueOnce(new Error("Network Error"));
 
-    const { result } = renderHook(
-      () =>
-        useCheckNickname({
-          setError: mockSetError,
-          clearErrors: mockClearErrors,
-          setValue: mockSetValue,
-          successField: "nicknameVerified",
-        }),
-      { wrapper },
+    const { result } = renderHook(() => useCheckNickname(), { wrapper });
+
+    await expect(result.current.mutateAsync("테스트닉네임")).rejects.toThrow(
+      "Network Error",
     );
-
-    result.current.mutate("테스트닉네임");
-
-    await waitFor(() => {
-      expect(result.current.isError).toBe(true);
-    });
-
-    expect(mockSetError).toHaveBeenCalledWith("nickname", {
-      type: "manual",
-      message: "닉네임 중복 체크에 실패했습니다.",
-    });
   });
 });

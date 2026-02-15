@@ -8,11 +8,14 @@ import CommonButton from "@/components/atoms/CommonButton/CommonButton";
 import AgreementList from "./component/AgreementList";
 import CommonInput from "@/components/atoms/CommonInput/CommonInput";
 import { useForm } from "react-hook-form";
-import { useCheckEmail } from "./hooks/useCheckEmail";
-import { useCheckNickname } from "./hooks/useCheckNickname";
+import { useCheckEmail, type CheckEmailResponse } from "./hooks/useCheckEmail";
+import {
+  useCheckNickname,
+  type CheckNicknameResponse,
+} from "./hooks/useCheckNickname";
 import { useSignup } from "./hooks/useSignup";
 import { PASSWORD_MIN_LENGTH, PASSWORD_PATTERN } from "@/constant/password";
-import { isAuthFormValid } from "./utils/authFormValidation";
+import { isAuthFormValid } from "./utils/validation";
 import "./style.css";
 
 export type AuthFormData = {
@@ -52,33 +55,75 @@ function AuthPage({ onSubmit }: AuthPageProps = {}) {
     mode: "onChange",
     defaultValues: AUTH_DEFAULT_VALUES,
   });
+
+  // 개인정보 동의 여부
   const [agreed, setAgreed] = useState(false);
 
+  // 중복 확인 성공 메시지
   const emailVerified = watch("emailVerified") ?? "";
   const nicknameVerified = watch("nicknameVerified") ?? "";
 
+  // 폼 유효성 검사
   const isFormValid = isAuthFormValid({
     watch,
     agreed,
     errors,
   });
 
-  const { mutate: checkEmail } = useCheckEmail({
-    setError,
-    clearErrors,
-    setValue,
-    successField: "emailVerified",
-  });
+  const { mutate: checkEmail } = useCheckEmail();
+  const { mutate: checkNickname } = useCheckNickname();
 
-  const { mutate: checkNickname } = useCheckNickname({
-    setError,
-    clearErrors,
-    setValue,
-    successField: "nicknameVerified",
-  });
+  const handleCheckEmail = () => {
+    const emailValue = watch("email");
+    if (!emailValue) return;
+    setValue("emailVerified", "");
+    checkEmail(emailValue, {
+      onSuccess: (data: CheckEmailResponse) => {
+        if (!data.available) {
+          setError("email", { type: "manual", message: data.message });
+        } else {
+          clearErrors("email");
+          setValue("emailVerified", "사용 가능한 이메일입니다.");
+        }
+      },
+      onError: () => {
+        setError("email", {
+          type: "manual",
+          message: "이메일 중복 체크에 실패했습니다.",
+        });
+      },
+    });
+  };
 
+  const handleCheckNickname = () => {
+    const nicknameValue = watch("nickname");
+    if (!nicknameValue) return;
+    setValue("nicknameVerified", "");
+    checkNickname(nicknameValue, {
+      onSuccess: (data: CheckNicknameResponse) => {
+        if (!data.available) {
+          setError("nickname", {
+            type: "manual",
+            message: data.message || "이미 사용 중인 닉네임입니다.",
+          });
+        } else {
+          clearErrors("nickname");
+          setValue("nicknameVerified", "사용 가능한 닉네임입니다.");
+        }
+      },
+      onError: () => {
+        setError("nickname", {
+          type: "manual",
+          message: "닉네임 중복 체크에 실패했습니다.",
+        });
+      },
+    });
+  };
+
+  // 회원가입 mutate
   const { mutate } = useSignup();
 
+  // 회원가입 서브밋 핸들러
   const handleFormSubmit = async (data: AuthFormData) => {
     if (onSubmit) {
       // 테스트 코드용 if문
@@ -139,13 +184,7 @@ function AuthPage({ onSubmit }: AuthPageProps = {}) {
               theme="overlap"
               width={104.6}
               height={44}
-              onClick={() => {
-                const emailValue = watch("email");
-                if (emailValue) {
-                  setValue("emailVerified", "");
-                  checkEmail(emailValue);
-                }
-              }}
+              onClick={handleCheckEmail}
             >
               중복 확인
             </CommonButton>
@@ -168,13 +207,7 @@ function AuthPage({ onSubmit }: AuthPageProps = {}) {
               theme="overlap"
               width={104.6}
               height={44}
-              onClick={() => {
-                const nicknameValue = watch("nickname");
-                if (nicknameValue) {
-                  setValue("nicknameVerified", "");
-                  checkNickname(nicknameValue);
-                }
-              }}
+              onClick={handleCheckNickname}
             >
               중복 확인
             </CommonButton>
