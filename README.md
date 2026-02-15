@@ -117,13 +117,14 @@ API 타입은 `generate:types`로 백엔드 OpenAPI 문서(`https://devtime.prok
 
 ### 5. 헤더·인증
 
+<div style="font-size: 0.875em;">
+
 - **인증이 필요한 요청**: `getAuthHeaders()`(`@/utils/authUtils`)로 `{ Authorization: "Bearer <accessToken>" }`을 넘깁니다. 토큰이 없으면 빈 객체 `{}`를 넘기며, 401 시 `AuthenticatedApiClient`가 refresh 후 재시도합니다.
 - **비인증 요청**: 로그인, 회원가입, 이메일/닉네임 중복 확인, Presigned URL 등은 헤더 없이 호출합니다.
 
 ### 6. 페이지별 useQuery / useMutation 사용 내역
 
-아래는 **페이지(기능)별**로 어떤 훅이 어떤 API를 어떻게 호출하는지 정리한 표입니다.  
-`args`는 클라이언트 메서드 두 번째 인자(`get(경로, args)` 등)에 넣는 옵션입니다.
+**페이지(기능)별** 훅·API·파라미터·헤더 정리. `args`는 `get(경로, args)` 등 두 번째 인자입니다.
 
 | 페이지/기능 | 훅 | API | 메서드 | 파라미터·바디 | 헤더 | 비고 |
 | ---------- | -- | --- | ------ | -------------- | ---- | ---- |
@@ -148,8 +149,10 @@ API 타입은 `generate:types`로 백엔드 OpenAPI 문서(`https://devtime.prok
 | | `useDeleteStudyLog` | `/api/study-logs/{studyLogId}` | DELETE | `pathParams: { studyLogId }` | `getAuthHeaders()` | 성공 시 `STUDY_LOGS_LIST`·`STUDY_LOGS` invalidate |
 | **Ranking** | `useGetRankings` | `/api/rankings` | GET | `query: { sortBy, page, limit }` (무한 스크롤용 pageParam) | AuthenticatedApiClient | **useInfiniteQuery** 사용, `getNextPageParam`으로 다음 페이지 계산 |
 
-- **GET 요청의 쿼리**: 위 표의 `query`는 모두 `ApiClient.get(경로, { query: { ... } })` 형태로 넘깁니다. 내부적으로 axios `params`로 전달됩니다.
-- **pathParams**: 경로에 `{ timerId }`, `{ studyLogId }` 등이 있을 때 `pathParams`로 넣으면 URL이 치환됩니다.
+- **GET 쿼리**: `ApiClient.get(경로, { query: { ... } })` → axios `params`로 전달.
+- **pathParams**: `{ timerId }`, `{ studyLogId }` 등 경로 변수 치환.
+
+</div>
 
 ### 7. 흐름 요약
 
