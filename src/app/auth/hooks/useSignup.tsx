@@ -6,13 +6,16 @@ import { useLogin } from "@/app/login/hooks/useLogin";
 import type { LoginResponse } from "@/app/login/types";
 import { setTokens } from "@/config/utils/tokenStorage";
 import { useModalStore } from "@/store/modalStore";
+import type { ApiRequest, ApiResponse } from "@/types/api/helpers";
 import type { AuthFormData } from "../Client";
+
+export type SignupResponse = ApiResponse<"/api/signup", "post", 201>;
 
 export const useSignup = () => {
   const router = useRouter();
-  const { mutateAsync: loginAsync } = useLogin();
   const openModal = useModalStore((state) => state.push);
   const closeModal = useModalStore((state) => state.closeTop);
+  const { mutateAsync: loginAsync } = useLogin();
 
   const showSignupSuccessModal = () => {
     openModal({
@@ -48,7 +51,7 @@ export const useSignup = () => {
 
   return useMutation({
     mutationFn: async (data: AuthFormData) => {
-      const payload = {
+      const payload: ApiRequest<"/api/signup", "post"> = {
         email: data.email,
         nickname: data.nickname,
         password: data.password,
@@ -56,7 +59,10 @@ export const useSignup = () => {
       };
 
       // 1) 회원가입
-      const signupRes = await ApiClient.post("/api/signup", payload);
+      const signupRes: SignupResponse = await ApiClient.post(
+        "/api/signup",
+        payload,
+      );
 
       // 2) 자동 로그인
       const loginRes: LoginResponse = await loginAsync({
