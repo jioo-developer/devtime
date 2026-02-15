@@ -1,18 +1,11 @@
 "use client";
-import { useEffect } from "react";
 import { PageErrorFallback } from "@/components/PageErrorFallback";
-
-export default function Error({
-  error,
-  reset,
-}: {
+type ErrorPageProps = {
   error: Error & { digest?: string };
   reset: () => void;
-}) {
-  useEffect(() => {
-    console.error(error);
-  }, [error]);
+};
 
+export default function ErrorPage({ error, reset }: ErrorPageProps) {
   return (
     <PageErrorFallback
       error={error}
