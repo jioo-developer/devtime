@@ -23,10 +23,12 @@ export type AuthFormData = {
 };
 
 interface AuthPageProps {
+  // 테스트 코드용 속성
   onSubmit?: (data: AuthFormData) => Promise<void>;
 }
 
 function AuthPage({ onSubmit }: AuthPageProps = {}) {
+  // 테스트 코드용 속성
   const {
     register,
     watch,
@@ -65,7 +67,7 @@ function AuthPage({ onSubmit }: AuthPageProps = {}) {
 
   const handleFormSubmit = async (data: AuthFormData) => {
     if (onSubmit) {
-      // 테스트 코드용 if
+      // 테스트 코드용 if문
       await onSubmit(data);
     } else {
       mutate(data);
