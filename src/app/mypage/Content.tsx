@@ -3,40 +3,29 @@ import { useUploadProfileImage, useMypageForm } from "./hooks";
 
 export function MypageContent() {
   const { upload: uploadProfileImage } = useUploadProfileImage();
-
-  const mypageForm = useMypageForm({
-    onUpdateError: (error) => {
-      console.error("PUT /api/profile failed", error.message);
-      const err = error as { response?: { data?: unknown } };
-      if (err.response?.data) console.error("서버 응답:", err.response.data);
-    },
-  });
+  const mypageForm = useMypageForm();
 
   const { profileData, isUpdating, isEditing } = mypageForm;
-
-  const hasExistingProfile = Boolean(profileData?.profile);
-  const isEditMode = isEditing;
+  const hasProfile = !!profileData?.profile;
 
   const handleProfileImageUpload = async (file: File) => {
-    const uploadedImageKey = await uploadProfileImage(file);
-    if (!uploadedImageKey) return;
-    mypageForm.setValue("profileImage", uploadedImageKey);
+    const imageKey = await uploadProfileImage(file);
+    if (imageKey) {
+      mypageForm.setValue("profileImage", imageKey);
+    }
   };
-
-  const shouldShowHeader = !isEditMode;
-  const shouldShowEditForm = isEditMode && hasExistingProfile;
 
   return (
     <div className="profileCard">
-      {shouldShowHeader && (
+      {!isEditing && (
         <ProfileHeader
           profileData={profileData}
           mypageForm={mypageForm}
-          hasExistingProfile={hasExistingProfile}
+          hasExistingProfile={hasProfile}
         />
       )}
 
-      {shouldShowEditForm ? (
+      {isEditing && hasProfile ? (
         <ProfileForm
           profileData={profileData}
           mypageForm={mypageForm}

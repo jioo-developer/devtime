@@ -6,7 +6,10 @@ import {
 } from "@tanstack/react-query";
 import { AuthenticatedApiClient } from "@/config/apiConfig/authenticated/AuthApiConfig";
 import { QueryKey } from "@/constant/queryKeys";
-import type { GetProfileResponse } from "../types";
+import type { ApiResponse } from "@/types/api/helpers";
+
+/** GET /api/profile 200 응답 (generated.ts 기반) */
+export type GetProfileResponse = ApiResponse<"/api/profile", "get", 200>;
 
 const profileQueryConfig = {
   queryKey: [QueryKey.PROFILE],

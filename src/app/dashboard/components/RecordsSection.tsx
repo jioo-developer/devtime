@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useGetStudyLogsList } from "../hooks/useGetStudyLogsList";
-import { useStudyLogModals } from "../hooks/useStudyLogModals";
+import { useStudyLogModals } from "../utils/useStudyLogModals";
 import { RecordsTable } from "./records/RecordsTable";
 import { RecordsPagination } from "./records/RecordsPagination";
 

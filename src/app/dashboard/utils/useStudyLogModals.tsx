@@ -2,7 +2,7 @@
 import CommonButton from "@/components/atoms/CommonButton/CommonButton";
 import { useModalStore } from "@/store/modalStore";
 import { StudyLogDetailContent } from "../components/records/StudyLogDetailContent";
-import { useDeleteStudyLog } from "./useDeleteStudyLog";
+import { useDeleteStudyLog } from "../hooks/useDeleteStudyLog";
 
 export function useStudyLogModals() {
   const openModal = useModalStore((state) => state.push);
