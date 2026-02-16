@@ -154,7 +154,21 @@ API 타입은 `generate:types`로 백엔드 OpenAPI 문서(`https://devtime.prok
 
 </div>
 
-### 7. 흐름 요약
+### 7. 이미지 업로드 전략
+
+프로필 이미지는 **Presigned URL + S3 직접 업로드** 방식입니다. 서버에는 파일 바이트를 보내지 않고, 업로드용 URL을 받아 클라이언트에서 S3로 PUT 합니다.
+
+| 동작 | 방식 | 설명 |
+|------|------|------|
+| **POST** (업로드) | `POST /api/file/presigned-url` → S3 PUT | body: `{ fileName, contentType }`. 응답의 `presignedUrl`로 `ApiClient.uploadImageToS3()` 호출해 S3에 파일 PUT. 응답의 `key`를 프로필의 `profileImage`로 사용. |
+| **GET** (조회) | `GET /api/profile` + S3 URL 조합 | 프로필 응답의 `profile.profileImage`는 S3 객체 **key**. 표시 시 `getProfileImageUrl(key)`로 `NEXT_PUBLIC_S3_IMAGE_BASE_URL` + key 조합해 이미지 URL 생성 후 `<img src={...}>` 로 로드 (브라우저가 해당 URL로 GET). |
+| **PUT** (변경) | 재업로드 + `PUT /api/profile` | 새 이미지 선택 시 동일하게 presigned URL 발급 → S3 PUT → 받은 key를 `PUT /api/profile` body의 `profileImage`로 전달해 프로필 수정. |
+| **DELETE** | 별도 API 없음 | 프론트에서는 이미지 단독 삭제 API를 호출하지 않음. 이미지 변경은 위 PUT 흐름으로 새 이미지로 교체하는 방식이며, 구 객체 삭제는 백엔드/스토리지 정책에 따름. |
+
+- **관련 코드**: `useUploadProfileImage` (`src/app/mypage/hooks/useUploadProfileImage.ts`), `getProfileImageUrl` / `S3_IMAGE_BASE_URL` (`src/app/mypage/constants/s3Image.ts`), `ApiClient.uploadImageToS3` (`src/config/apiConfig/apiConfig.ts`).
+- **환경 변수**: `NEXT_PUBLIC_S3_IMAGE_BASE_URL` (이미지 표시용 베이스 URL) 필수.
+
+### 8. 흐름 요약
 
 1. 백엔드 OpenAPI 스펙 → `generate:types` → `generated.ts` 갱신  
 2. `helpers.ts`가 `paths`를 이용해 경로·메서드별 타입 제공  
