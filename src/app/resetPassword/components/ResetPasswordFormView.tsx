@@ -8,9 +8,9 @@ import CommonButton from "@/components/atoms/CommonButton/CommonButton";
 import LogoBlue from "@/asset/images/logo_blue.svg";
 import { ResetPasswordFormData } from "../Client";
 
-export interface ResetPasswordFormViewProps {
+type ResetPasswordFormViewProps = {
   onSubmit: (data: ResetPasswordFormData) => Promise<void>;
-}
+};
 
 export default function ResetPasswordFormView({
   onSubmit,
