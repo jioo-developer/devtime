@@ -146,6 +146,9 @@ function Client() {
             >
               로그인
             </CommonButton>
+            <Link href="/resetPassword" className="findPasswordLink">
+              비밀번호 찾기
+            </Link>
           </form>
 
           <Link href="/auth">

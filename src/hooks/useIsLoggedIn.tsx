@@ -6,7 +6,7 @@ import { useModalStore } from "@/store/modalStore";
 import CommonButton from "@/components/atoms/CommonButton/CommonButton";
 
 // 로그인 불필요한 경로
-const PUBLIC_PATHS = ["/login", "/auth", "/profile"];
+export const PUBLIC_PATHS = ["/login", "/auth", "/profile", "/resetPassword"];
 
 /** 로그인 여부: accessToken 존재로 판단. isReady는 클라이언트에서 1회 확인 후 true */
 export function useIsLoggedIn(): { isLoggedIn: boolean; isReady: boolean } {
