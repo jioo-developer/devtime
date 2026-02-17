@@ -42,7 +42,6 @@
   align-items: center;
   width: 100%;
   max-width: 485px;
-  height: 598px;
   padding: 72px 86px 64px 86px;
   background: rgba(255, 255, 255, 0.5);
   border-radius: 20px;
@@ -66,11 +65,23 @@
   margin-top: 42px;
 }
 
+.findPasswordLink {
+  margin-top: 12px;
+  text-align: right;
+  font-size: var(--fontsize-body-small);
+  color: var(--gray-600);
+  text-decoration: none;
+}
+
+.findPasswordLink:hover {
+  color: var(--primary-vivid);
+}
+
 .goSignup {
   display: flex;
   justify-content: center;
   width: 100%;
-  margin-top: 24px;
+  margin-top: 14px;
 }
 
 .goSignup span {

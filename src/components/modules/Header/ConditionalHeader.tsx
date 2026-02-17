@@ -1,13 +1,12 @@
 "use client";
 import { usePathname } from "next/navigation";
 import Header from "./Header";
-
-const PUBLIC_PATH_PREFIXES = ["/login", "/auth", "/profile"];
+import { PUBLIC_PATHS } from "@/hooks/useIsLoggedIn";
 
 function isPublicPath(pathname: string | null): boolean {
   const path = pathname ?? "/";
-  return PUBLIC_PATH_PREFIXES.some(
-    (prefix) => path === prefix || path.startsWith(`${prefix}/`),
+  return PUBLIC_PATHS.some(
+    (publicPath) => path === publicPath || path.startsWith(`${publicPath}/`),
   );
 }
 
