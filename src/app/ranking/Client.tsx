@@ -7,15 +7,15 @@ import type { RankingTabType } from "./components/RankingTabs";
 import { RankingPageContent } from "./Content";
 import { RankingSkeleton } from "./components/RankingSkeleton";
 import CommonDropdown from "@/components/modules/CommonDropdown/CommonDropdown";
-import { TECH_STACK_OPTIONS } from "@/app/profile/constants/constants";
+import { useTechStacks } from "@/app/profile/hooks/useTechStacks";
 import { PageErrorFallback } from "@/components/PageErrorFallback";
 
-const TECH_STACK_FILTER_OPTIONS = [
-  { value: "", label: "전체" },
-  ...TECH_STACK_OPTIONS,
-];
-
 export function Client() {
+  const { data: techStackData = [] } = useTechStacks();
+  const techStackFilterOptions = [
+    { value: "", label: "전체" },
+    ...techStackData,
+  ];
   const [tab, setTab] = useState<RankingTabType>("total");
   const [techStackFilter, setTechStackFilter] = useState("");
   const sortBy: "total" | "avg" = tab === "dailyAvg" ? "avg" : "total";
@@ -28,7 +28,7 @@ export function Client() {
         <CommonDropdown
           label=""
           placeholder="전체"
-          options={TECH_STACK_FILTER_OPTIONS}
+          options={techStackFilterOptions}
           value={techStackFilter}
           onChange={setTechStackFilter}
           className="rankingPage__filterDropdown"

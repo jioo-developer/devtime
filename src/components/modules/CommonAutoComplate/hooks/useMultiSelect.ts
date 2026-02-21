@@ -56,6 +56,7 @@ export function useMultiSelect({
 
     if (multiSelect) {
       addSelectedItem(trimmed);
+      onAddNew?.(trimmed);
       return;
     }
     onAddNew?.(trimmed);

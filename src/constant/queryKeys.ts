@@ -10,4 +10,6 @@ export enum QueryKey {
   STUDY_LOGS_LIST = "devtime/study-logs-list",
   /** GET /api/rankings — 랭킹 목록(무한스크롤) */
   RANKINGS = "devtime/rankings",
+  /** GET /api/tech-stacks — 기술 스택 목록 */
+  TECH_STACKS = "devtime/tech-stacks",
 }

@@ -2,12 +2,11 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import CommonButton from "@/components/atoms/CommonButton/CommonButton";
 import { ApiClient } from "@/config/apiConfig/apiConfig";
-import { useLogin } from "@/app/login/hooks/useLogin";
-import type { LoginResponse } from "@/app/login/types";
+import { LoginResponse, useLogin } from "@/app/login/hooks/useLogin";
 import { setTokens } from "@/config/utils/tokenStorage";
 import { useModalStore } from "@/store/modalStore";
 import type { ApiRequest, ApiResponse } from "@/types/api/helpers";
-import type { AuthFormData } from "../Client";
+import { AuthFormData } from "../type/type";
 
 export type SignupResponse = ApiResponse<"/api/signup", "post", 201>;
 
