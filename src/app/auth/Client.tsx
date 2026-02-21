@@ -15,31 +15,9 @@ import {
 } from "./hooks/useCheckNickname";
 import { useSignup } from "./hooks/useSignup";
 import { PASSWORD_MIN_LENGTH, PASSWORD_PATTERN } from "@/constant/password";
-import { isAuthFormValid } from "./utils/validation";
+import { AUTH_DEFAULT_VALUES, isAuthFormValid } from "./utils/validation";
 import "./style.css";
-
-export type AuthFormData = {
-  email: string;
-  nickname: string;
-  password: string;
-  passwordConfirmation: string;
-  /** 중복 확인 성공 메시지 (react-hook-form 상태로 관리) */
-  emailVerified?: string;
-  nicknameVerified?: string;
-};
-interface AuthPageProps {
-  // 테스트 코드용 속성
-  onSubmit?: (data: AuthFormData) => Promise<void>;
-}
-
-const AUTH_DEFAULT_VALUES: AuthFormData = {
-  email: "",
-  nickname: "",
-  password: "",
-  passwordConfirmation: "",
-  emailVerified: "",
-  nicknameVerified: "",
-};
+import { AuthFormData, AuthPageProps } from "./type/type";
 
 function AuthPage({ onSubmit }: AuthPageProps = {}) {
   // 테스트 코드용 속성

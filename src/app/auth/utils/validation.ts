@@ -1,11 +1,20 @@
 import type { UseFormWatch, FieldErrors } from "react-hook-form";
-import type { AuthFormData } from "../Client";
+import { AuthFormData } from "../type/type";
 
 interface FormValidationParams {
   watch: UseFormWatch<AuthFormData>;
   agreed: boolean;
   errors: FieldErrors<AuthFormData>;
 }
+
+export const AUTH_DEFAULT_VALUES: AuthFormData = {
+  email: "",
+  nickname: "",
+  password: "",
+  passwordConfirmation: "",
+  emailVerified: "",
+  nicknameVerified: "",
+};
 
 export const isAuthFormValid = ({
   watch,

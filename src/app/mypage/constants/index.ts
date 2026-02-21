@@ -9,7 +9,6 @@ export {
   PURPOSE_OPTIONS_WITH_OTHER,
   PURPOSE_OTHER_VALUE,
   toAllowedEnumValue,
-  TECH_STACK_OPTIONS,
 } from "@/app/profile/constants/constants";
 export type {
   CareerApiValue,

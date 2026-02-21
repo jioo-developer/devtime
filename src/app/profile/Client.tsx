@@ -19,24 +19,17 @@ import { isProfileFormIncomplete } from "./utils/validation";
 import type { ProfileFormData } from "@/app/profile/types";
 import {
   CAREER_OPTIONS,
+  DefaultFormData,
   PURPOSE_OPTIONS_WITH_OTHER,
   PURPOSE_OTHER_VALUE,
-  TECH_STACK_OPTIONS,
 } from "@/app/profile/constants/constants";
+import { useTechStacks } from "@/app/profile/hooks/useTechStacks";
+import { useCreateTechStack } from "@/app/profile/hooks/useCreateTechStack";
 import Background from "@/asset/images/logo_background.jpg";
 import Logo from "@/asset/images/Logo.svg";
 import DEFAULT_PROFILE_IMAGE from "@/asset/images/default_profile_image.svg";
 import "./style.css";
-
-const DefaultFormData: ProfileFormData = {
-  nickname: "",
-  goal: "",
-  career: "",
-  purpose: "",
-  purposeDetail: "",
-  techStacks: [],
-  profileImage: "",
-};
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Client() {
   const router = useRouter();
@@ -51,6 +44,9 @@ export default function Client() {
   });
   const openModal = useModalStore((state) => state.push);
   const closeModal = useModalStore((state) => state.closeTop);
+  const queryClient = useQueryClient();
+  const { data: techStackOptions = [] } = useTechStacks();
+  const { mutate: createTechStack } = useCreateTechStack();
   const { mutate: createProfile } = useCreateProfile();
   const { upload: uploadProfileImage } = useUploadProfileImage();
 
@@ -61,6 +57,26 @@ export default function Client() {
       if (!key) return;
       setValue("profileImage", key);
     });
+  };
+
+  const handleAddTechStack = (inputValue: string) => {
+    const normalized = inputValue.trim();
+    if (!normalized) return;
+    const exists = techStackOptions.some(
+      (option) => option.label.toLowerCase() === normalized.toLowerCase(),
+    );
+    if (exists) return;
+    createTechStack(
+      { name: normalized },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["techStacks"] });
+        },
+        onError: (err) => {
+          console.error(`추가하는데 실패하였습니다.\n${err.message}`);
+        },
+      },
+    );
   };
 
   const onSubmit = (formData: ProfileFormData) => {
@@ -83,6 +99,7 @@ export default function Client() {
       onSuccess: () => {
         setProfileComplete();
         router.replace("/");
+        // 프로필 설정 완료
       },
       onError: (error) => {
         openModal({
@@ -156,7 +173,7 @@ export default function Client() {
               />
               {formWatch("purpose") === PURPOSE_OTHER_VALUE && (
                 <div className="profileSettingPurposeDetailWrap">
-                  <CommonInput<ProfileFormData>
+                  <CommonInput
                     id="purposeDetail"
                     label=""
                     placeholder="공부 목적을 입력해 주세요."
@@ -168,7 +185,7 @@ export default function Client() {
             </div>
 
             <div className="profileSettingField">
-              <CommonInput<ProfileFormData>
+              <CommonInput
                 id="goal"
                 label="공부 목표"
                 placeholder="슈퍼 개발자가 돼서 지구 정복"
@@ -184,10 +201,11 @@ export default function Client() {
               <CommonAutocomplete
                 label=""
                 placeholder="기술 스택을 검색해 등록해 주세요."
-                options={TECH_STACK_OPTIONS}
+                options={techStackOptions}
                 multiSelect
                 showAddButton
                 selectedItems={formWatch("techStacks") ?? []}
+                onAddNew={handleAddTechStack}
                 onSelectedItemsChange={(items) => setValue("techStacks", items)}
               />
             </div>

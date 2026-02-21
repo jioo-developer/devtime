@@ -2,6 +2,8 @@
  * 프로필 셀렉트 옵션 (OpenAPI 스펙 기준) — 마이페이지에서도 사용
  */
 
+import { ProfileFormData } from "../types";
+
 export type SelectOption<T extends string> = {
   value: T;
   label: string;
@@ -65,28 +67,6 @@ export function getPurposeLabel(purposeFromApi: PurposeFromApi): string {
   return getEnumLabel(purposeFromApi, PURPOSE_OPTIONS);
 }
 
-// ─── Tech Stack ─────────────────────────────────────────────────────────
-
-const TECH_STACK_NAMES = [
-  "React",
-  "Vue.js",
-  "Angular",
-  "Svelte",
-  "Next.js",
-  "Gatsby",
-  "TypeScript",
-  "JavaScript",
-  "Node.js",
-  "Python",
-  "Java",
-  "Spring",
-  "Django",
-  "Go",
-  "Rust",
-] as const;
-
-export const TECH_STACK_OPTIONS = createOptions(TECH_STACK_NAMES);
-
 // ─── 유틸 ───────────────────────────────────────────────────────────────
 
 export function toAllowedEnumValue<T extends EnumValues>(
@@ -110,3 +90,13 @@ export function getEnumLabel<T extends string>(
     valueFromApi
   );
 }
+
+export const DefaultFormData: ProfileFormData = {
+  nickname: "",
+  goal: "",
+  career: "",
+  purpose: "",
+  purposeDetail: "",
+  techStacks: [],
+  profileImage: "",
+};

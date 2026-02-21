@@ -13,9 +13,10 @@ import {
   CAREER_OPTIONS,
   PURPOSE_OPTIONS_WITH_OTHER,
   PURPOSE_OTHER_VALUE,
-  TECH_STACK_OPTIONS,
   getProfileImageUrl,
 } from "../constants";
+import { useTechStacks } from "@/app/profile/hooks/useTechStacks";
+import { useCreateTechStack } from "@/app/profile/hooks/useCreateTechStack";
 import type { GetProfileResponse } from "../types";
 import type { MypageFormReturn } from "../hooks";
 
@@ -32,6 +33,8 @@ export function ProfileForm({
   isUpdating,
   onProfileImageUpload,
 }: ProfileFormProps) {
+  const { mutate: createTechStack } = useCreateTechStack();
+  const { data: techStackOptions = [] } = useTechStacks();
   const selectedTechStacks = mypageForm.watch("techStacks");
   const currentProfileImage = mypageForm.watch("profileImage");
   const nicknameVerified = mypageForm.watch("nicknameVerified") ?? "";
@@ -61,6 +64,18 @@ export function ProfileForm({
         });
       },
     });
+  };
+
+  const handleAddTechStack = (inputValue: string) => {
+    const value = inputValue.trim();
+    if (!value) return;
+
+    const isDuplicate = techStackOptions.some(
+      ({ label }) => label.toLowerCase() === value.toLowerCase(),
+    );
+    if (isDuplicate) return;
+
+    createTechStack({ name: value }, { onError: console.error });
   };
 
   return (
@@ -208,10 +223,11 @@ export function ProfileForm({
             <CommonAutocomplete
               label=""
               placeholder="기술 스택을 검색해 등록해 주세요."
-              options={TECH_STACK_OPTIONS}
+              options={techStackOptions}
               multiSelect
               showAddButton
               selectedItems={selectedTechStacks ?? []}
+              onAddNew={handleAddTechStack}
               onSelectedItemsChange={(newSelectedTechStacks) =>
                 mypageForm.setValue("techStacks", newSelectedTechStacks)
               }
