@@ -2,10 +2,10 @@ import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { ApiClient } from "@/config/apiConfig/apiConfig";
 import { QueryKey } from "@/constant/queryKeys";
 import { getAuthHeaders } from "@/utils/authUtils";
-import type { ApiResponseSuccess } from "@/types/api/helpers";
+import type { ApiResponse } from "@/types/api/helpers";
 
 /** GET /api/timers 200 응답 (404 시 default 반환으로 동일 형태) */
-export type TimerResponse = ApiResponseSuccess<"/api/timers", "get">;
+export type TimerResponse = ApiResponse<"/api/timers", "get", 200>;
 
 const defaultTimerResponse: TimerResponse = {
   timerId: "",

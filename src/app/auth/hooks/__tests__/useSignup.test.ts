@@ -59,8 +59,8 @@ describe("useSignup", () => {
       nickname: "테스트유저",
       password: "password123!",
       passwordConfirmation: "password123!",
-      agreedToTermsAndPrivacy: true,
-      agreedToMarketing: false,
+      emailVerified: "verified",
+      nicknameVerified: "verified",
     };
 
     result.current.mutate(signupData);
@@ -91,8 +91,8 @@ describe("useSignup", () => {
       nickname: "테스트유저",
       password: "password123!",
       passwordConfirmation: "password123!",
-      agreedToTermsAndPrivacy: true,
-      agreedToMarketing: false,
+      emailVerified: "verified",
+      nicknameVerified: "verified",
     };
 
     result.current.mutate(signupData);
@@ -117,8 +117,8 @@ describe("useSignup", () => {
       nickname: "신규유저",
       password: "securePass123!",
       passwordConfirmation: "securePass123!",
-      agreedToTermsAndPrivacy: true,
-      agreedToMarketing: true,
+      emailVerified: "verified",
+      nicknameVerified: "verified",
     };
 
     result.current.mutate(signupData);

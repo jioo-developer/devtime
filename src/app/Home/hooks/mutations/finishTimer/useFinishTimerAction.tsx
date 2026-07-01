@@ -5,7 +5,7 @@ import { useFinishTimer } from "./useFinishTimer";
 import { useNoCompletedTasksAlert } from "./useNoCompletedTasksAlert";
 import { useResetTimerStateAfterFinish } from "./useResetTimerStateAfterFinish";
 import { buildFinishTimerPayload } from "@/app/Home/utils/buildFinishTimerPayload";
-import type { ModalFormEndOptions } from "@/app/Home/component/Form/components/ModalForm";
+import type { ModalFormEndOptions } from "@/app/Home/component/Form/types";
 import type { FinishTimerTaskItem } from "./useFinishTimer";
 
 /**
