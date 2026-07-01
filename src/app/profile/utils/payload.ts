@@ -2,6 +2,7 @@
 import type {
   CreateProfileRequest,
   GetProfileResponse,
+  ProfileCreateFormData,
   ProfileFormData,
   UpdateProfileRequest,
 } from "@/app/profile/types";
@@ -48,7 +49,7 @@ const DEFAULT_PROFILE_RESPONSE: GetProfileResponse = {
  * API 요청용 purpose payload로 변환
  */
 function formPurpose(
-  formData: ProfileFormData, // 현재 폼 입력값
+  formData: ProfileCreateFormData, // 현재 폼 입력값
   profileData: GetProfileResponse, // 기존 프로필 데이터(없으면 DEFAULT_PROFILE_RESPONSE 사용)
 ): CreateProfileRequest["purpose"] {
   // 폼에서 '기타'를 선택한 경우 → detail이 있을 때만 object 전송 (빈 detail은 서버 400 방지)
@@ -81,7 +82,7 @@ function formPurpose(
  * - 수정 시에도 profileData를 넘겨 fallback 용도로 재사용
  */
 export function getCreateProfilePayload(
-  formData: ProfileFormData, // 현재 폼 입력 데이터
+  formData: ProfileCreateFormData, // 현재 폼 입력 데이터
   profileData?: GetProfileResponse, // 기존 프로필 없으면 기본 프로필 이미지 등으로 대체
 ): CreateProfileRequest {
   const effectiveProfileData = profileData ?? DEFAULT_PROFILE_RESPONSE;

@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import CommonImage from "@/components/atoms/CommonImage/CommonImage";
 import CommonInput from "@/components/atoms/CommonInput/CommonInput";
@@ -15,7 +16,7 @@ import { setTokens } from "@/config/utils/tokenStorage";
 import { safeInternalPath } from "@/utils/pathUtils";
 import type { LoginData, LoginResponse } from "./hooks/useLogin";
 import Link from "next/link";
-import { PASSWORD_MIN_LENGTH, PASSWORD_PATTERN } from "@/constant/password";
+import { loginSchema } from "@/schema/formSchemas";
 import "./style.css";
 
 function Client() {
@@ -29,6 +30,7 @@ function Client() {
     formState: { errors },
     trigger,
   } = useForm<LoginData>({
+    resolver: zodResolver(loginSchema),
     mode: "onChange",
   });
 
@@ -97,13 +99,6 @@ function Client() {
               autoComplete="email"
               placeholder="이메일 주소를 입력해 주세요."
               register={register}
-              validation={{
-                required: "이메일을 입력하세요.",
-                pattern: {
-                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: "이메일 형식으로 작성해 주세요.",
-                },
-              }}
               error={errors.email}
             />
             <div className="saveEmailCheckboxWrap">
@@ -124,17 +119,6 @@ function Client() {
               autoComplete="current-password"
               placeholder="비밀번호를 입력해 주세요."
               register={register}
-              validation={{
-                required: "비밀번호를 입력하세요.",
-                minLength: {
-                  value: PASSWORD_MIN_LENGTH,
-                  message: `비밀번호는 ${PASSWORD_MIN_LENGTH}자 이상이어야 합니다.`,
-                },
-                pattern: {
-                  value: PASSWORD_PATTERN,
-                  message: "비밀번호는 영문과 숫자 조합이어야 합니다.",
-                },
-              }}
               error={errors.password}
             />
             <CommonButton

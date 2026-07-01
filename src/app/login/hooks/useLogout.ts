@@ -3,10 +3,10 @@ import { AuthenticatedApiClient } from "@/config/apiConfig/authenticated/AuthApi
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { clearTokens } from "@/config/utils/tokenStorage";
-import type { ApiResponse } from "@/types/api/helpers";
+import type { ApiResponseSuccess } from "@/types/api/helpers";
 
-/** POST /api/auth/logout 200 응답 (generated.ts 기반) */
-export type LogoutResponse = ApiResponse<"/api/auth/logout", "post", 200>;
+/** POST /api/auth/logout 2xx 응답 (generated.ts 기반) */
+export type LogoutResponse = ApiResponseSuccess<"/api/auth/logout", "post">;
 
 export const useLogout = () => {
   const router = useRouter();

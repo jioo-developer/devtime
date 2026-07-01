@@ -1,6 +1,7 @@
 "use client";
 import { ErrorBoundary } from "react-error-boundary";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { PageErrorFallback } from "@/components/PageErrorFallback";
 import { getCreateProfilePayload } from "@/app/profile/utils/payload";
@@ -15,8 +16,7 @@ import { useModalStore } from "@/store/modalStore";
 import { useCreateProfile } from "@/app/profile/hooks/useCreateProfile";
 import { useUploadProfileImage } from "@/app/mypage/hooks";
 import { getProfileImageUrl } from "@/app/mypage/constants";
-import { isProfileFormIncomplete } from "./utils/validation";
-import type { ProfileFormData } from "@/app/profile/types";
+import type { ProfileCreateFormData } from "@/app/profile/types";
 import {
   CAREER_OPTIONS,
   DefaultFormData,
@@ -25,6 +25,7 @@ import {
 } from "@/app/profile/constants/constants";
 import { useTechStacks } from "@/app/profile/hooks/useTechStacks";
 import { useCreateTechStack } from "@/app/profile/hooks/useCreateTechStack";
+import { profileCreateSchema } from "@/schema/formSchemas";
 import Background from "@/asset/images/logo_background.jpg";
 import Logo from "@/asset/images/Logo.svg";
 import DEFAULT_PROFILE_IMAGE from "@/asset/images/default_profile_image.svg";
@@ -38,7 +39,9 @@ export default function Client() {
     watch: formWatch,
     setValue,
     handleSubmit,
-  } = useForm<ProfileFormData>({
+    formState: { errors },
+  } = useForm<ProfileCreateFormData>({
+    resolver: zodResolver(profileCreateSchema),
     defaultValues: DefaultFormData,
     mode: "onChange",
   });
@@ -79,21 +82,7 @@ export default function Client() {
     );
   };
 
-  const onSubmit = (formData: ProfileFormData) => {
-    if (isProfileFormIncomplete(formData)) {
-      openModal({
-        title: "입력 오류",
-        content: "모든 항목을 입력해 주세요.",
-        footer: (
-          <CommonButton theme="primary" onClick={() => closeModal()}>
-            확인
-          </CommonButton>
-        ),
-        BackdropMiss: false,
-      });
-      return;
-    }
-
+  const onSubmit = (formData: ProfileCreateFormData) => {
     const payload = getCreateProfilePayload(formData);
     createProfile(payload, {
       onSuccess: () => {
@@ -178,6 +167,7 @@ export default function Client() {
                     label=""
                     placeholder="공부 목적을 입력해 주세요."
                     register={register}
+                    error={errors.purposeDetail}
                     className="profileSettingInput"
                   />
                 </div>
@@ -190,6 +180,7 @@ export default function Client() {
                 label="공부 목표"
                 placeholder="슈퍼 개발자가 돼서 지구 정복"
                 register={register}
+                error={errors.goal}
                 className="profileSettingInput"
               />
             </div>

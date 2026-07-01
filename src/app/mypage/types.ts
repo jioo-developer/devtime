@@ -10,7 +10,7 @@ import type {
   UseFormSetValue,
   UseFormWatch,
 } from "react-hook-form";
-import type { ApiRequest, ApiResponse } from "@/types/api/helpers";
+import type { ApiRequest, ApiResponseSuccess } from "@/types/api/helpers";
 import type {
   GetProfileResponse,
   ProfileFormData,
@@ -24,12 +24,11 @@ export type {
 } from "@/app/profile/types";
 
 /** PUT /api/profile 응답 (마이페이지는 수정만 사용) */
-export type UpdateProfileResponse = ApiResponse<"/api/profile", "put", 200>;
+export type UpdateProfileResponse = ApiResponseSuccess<"/api/profile", "put">;
 export type PresignedUrlRequest = ApiRequest<"/api/file/presigned-url", "post">;
-export type PresignedUrlResponse = ApiResponse<
+export type PresignedUrlResponse = ApiResponseSuccess<
   "/api/file/presigned-url",
-  "post",
-  200
+  "post"
 >;
 
 export type UpdateProfileMutation = (

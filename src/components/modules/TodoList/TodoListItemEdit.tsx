@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { MdCheck } from "react-icons/md";
 import styles from "./style.module.css";
 import codeIcon from "@/asset/images/code-icon.png";
@@ -8,6 +9,7 @@ import CommonCheckbox from "@/components/atoms/CommonCheckbox/CommonCheckbox";
 import CommonInput from "@/components/atoms/CommonInput/CommonInput";
 import CommonImage from "@/components/atoms/CommonImage/CommonImage";
 import { useTodoListItemController } from "./hooks/useTodoListController";
+import { todoListItemEditSchema } from "@/schema/formSchemas";
 
 type ControllerState = ReturnType<typeof useTodoListItemController>["state"];
 type ControllerActions = ReturnType<
@@ -23,7 +25,15 @@ export default function TodoListItemEdit({
   state,
   actions,
 }: TodoListItemEditProps) {
-  const { register, handleSubmit, reset } = useForm<{ text: string }>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<{
+    text: string;
+  }>({
+    resolver: zodResolver(todoListItemEditSchema),
     defaultValues: { text: state.text },
   });
 
@@ -61,6 +71,7 @@ export default function TodoListItemEdit({
               type="text"
               className={styles.textInput}
               register={register}
+              error={errors.text}
             />
           </div>
 

@@ -35,13 +35,6 @@ export function TodoInputSection({
           maxLength={30}
           register={register}
           className="titleInputNoBorder"
-          validation={{
-            required: "목표를 입력해 주세요.",
-            maxLength: {
-              value: 30,
-              message: "최대 30자까지 입력 가능합니다.",
-            },
-          }}
         />
       )}
 
@@ -53,12 +46,6 @@ export function TodoInputSection({
           maxLength={30}
           register={register}
           className="todoInputNoBorder"
-          validation={{
-            maxLength: {
-              value: 30,
-              message: "최대 30자까지 입력 가능합니다.",
-            },
-          }}
         />
 
         <CommonButton

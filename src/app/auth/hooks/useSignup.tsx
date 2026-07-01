@@ -5,10 +5,10 @@ import { ApiClient } from "@/config/apiConfig/apiConfig";
 import { LoginResponse, useLogin } from "@/app/login/hooks/useLogin";
 import { setTokens } from "@/config/utils/tokenStorage";
 import { useModalStore } from "@/store/modalStore";
-import type { ApiRequest, ApiResponse } from "@/types/api/helpers";
+import type { ApiRequest, ApiResponseSuccess } from "@/types/api/helpers";
 import { AuthFormData } from "../type/type";
 
-export type SignupResponse = ApiResponse<"/api/signup", "post", 201>;
+export type SignupResponse = ApiResponseSuccess<"/api/signup", "post">;
 
 export const useSignup = () => {
   const router = useRouter();

@@ -8,16 +8,26 @@ import CommonButton from "@/components/atoms/CommonButton/CommonButton";
 import AgreementList from "./component/AgreementList";
 import CommonInput from "@/components/atoms/CommonInput/CommonInput";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useCheckEmail, type CheckEmailResponse } from "./hooks/useCheckEmail";
 import {
   useCheckNickname,
   type CheckNicknameResponse,
 } from "./hooks/useCheckNickname";
 import { useSignup } from "./hooks/useSignup";
-import { PASSWORD_MIN_LENGTH, PASSWORD_PATTERN } from "@/constant/password";
-import { AUTH_DEFAULT_VALUES, isAuthFormValid } from "./utils/validation";
-import "./style.css";
+import { PASSWORD_MIN_LENGTH } from "@/constant/password";
 import { AuthFormData, AuthPageProps } from "./type/type";
+import { authSchema } from "@/schema/formSchemas";
+import "./style.css";
+
+const AUTH_DEFAULT_VALUES: AuthFormData = {
+  email: "",
+  nickname: "",
+  password: "",
+  passwordConfirmation: "",
+  emailVerified: "",
+  nicknameVerified: "",
+};
 
 function AuthPage({ onSubmit }: AuthPageProps = {}) {
   // 테스트 코드용 속성
@@ -28,8 +38,9 @@ function AuthPage({ onSubmit }: AuthPageProps = {}) {
     setError,
     clearErrors,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<AuthFormData>({
+    resolver: zodResolver(authSchema),
     mode: "onChange",
     defaultValues: AUTH_DEFAULT_VALUES,
   });
@@ -42,11 +53,7 @@ function AuthPage({ onSubmit }: AuthPageProps = {}) {
   const nicknameVerified = watch("nicknameVerified") ?? "";
 
   // 폼 유효성 검사
-  const isFormValid = isAuthFormValid({
-    watch,
-    agreed,
-    errors,
-  });
+  const isFormValid = isValid && agreed;
 
   const { mutate: checkEmail } = useCheckEmail();
   const { mutate: checkNickname } = useCheckNickname();
@@ -147,13 +154,6 @@ function AuthPage({ onSubmit }: AuthPageProps = {}) {
               type="text"
               placeholder="아이디를 입력하세요"
               register={register}
-              validation={{
-                required: "이메일을 입력하세요.",
-                pattern: {
-                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: "이메일 형식으로 작성해 주세요.",
-                },
-              }}
               error={errors.email}
               success={emailVerified}
             />
@@ -174,9 +174,6 @@ function AuthPage({ onSubmit }: AuthPageProps = {}) {
               label="닉네임"
               placeholder="닉네임을 입력해주세요"
               register={register}
-              validation={{
-                required: "닉네임을 입력하세요.",
-              }}
               error={errors.nickname}
               success={nicknameVerified}
             />
@@ -197,17 +194,6 @@ function AuthPage({ onSubmit }: AuthPageProps = {}) {
             type="password"
             placeholder={`비밀번호를 ${PASSWORD_MIN_LENGTH}자리 이상 입력하세요`}
             register={register}
-            validation={{
-              required: "비밀번호를 입력하세요.",
-              minLength: {
-                value: PASSWORD_MIN_LENGTH,
-                message: `비밀번호는 ${PASSWORD_MIN_LENGTH}자리 이상이어야 합니다.`,
-              },
-              pattern: {
-                value: PASSWORD_PATTERN,
-                message: "비밀번호는 영문과 숫자를 포함해야 합니다.",
-              },
-            }}
             error={errors.password}
           />
           <CommonInput
@@ -217,11 +203,6 @@ function AuthPage({ onSubmit }: AuthPageProps = {}) {
             type="password"
             placeholder="비밀번호를 다시 입력해 주세요."
             register={register}
-            validation={{
-              required: "비밀번호를 다시 입력해 주세요.",
-              validate: (value: string | undefined) =>
-                value === watch("password") || "비밀번호가 일치하지 않습니다.",
-            }}
             error={errors.passwordConfirmation}
           />
           <AgreementList agreed={agreed} setAgreed={setAgreed} />

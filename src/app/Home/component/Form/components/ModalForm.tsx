@@ -1,31 +1,24 @@
 "use client";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { FormMode, TodoFormData } from "../types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ModalFormProps, TodoFormData } from "../types";
 import { useTodoForm } from "../hooks/useTodoForm";
 import { isTimerStartValid } from "../utils/timerValidation";
 import { TodoListSection } from "./TodoListSection";
 import { TodoInputSection } from "./TodoInputSection";
 import { FormFooter } from "./FormFooter";
+import {
+  todoCreateSchema,
+  todoEndSchema,
+  todoFormSchema,
+} from "@/schema/formSchemas";
 import { CommonTextArea } from "@/components/atoms/CommonTextArea/CommonTextArea";
 import { useGetStudyLog } from "@/app/Home/hooks/getter/useGetStudyLog";
 import { useTimerStore } from "@/store/timerStore";
 import { useModalFormActions } from "../hooks/useModalFormActions";
 import { useFinishTimerAction } from "../../../hooks/mutations/finishTimer/useFinishTimerAction";
 import "../style.css";
-
-export type ModalFormEndOptions = {
-  timerId: string;
-  startTime: string;
-  pausedDuration?: number;
-  endTime?: string;
-};
-
-type ModalFormProps = {
-  mode: FormMode;
-  studyLogId?: string;
-  endOptions?: ModalFormEndOptions;
-};
 
 export default function ModalForm({
   mode,
@@ -41,13 +34,24 @@ export default function ModalForm({
   );
   const savedTodos = useTimerStore((state) => state.savedTodos);
 
+  const schema = isCreateMode
+    ? todoCreateSchema
+    : isEndMode
+      ? todoEndSchema
+      : todoFormSchema;
+
+  const resolver = zodResolver(schema);
+
   const {
     register,
     watch,
     reset,
     handleSubmit,
     formState: { errors },
-  } = useForm<TodoFormData>({ mode: "onChange" });
+  } = useForm<TodoFormData>({
+    resolver,
+    mode: "onChange",
+  });
 
   const getInitialTodos = () => {
     if (isEditMode && studyLog?.data?.tasks) return studyLog.data.tasks;
@@ -98,7 +102,7 @@ export default function ModalForm({
   const { finishTimerAction } = useFinishTimerAction();
 
   const onStartTimer = () => {
-    const title = watch("title");
+    const title = watch("title") ?? "";
     startTimerAction(title, todos ?? []);
   };
 
@@ -174,14 +178,7 @@ export default function ModalForm({
             <h3 className="sectionTitle">학습 회고</h3>
             <CommonTextArea
               rows={8}
-              {...register("reflection", {
-                required: "학습 회고를 작성해 주세요.",
-                minLength: { value: 15, message: "15자 이상 작성해 주세요." },
-                maxLength: {
-                  value: 500,
-                  message: "500자 이하로 작성해 주세요.",
-                },
-              })}
+              {...register("reflection")}
               placeholder="오늘 학습한 내용을 회고해 보세요. (15자 이상 작성 필수)"
               className="reflectionTextarea"
               error={errors.reflection?.message}

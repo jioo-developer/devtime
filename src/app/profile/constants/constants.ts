@@ -2,7 +2,7 @@
  * 프로필 셀렉트 옵션 (OpenAPI 스펙 기준) — 마이페이지에서도 사용
  */
 
-import { ProfileFormData } from "../types";
+import { ProfileCreateFormData } from "../types";
 
 export type SelectOption<T extends string> = {
   value: T;
@@ -91,8 +91,7 @@ export function getEnumLabel<T extends string>(
   );
 }
 
-export const DefaultFormData: ProfileFormData = {
-  nickname: "",
+export const DefaultFormData: ProfileCreateFormData = {
   goal: "",
   career: "",
   purpose: "",

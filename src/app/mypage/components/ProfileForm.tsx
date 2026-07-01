@@ -4,7 +4,6 @@ import CommonInput from "@/components/atoms/CommonInput/CommonInput";
 import CommonAutocomplete from "@/components/modules/CommonAutoComplate/CommonAutoComplate";
 import CommonDropdown from "@/components/modules/CommonDropdown/CommonDropdown";
 import ImageUploader from "@/components/modules/CommonImageUploder/ImageUploder";
-import { PASSWORD_MIN_LENGTH, PASSWORD_PATTERN } from "@/constant/password";
 import { useTechStacks } from "@/app/profile/hooks/useTechStacks";
 import { useCreateTechStack } from "@/app/profile/hooks/useCreateTechStack";
 import type { GetProfileResponse } from "../types";
@@ -119,7 +118,6 @@ export function ProfileForm({
                 label=""
                 placeholder="닉네임"
                 register={mypageForm.register}
-                validation={{ required: "닉네임을 입력하세요." }}
                 error={mypageForm.errors.nickname}
                 success={nicknameVerified}
                 className="profileFormInput"
@@ -167,17 +165,6 @@ export function ProfileForm({
               label="새 비밀번호"
               placeholder="새 비밀번호를 입력해 주세요."
               register={mypageForm.register}
-              validation={{
-                validate: (value: string | string[] | undefined) => {
-                  const str = typeof value === "string" ? value : "";
-                  if (!str.trim()) return true;
-                  if (str.length < PASSWORD_MIN_LENGTH)
-                    return `새 비밀번호는 ${PASSWORD_MIN_LENGTH}자리 이상이어야 합니다.`;
-                  if (!PASSWORD_PATTERN.test(str))
-                    return "비밀번호는 영문과 숫자를 포함해야 합니다.";
-                  return true;
-                },
-              }}
               error={mypageForm.errors.newPassword}
               className="profileFormInput"
             />
@@ -190,16 +177,6 @@ export function ProfileForm({
               type="password"
               placeholder="비밀번호를 다시 입력해 주세요."
               register={mypageForm.register}
-              validation={{
-                validate: (value: string | string[] | undefined) => {
-                  const str = typeof value === "string" ? value : "";
-                  if (!str.trim()) return true;
-                  return (
-                    str === mypageForm.watch("newPassword") ||
-                    "비밀번호가 일치하지 않습니다."
-                  );
-                },
-              }}
               error={mypageForm.errors.newPasswordConfirmation}
               className="profileFormInput"
             />

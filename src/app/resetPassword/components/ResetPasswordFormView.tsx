@@ -1,12 +1,14 @@
 "use client";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import CommonImage from "@/components/atoms/CommonImage/CommonImage";
 import CommonInput from "@/components/atoms/CommonInput/CommonInput";
 import CommonButton from "@/components/atoms/CommonButton/CommonButton";
 import LogoBlue from "@/asset/images/logo_blue.svg";
 import { ResetPasswordFormData } from "../Client";
+import { resetPasswordSchema } from "@/schema/formSchemas";
 
 type ResetPasswordFormViewProps = {
   onSubmit: (data: ResetPasswordFormData) => Promise<void>;
@@ -20,7 +22,10 @@ export default function ResetPasswordFormView({
     watch,
     handleSubmit,
     formState: { errors },
-  } = useForm<ResetPasswordFormData>({ mode: "onChange" });
+  } = useForm<ResetPasswordFormData>({
+    resolver: zodResolver(resetPasswordSchema),
+    mode: "onChange",
+  });
 
   const email = watch("email");
   const isFormValid = !!email && !errors.email;
@@ -43,13 +48,6 @@ export default function ResetPasswordFormView({
           autoComplete="email"
           placeholder="이메일 주소를 입력해 주세요."
           register={register}
-          validation={{
-            required: "이메일을 입력하세요.",
-            pattern: {
-              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-              message: "이메일 형식으로 작성해 주세요.",
-            },
-          }}
           error={errors.email}
         />
         <CommonButton

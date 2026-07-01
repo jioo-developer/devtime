@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import type { GetProfileResponse, ProfileFormData } from "../types";
 import {
   PURPOSE_OTHER_VALUE,
@@ -8,6 +9,7 @@ import {
 import { getUpdateProfilePayload } from "@/app/profile/utils/payload";
 import { useGetProfileSuspense } from "./useGetProfile";
 import { useUpdateProfile } from "./useUpdateProfile";
+import { profileUpdateSchema } from "@/schema/formSchemas";
 
 /** API purpose → 폼용 purpose, purposeDetail (프로필 상수 타입 기준) */
 function apiPurposeToForm(purpose: PurposeFromApi): {
@@ -68,7 +70,11 @@ export function useMypageForm(callbacks?: UseMypageFormCallbacks) {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<ProfileFormData>({ defaultValues, mode: "onChange" });
+  } = useForm<ProfileFormData>({
+    resolver: zodResolver(profileUpdateSchema),
+    defaultValues,
+    mode: "onChange",
+  });
 
   useEffect(() => {
     if (profileData) reset(getFormDefaultValue(profileData));
